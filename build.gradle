@@ -28,6 +28,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     implementation 'com.mysql:mysql-connector-j:9.3.0'
+    implementation 'com.zaxxer:HikariCP:6.2.1'
 }
 
 application {

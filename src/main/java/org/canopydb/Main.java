@@ -5,9 +5,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.canopydb.ui.Sidebar;
-
 import java.util.*;
+import org.canopydb.ui.Sidebar;
 
 
 public class Main extends Application {
@@ -20,7 +19,7 @@ public class Main extends Application {
         Scene scene = new Scene(borderPane, 1280, 720,
                 Color.DARKGRAY);
 
-        stage.setTitle("CanopyDB - Lite SQL Client");
+        stage.setTitle("CanopyDB - SQL Client");
         stage.setScene(scene);
         stage.show();
     }

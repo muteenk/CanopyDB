@@ -1,26 +1,46 @@
 package org.canopydb;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        Ellipse ellipse = new Ellipse(110, 70);
-        ellipse.setFill(Color.LIGHTBLUE);
-        // Create a Text shape with font and size
-        Text text = new Text("My Shapes");
-        text.setFont(new Font("Arial Bold", 24));
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(ellipse, text);
-        Scene scene = new Scene(stackPane, 350, 230,
-                Color.LIGHTYELLOW);
+        Map<String, List<String>> databases = new HashMap<>();
+        databases.put("Database1", new ArrayList<>(List.of("D1T1", "D1T2", "D1T3")));
+        databases.put("Database2", new ArrayList<>(List.of("D2T1", "D2T2")));
+        databases.put("Database3", new ArrayList<>(List.of("D3T0", "D3T1", "D3T2")));
+
+        TreeItem<String> rootDatabases = new TreeItem<>("Databases");
+        databases.forEach((database, tables) -> {
+            TreeItem<String> dbItem = new TreeItem<>(database);
+            dbItem.getChildren().addAll(
+                    tables.stream()
+                            .map(TreeItem::new)
+                            .toList()
+            );
+
+            // Attach this database node to the main root
+            rootDatabases.getChildren().add(dbItem);
+        });
+
+        BorderPane borderPane = new BorderPane();
+        TreeView<String> sidebar = new TreeView<>(rootDatabases);
+        borderPane.setLeft(sidebar);
+        Scene scene = new Scene(borderPane, 1280, 720,
+                Color.DARKGRAY);
 
         stage.setTitle("CanopyDB - Lite SQL Client");
         stage.setScene(scene);

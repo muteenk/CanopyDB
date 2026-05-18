@@ -1,4 +1,4 @@
-package org.canopydb.db;
+package org.canopydb.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

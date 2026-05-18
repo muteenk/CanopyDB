@@ -6,23 +6,19 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.canopydb.config.DatabasePool;
 import org.canopydb.db.MetadataDAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Sidebar {
     private final MetadataDAO metadataDAO = new MetadataDAO();
 
     private void loadDatabasesAsync(TreeItem<String> node) {
-        if (!node.getChildren().getFirst().getValue().equals("Fetching...")){
+        if (node.getChildren().isEmpty()) return;
+        String firstChildValue = node.getChildren().getFirst().getValue();
+        if (!firstChildValue.equals("Loading") &&
+            !firstChildValue.equals("Error")){
             return;
         }
 
@@ -35,17 +31,22 @@ public class Sidebar {
 
         fetchDatabases.setOnSucceeded(event -> {
             List<String> dbList = fetchDatabases.getValue();
-            node.getChildren().removeLast();
+            if (!node.getChildren().isEmpty()) node.getChildren().clear();
             for (String dbName : dbList) {
-                node.getChildren().add(new TreeItem<>(dbName));
+                TreeItem<String> dbItem = new TreeItem<>(dbName);
+                dbItem.getChildren().add(new TreeItem<>("Loading"));
+                dbItem.addEventHandler(TreeItem.<String>branchExpandedEvent(), dbEvent -> {
+                    loadTablesAsync(dbEvent.getSource());
+                });
+                node.getChildren().add(dbItem);
             }
         });
 
         fetchDatabases.setOnFailed(event -> {
             Throwable error = fetchDatabases.getException();
             System.err.println("Failed to fetch databases: " + error.getMessage());
-            node.getChildren().removeLast();
-            node.getChildren().add(new TreeItem<>("Error loading databases !"));
+            if (!node.getChildren().isEmpty()) node.getChildren().clear();
+            node.getChildren().add(new TreeItem<>("Error"));
         });
 
         Thread task = new Thread(fetchDatabases);
@@ -53,23 +54,45 @@ public class Sidebar {
         task.start();
     }
 
+    private void loadTablesAsync(TreeItem<String> node) {
+        if (node.getChildren().isEmpty()) return;
+        String firstChildValue = node.getChildren().getFirst().getValue();
+        if (!firstChildValue.equals("Loading") && !firstChildValue.equals("Error")){
+            return;
+        }
+
+        Task<List<String>> fetchTables = new Task<List<String>>() {
+            @Override
+            protected List<String> call() throws Exception {
+                return metadataDAO.getAllTablesByDatabase(node.getValue());
+            }
+        };
+
+        fetchTables.setOnSucceeded(event -> {
+            List<String> tables = fetchTables.getValue();
+            if (!node.getChildren().isEmpty()) node.getChildren().clear();
+            for (String table: tables){
+                node.getChildren().add(new TreeItem<>(table));
+            }
+        });
+
+        fetchTables.setOnFailed(event -> {
+            Throwable error = fetchTables.getException();
+            System.err.println("Failed to fetch tables: " + error.getMessage());
+            if (!node.getChildren().isEmpty()) node.getChildren().clear();
+            node.getChildren().add(new TreeItem<>("Error"));
+        });
+
+        Thread task = new Thread(fetchTables);
+        task.start();
+    }
+
     public VBox getSidebar() {
-//        Map<String, List<String>> databases = loadDatabases();
         TreeItem<String> rootDatabases = new TreeItem<>("Databases");
-        rootDatabases.getChildren().add(new TreeItem<>("Fetching..."));
+        rootDatabases.getChildren().add(new TreeItem<>("Loading"));
         rootDatabases.addEventHandler(TreeItem.<String>branchExpandedEvent(), event -> {
             loadDatabasesAsync(event.getSource());
         });
-
-//        databases.forEach((database, tables) -> {
-//            TreeItem<String> dbItem = new TreeItem<>(database);
-//            dbItem.getChildren().addAll(
-//                    tables.stream()
-//                            .map(TreeItem::new)
-//                            .toList()
-//            );
-//            rootDatabases.getChildren().add(dbItem);
-//        });
 
         TextField searchInput = new TextField();
         searchInput.setPromptText("Search");
@@ -80,6 +103,7 @@ public class Sidebar {
         VBox sidebar = new VBox(searchInput, databaseTreeView);
         VBox.setVgrow(sidebar, Priority.ALWAYS);
         sidebar.setStyle("-fx-background-color: #363840;");
+
         return sidebar;
     }
 }

@@ -25,4 +25,25 @@ public class MetadataDAO {
         }
         return databases;
     }
+
+    public List<String> getAllTablesByDatabase(String database) throws SQLException {
+        List<String> tables = new ArrayList<>();
+        String sql = "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = ?";
+
+        try (Connection conn = DatabasePool.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // Bind the database name safely to prevent SQL Injection
+            pstmt.setString(1, database);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    // Column 1 contains the TABLE_NAME string
+                    String tableName = rs.getString(1);
+                    tables.add(tableName);
+                }
+            }
+        }
+        return tables;
+    }
 }

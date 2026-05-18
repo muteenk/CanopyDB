@@ -101,7 +101,7 @@ public class Sidebar {
         TreeView<String> databaseTreeView = new TreeView<>(rootDatabases);
         databaseTreeView.setStyle("-fx-background-color: #363840;");
         VBox sidebar = new VBox(searchInput, databaseTreeView);
-        VBox.setVgrow(sidebar, Priority.ALWAYS);
+        VBox.setVgrow(databaseTreeView, Priority.ALWAYS);
         sidebar.setStyle("-fx-background-color: #363840;");
 
         return sidebar;

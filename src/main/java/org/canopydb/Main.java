@@ -15,10 +15,12 @@ public class Main extends Application {
         Sidebar sidebar = new Sidebar();
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(sidebar.getSidebar());
-        borderPane.setStyle("-fx-background-color: #22242a");
-        Scene scene = new Scene(borderPane, 1280, 720,
-                Color.DARKGRAY);
-
+        Scene scene = new Scene(borderPane, 1280, 720);
+        scene.getStylesheets().add(
+                Objects.requireNonNull(
+                        getClass().getResource("/style.css")
+                ).toExternalForm()
+        );
         stage.setTitle("CanopyDB - SQL Client");
         stage.setScene(scene);
         stage.show();

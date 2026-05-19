@@ -96,13 +96,10 @@ public class Sidebar {
 
         TextField searchInput = new TextField();
         searchInput.setPromptText("Search");
-        searchInput.setStyle("-fx-background-color: #363840;");
 
         TreeView<String> databaseTreeView = new TreeView<>(rootDatabases);
-        databaseTreeView.setStyle("-fx-background-color: #363840;");
         VBox sidebar = new VBox(searchInput, databaseTreeView);
         VBox.setVgrow(databaseTreeView, Priority.ALWAYS);
-        sidebar.setStyle("-fx-background-color: #363840;");
 
         return sidebar;
     }

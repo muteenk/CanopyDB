@@ -1,0 +1,39 @@
+.root {
+    -fx-background-color: #1f232a;
+}
+
+/* Sidebar */
+.sidebar {
+    -fx-background-color: #2b2d31;
+}
+
+/* Search Input */
+.text-field {
+    -fx-background-color: #363840;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #8b949e;
+    -fx-background-radius: 0;
+}
+
+/* TreeView */
+.tree-view {
+    -fx-background-color: #2b2d31;
+    -fx-control-inner-background: #2b2d31;
+}
+
+/* Tree cells */
+.tree-cell {
+    -fx-background-color: #2b2d31;
+    -fx-text-fill: #d0d7de;
+}
+
+/* Hover */
+.tree-cell:hover {
+    -fx-background-color: #373b41;
+}
+
+/* Selected */
+.tree-cell:selected {
+    -fx-background-color: #1f6feb;
+    -fx-text-fill: white;
+}

@@ -2,10 +2,11 @@ package org.canopydb.services;
 
 import javafx.concurrent.Task;
 import javafx.scene.control.TreeItem;
+import org.canopydb.config.ThreadPool;
 import org.canopydb.repository.MetadataDAO;
 
-import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class ConnectionMetadataService {
     private final MetadataDAO metadataDAO = new MetadataDAO();
@@ -18,7 +19,7 @@ public class ConnectionMetadataService {
             return;
         }
 
-        Task<List<String>> fetchDatabases = new Task<List<String>>() {
+        Task<List<String>> fetchDatabases = new Task<>() {
             @Override
             protected List<String> call() throws Exception {
                 return metadataDAO.getAllDatabases();
@@ -45,9 +46,8 @@ public class ConnectionMetadataService {
             node.getChildren().add(new TreeItem<>("Error"));
         });
 
-        Thread task = new Thread(fetchDatabases);
-        task.setDaemon(true);
-        task.start();
+        ExecutorService exec = ThreadPool.getExecutor();
+        exec.submit(fetchDatabases);
     }
 
     public void loadTablesAsync(TreeItem<String> node) {
@@ -80,7 +80,7 @@ public class ConnectionMetadataService {
             node.getChildren().add(new TreeItem<>("Error"));
         });
 
-        Thread task = new Thread(fetchTables);
-        task.start();
+        ExecutorService exec = ThreadPool.getExecutor();
+        exec.submit(fetchTables);
     }
 }

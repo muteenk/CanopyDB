@@ -1,6 +1,6 @@
 package org.canopydb.ui.organisms;
 
-import javafx.concurrent.Task;
+import javafx.application.Platform;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -8,14 +8,17 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.services.ConnectionMetadataService;
 import org.canopydb.services.TableActionService;
+import org.canopydb.ui.interfaces.TableDataAppendAction;
+
+import java.util.List;
 
 public class Sidebar {
     private final ConnectionMetadataService connectionMetadataService = new ConnectionMetadataService();
     private final TableActionService tableActionService = new TableActionService();
-    private final MiddlePane middle;
+    private final TableDataAppendAction tableDataAppendAction;
 
-    public Sidebar(MiddlePane middleComponent) {
-        this.middle = middleComponent;
+    public Sidebar(TableDataAppendAction tableDataAppendAction) {
+        this.tableDataAppendAction = tableDataAppendAction;
     }
 
     private int getNodeDepth(TreeItem<String> item){
@@ -25,7 +28,6 @@ public class Sidebar {
 
         int depth = 0;
         TreeItem<String> current = item;
-
         while (current.getParent() != null) {
             depth++;
             current = current.getParent();
@@ -45,7 +47,12 @@ public class Sidebar {
                 TreeItem<String> selectedItem = databaseTreeView.getSelectionModel().getSelectedItem();
 
                 if (selectedItem != null && isTableNode(selectedItem)) {
-                    tableActionService.loadTableDataAsync(selectedItem, middle);
+                    tableActionService.loadTableDataAsyncV2(
+                            selectedItem.getValue(),
+                            selectedItem.getParent().getValue()
+                    ).thenAccept(data -> {
+                        Platform.runLater(() -> {tableDataAppendAction.render(data);});
+                    });
                 }
             }
         });

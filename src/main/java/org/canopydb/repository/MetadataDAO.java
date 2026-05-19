@@ -1,4 +1,4 @@
-package org.canopydb.db;
+package org.canopydb.repository;
 
 import org.canopydb.config.DatabasePool;
 

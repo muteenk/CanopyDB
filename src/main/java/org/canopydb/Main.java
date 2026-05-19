@@ -3,10 +3,9 @@ package org.canopydb;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.util.*;
-import org.canopydb.ui.Sidebar;
+import org.canopydb.ui.organisms.Sidebar;
 
 
 public class Main extends Application {

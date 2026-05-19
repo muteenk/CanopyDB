@@ -1,24 +1,20 @@
-package org.canopydb.ui;
+package org.canopydb.services;
 
 import javafx.concurrent.Task;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import org.canopydb.db.MetadataDAO;
+import org.canopydb.repository.MetadataDAO;
 
-import java.sql.SQLException;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
-public class Sidebar {
+public class ConnectionMetadataService {
     private final MetadataDAO metadataDAO = new MetadataDAO();
 
-    private void loadDatabasesAsync(TreeItem<String> node) {
+    public void loadDatabasesAsync(TreeItem<String> node) {
         if (node.getChildren().isEmpty()) return;
         String firstChildValue = node.getChildren().getFirst().getValue();
         if (!firstChildValue.equals("Loading") &&
-            !firstChildValue.equals("Error")){
+                !firstChildValue.equals("Error")){
             return;
         }
 
@@ -54,7 +50,7 @@ public class Sidebar {
         task.start();
     }
 
-    private void loadTablesAsync(TreeItem<String> node) {
+    public void loadTablesAsync(TreeItem<String> node) {
         if (node.getChildren().isEmpty()) return;
         String firstChildValue = node.getChildren().getFirst().getValue();
         if (!firstChildValue.equals("Loading") && !firstChildValue.equals("Error")){
@@ -72,7 +68,8 @@ public class Sidebar {
             List<String> tables = fetchTables.getValue();
             if (!node.getChildren().isEmpty()) node.getChildren().clear();
             for (String table: tables){
-                node.getChildren().add(new TreeItem<>(table));
+                TreeItem<String> tableItem = new TreeItem<>(table);
+                node.getChildren().add(tableItem);
             }
         });
 
@@ -85,22 +82,5 @@ public class Sidebar {
 
         Thread task = new Thread(fetchTables);
         task.start();
-    }
-
-    public VBox getSidebar() {
-        TreeItem<String> rootDatabases = new TreeItem<>("Databases");
-        rootDatabases.getChildren().add(new TreeItem<>("Loading"));
-        rootDatabases.addEventHandler(TreeItem.<String>branchExpandedEvent(), event -> {
-            loadDatabasesAsync(event.getSource());
-        });
-
-        TextField searchInput = new TextField();
-        searchInput.setPromptText("Search");
-
-        TreeView<String> databaseTreeView = new TreeView<>(rootDatabases);
-        VBox sidebar = new VBox(searchInput, databaseTreeView);
-        VBox.setVgrow(databaseTreeView, Priority.ALWAYS);
-
-        return sidebar;
     }
 }

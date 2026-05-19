@@ -37,3 +37,91 @@
     -fx-background-color: #5C3E94;
     -fx-text-fill: white;
 }
+
+
+
+
+/* =========================================================================
+   TableView - Dark Theme Custom Styling
+   ========================================================================= */
+
+/* The overall container background and outer border */
+.table-view {
+    -fx-background-color: #2b2d31;
+    -fx-control-inner-background: #1f232a; /* Empty area rows background */
+    -fx-background-color: transparent;
+}
+
+/* Header background strip */
+.table-view .column-header-background {
+    -fx-background-color: #2b2d31;
+}
+
+/* Individual column headers text and box */
+.table-view .column-header {
+    -fx-background-color: #2b2d31;
+    -fx-border-color: #1f232a; /* Subdued grid dividers for headers */
+    -fx-border-width: 0 1 1 0;
+}
+
+/* Column header text styling */
+.table-view .column-header .label {
+    -fx-text-fill: #8b949e; /* Muted gray text matching your search prompt */
+    -fx-font-weight: bold;
+}
+
+/* Data Rows text & background */
+.table-view .table-row-cell {
+    -fx-background-color: #2b2d31;
+    -fx-background-insets: 0, 0 0 1 0; /* Creates an underline grid border effect */
+    -fx-text-fill: #d0d7de;
+}
+
+/* Alternating dark gray row colors (Optional, uncomment if desired) */
+/*
+.table-view .table-row-cell:odd {
+    -fx-background-color: #23272e;
+}
+*/
+
+/* Individual cells text color alignment */
+.table-view .table-cell {
+    -fx-text-fill: #d0d7de;
+    -fx-border-color: transparent;
+}
+
+/* Row Hover State */
+.table-view .table-row-cell:hover {
+    -fx-background-color: #373b41; /* Matches your tree-view hover */
+}
+
+/* Row Selected State (Using your exact Purple accent color) */
+.table-view .table-row-cell:selected {
+    -fx-background-color: #5C3E94;
+    -fx-text-fill: #ffffff;
+}
+
+/* Ensure text inside selected row remains bright white */
+.table-view .table-row-cell:selected .table-cell {
+    -fx-text-fill: #ffffff;
+}
+
+/* Scrollbar Corner Block tracking */
+.table-view .corner {
+    -fx-background-color: #1f232a;
+}
+
+/* Custom styling for the scrollbars to match the dark theme */
+.table-view .scroll-bar:vertical,
+.table-view .scroll-bar:horizontal {
+    -fx-background-color: #1f232a;
+}
+
+.table-view .scroll-bar .thumb {
+    -fx-background-color: #363840; /* Matches your text-field dark color */
+    -fx-background-radius: 4;
+}
+
+.table-view .scroll-bar .thumb:hover {
+    -fx-background-color: #373b41;
+}

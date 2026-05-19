@@ -32,7 +32,7 @@ dependencies {
 }
 
 application {
-    mainClass = 'org.canopydb.Main'
+    mainClass = 'org.canopydb.Launch'
 }
 
 test {

@@ -5,15 +5,32 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import org.canopydb.entities.TableData;
 
 import java.util.List;
 
 public class TableComponent {
-    public static TableView<List<String>> buildTable(List<List<String>> table) {
+
+    public static void debugLogTableData(TableData table) {
+        System.out.println("------- HEADERS --------");
+        for (String col: table.getHeaders()){
+            System.out.print(col + "  ");
+        }
+        System.out.println("------- ROWS ---------");
+        for (List<String> row: table.getRows()){
+            for (String item: row){
+                System.out.print(item + "  ");
+            }
+            System.out.println(" ");
+        }
+    }
+
+    public static TableView<List<String>> buildTable(TableData table) {
         TableView<List<String>> tableView = new TableView<>();
-        for (int i = 0; i < table.getFirst().size(); i++) {
+        List<String> tableHeaders = table.getHeaders();
+        for (int i = 0; i < tableHeaders.size(); i++) {
             final int columnIndex = i;
-            TableColumn<List<String>, String> column = new TableColumn<>(table.getFirst().get(i));
+            TableColumn<List<String>, String> column = new TableColumn<>(tableHeaders.get(i));
             column.setCellValueFactory(cellData -> {
                 List<String> row = cellData.getValue();
                 String cellValue = (columnIndex < row.size()) ? row.get(columnIndex) : "";
@@ -22,11 +39,7 @@ public class TableComponent {
             tableView.getColumns().add(column);
         }
 
-        table.removeFirst();
-        if (table.isEmpty()) {
-            tableView.setPlaceholder(new javafx.scene.control.Label("Table is empty."));
-        }
-        ObservableList<List<String>> observableRows = FXCollections.observableArrayList(table);
+        ObservableList<List<String>> observableRows = FXCollections.observableArrayList(table.getRows());
         tableView.setItems(observableRows);
 
         return tableView;

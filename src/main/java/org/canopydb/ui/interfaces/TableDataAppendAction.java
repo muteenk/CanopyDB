@@ -1,8 +1,8 @@
 package org.canopydb.ui.interfaces;
 
-import java.util.List;
+import org.canopydb.entities.TableData;
 
 @FunctionalInterface
 public interface TableDataAppendAction {
-    void render(List<List<String>> tableData);
+    void render(TableData tableData);
 }

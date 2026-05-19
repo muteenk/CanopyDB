@@ -3,6 +3,7 @@ package org.canopydb.ui.organisms;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.canopydb.entities.TableData;
 import org.canopydb.ui.molecules.TableComponent;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class MiddlePane {
         return middleArea;
     }
 
-    public void addTable(List<List<String>> tableData) {
+    public void addTable(TableData tableData) {
         TableView<List<String>> tableView = TableComponent.buildTable(tableData);
         middleArea.getChildren().clear();
         middleArea.getChildren().add(tableView);

@@ -45,9 +45,8 @@ public class Sidebar {
         databaseTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 TreeItem<String> selectedItem = databaseTreeView.getSelectionModel().getSelectedItem();
-
                 if (selectedItem != null && isTableNode(selectedItem)) {
-                    tableActionService.loadTableDataAsyncV2(
+                    tableActionService.loadTableDataAsync(
                             selectedItem.getValue(),
                             selectedItem.getParent().getValue()
                     ).thenAccept(data -> {

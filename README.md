@@ -77,13 +77,13 @@ The project is intentionally starting small.
 
 ## Tech Stack
 
-| Area                  | Technology |
-| --------------------- | ---------- |
-| Language              | Java 25    |
-| UI                    | JavaFX     |
-| Database Connectivity | JDBC       |
-| Build Tool            | Gradle     |
-| Database Support      | MySQL      |
+| Area                  | Technology      |
+| --------------------- |-----------------|
+| Language              | Java 25         |
+| UI                    | JavaFX          |
+| Database Connectivity | JDBC + HikariCP |
+| Build Tool            | Gradle          |
+| Database Support      | MySQL (For now) |
 
 ---
 
@@ -106,8 +106,10 @@ A major focus of the project is ensuring that heavy database operations never bl
 
 ### Phase 1
 
-* [x] JavaFX application bootstrap
-* [ ] MySQL connection support
+* [x] JavaFX application setup
+* [x] DB Connection Pool Setup 
+* [x] Basic UI Setup
+* [x] Connection Database and Table Fetching
 * [ ] Query editor
 * [ ] Multi-tab interface
 * [ ] Parallel query execution

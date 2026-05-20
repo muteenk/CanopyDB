@@ -1,127 +1,305 @@
+/* =========================================================================
+   ROOT
+   ========================================================================= */
+
 .root {
     -fx-background-color: #1f232a;
+    -fx-font-family: "Inter", "SF Pro Display", "Segoe UI", sans-serif;
 }
 
-/* Sidebar */
+
+/* =========================================================================
+   SIDEBAR
+   ========================================================================= */
+
 .sidebar {
     -fx-background-color: #2b2d31;
+    -fx-border-color: transparent #1f232a transparent transparent;
+    -fx-border-width: 0 1 0 0;
 }
 
-/* Search Input */
+
+/* =========================================================================
+   TEXT INPUT
+   ========================================================================= */
+
 .text-field {
     -fx-background-color: #363840;
     -fx-text-fill: #ffffff;
     -fx-prompt-text-fill: #8b949e;
+
     -fx-background-radius: 0;
+    -fx-border-radius: 0;
+
+    -fx-border-color: transparent;
+    -fx-padding: 8 10 8 10;
 }
 
-/* TreeView */
+.text-field:focused {
+    -fx-border-color: #5C3E94;
+    -fx-border-width: 1;
+}
+
+
+/* =========================================================================
+   TREE VIEW
+   ========================================================================= */
+
 .tree-view {
     -fx-background-color: #2b2d31;
     -fx-control-inner-background: #2b2d31;
+
+    -fx-background-insets: 0;
+    -fx-padding: 4 0 0 0;
 }
 
 /* Tree cells */
+
 .tree-cell {
     -fx-background-color: #2b2d31;
     -fx-text-fill: #d0d7de;
+
+    -fx-padding: 6 10 6 10;
+    -fx-font-size: 13px;
 }
 
 /* Hover */
+
 .tree-cell:hover {
     -fx-background-color: #373b41;
 }
 
 /* Selected */
+
 .tree-cell:selected {
     -fx-background-color: #5C3E94;
     -fx-text-fill: white;
 }
 
+/* Remove ugly focus ring */
 
+.tree-view:focused,
+.tree-cell:focused {
+    -fx-background-insets: 0;
+}
 
 
 /* =========================================================================
-   TableView - Dark Theme Custom Styling
+   TAB PANE
    ========================================================================= */
 
-/* The overall container background and outer border */
-.table-view {
-    -fx-background-color: #2b2d31;
-    -fx-control-inner-background: #1f232a; /* Empty area rows background */
-    -fx-background-color: transparent;
+.tab-pane {
+    -fx-background-color: #1f232a;
 }
 
-/* Header background strip */
+/* Background behind tabs */
+
+.tab-pane .tab-header-background {
+    -fx-background-color: #2b2d31;
+}
+
+/* Individual tabs */
+
+.tab-pane .tab {
+    -fx-background-color: #363840;
+
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+
+    -fx-padding: 7 16 7 16;
+
+    -fx-border-color: transparent #1f232a transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+/* Hover */
+
+.tab-pane .tab:hover {
+    -fx-background-color: #3b3f46;
+}
+
+/* Selected tab */
+
+.tab-pane .tab:selected {
+    -fx-background-color: #1f232a;
+}
+
+/* Tab text */
+
+.tab-pane .tab .tab-label {
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 13px;
+}
+
+/* Selected tab text */
+
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: #ffffff;
+}
+
+/* Remove ugly blue focus ring */
+
+.tab-pane *.focus-indicator {
+    -fx-border-color: transparent;
+}
+
+/* Close button */
+
+.tab-pane .tab .tab-close-button {
+    -fx-background-color: #8b949e;
+}
+
+.tab-pane .tab .tab-close-button:hover {
+    -fx-background-color: #ffffff;
+}
+
+
+/* =========================================================================
+   TABLE VIEW
+   ========================================================================= */
+
+.table-view {
+    -fx-background-color: #1f232a;
+    -fx-control-inner-background: #1f232a;
+
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 0;
+}
+
+/* Empty background */
+
+.table-view .placeholder .label {
+    -fx-text-fill: #5f6a79;
+}
+
+/* Column header background strip */
+
 .table-view .column-header-background {
     -fx-background-color: #2b2d31;
 }
 
-/* Individual column headers text and box */
-.table-view .column-header {
+/* Fix ugly white filler space */
+
+.table-view .filler {
     -fx-background-color: #2b2d31;
-    -fx-border-color: #1f232a; /* Subdued grid dividers for headers */
-    -fx-border-width: 0 1 1 0;
 }
 
-/* Column header text styling */
+/* Individual column headers */
+
+.table-view .column-header {
+    -fx-background-color: #2b2d31;
+
+    -fx-border-color: transparent #2f343d #1f232a transparent;
+    -fx-border-width: 0 1 1 0;
+
+    -fx-padding: 8 6 8 6;
+}
+
+/* Column resize line */
+.table-view .column-resize-line {
+    -fx-background-color: #5C3E94;
+    -fx-pref-width: 2px;
+}
+
+/* Header drag area visibility */
+.table-view .column-header:hover {
+    -fx-background-color: #32353c;
+}
+
+/* Column header text */
+
 .table-view .column-header .label {
-    -fx-text-fill: #8b949e; /* Muted gray text matching your search prompt */
+    -fx-text-fill: #8b949e;
+
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 
-/* Data Rows text & background */
+/* Table rows */
+
 .table-view .table-row-cell {
-    -fx-background-color: #2b2d31;
-    -fx-background-insets: 0, 0 0 1 0; /* Creates an underline grid border effect */
+    -fx-background-color: #1f232a;
     -fx-text-fill: #d0d7de;
+
+    -fx-table-cell-border-color: transparent;
 }
 
-/* Alternating dark gray row colors (Optional, uncomment if desired) */
-/*
+/* Alternate rows */
+
 .table-view .table-row-cell:odd {
     -fx-background-color: #23272e;
 }
-*/
 
-/* Individual cells text color alignment */
-.table-view .table-cell {
-    -fx-text-fill: #d0d7de;
-    -fx-border-color: transparent;
-}
+/* Hover */
 
-/* Row Hover State */
 .table-view .table-row-cell:hover {
-    -fx-background-color: #373b41; /* Matches your tree-view hover */
+    -fx-background-color: #373b41;
 }
 
-/* Row Selected State (Using your exact Purple accent color) */
+/* Selected row */
+
 .table-view .table-row-cell:selected {
     -fx-background-color: #5C3E94;
-    -fx-text-fill: #ffffff;
 }
 
-/* Ensure text inside selected row remains bright white */
+/* Selected row text */
+
 .table-view .table-row-cell:selected .table-cell {
     -fx-text-fill: #ffffff;
 }
 
-/* Scrollbar Corner Block tracking */
-.table-view .corner {
+/* Individual cells */
+
+.table-view .table-cell {
+    -fx-text-fill: #d0d7de;
+
+    -fx-padding: 8 10 8 10;
+
+    -fx-border-color: transparent #2f343d transparent transparent;
+    -fx-border-width: 0 1 0 0;
+
+    -fx-font-size: 13px;
+}
+
+
+/* =========================================================================
+   SCROLLBARS
+   ========================================================================= */
+
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
     -fx-background-color: #1f232a;
 }
 
-/* Custom styling for the scrollbars to match the dark theme */
-.table-view .scroll-bar:vertical,
-.table-view .scroll-bar:horizontal {
-    -fx-background-color: #1f232a;
-}
+/* Thumb */
 
-.table-view .scroll-bar .thumb {
-    -fx-background-color: #363840; /* Matches your text-field dark color */
+.scroll-bar .thumb {
+    -fx-background-color: #363840;
     -fx-background-radius: 4;
 }
 
-.table-view .scroll-bar .thumb:hover {
-    -fx-background-color: #373b41;
+.scroll-bar .thumb:hover {
+    -fx-background-color: #4a4f57;
+}
+
+/* Track */
+
+.scroll-bar .track {
+    -fx-background-color: #1f232a;
+}
+
+/* Increment/decrement buttons */
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: #1f232a;
+    -fx-padding: 0;
+}
+
+/* Remove arrows */
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
 }

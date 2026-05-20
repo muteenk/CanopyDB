@@ -8,9 +8,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.services.ConnectionMetadataService;
 import org.canopydb.services.TableActionService;
+import org.canopydb.ui.atoms.TextInput;
 import org.canopydb.ui.interfaces.TableDataAppendAction;
 
-import java.util.List;
 
 public class Sidebar {
     private final ConnectionMetadataService connectionMetadataService = new ConnectionMetadataService();
@@ -65,9 +65,7 @@ public class Sidebar {
             connectionMetadataService.loadDatabasesAsync(event.getSource());
         });
 
-        TextField searchInput = new TextField();
-        searchInput.setPromptText("Search");
-
+        TextField searchInput = new TextInput("Search").getTextField();
         TreeView<String> databaseTreeView = getStringTreeView(rootDatabases);
         VBox sidebar = new VBox(searchInput, databaseTreeView);
         VBox.setVgrow(databaseTreeView, Priority.ALWAYS);

@@ -18,7 +18,7 @@ public class Sidebar {
         treeViewEventController = new TreeViewEventController(tableDataAppendAction, tableActiveCheck);
     }
 
-    private TreeView<String> getStringTreeView(TreeItem<String> rootDatabases) {
+    private TreeView<String> buildTreeView(TreeItem<String> rootDatabases) {
         TreeView<String> databaseTreeView = new TreeView<>(rootDatabases);
         databaseTreeView.setOnMouseClicked(
                 event -> {
@@ -33,19 +33,22 @@ public class Sidebar {
         return databaseTreeView;
     }
 
-    public VBox getSidebar() {
+    private TreeItem<String> getConnectionRoot() {
         TreeItem<String> rootDatabases = new TreeItem<>("Connection");
         rootDatabases.getChildren().add(new TreeItem<>("Loading"));
         rootDatabases.addEventHandler(
-            TreeItem.<String>branchExpandedEvent(),
-            event -> {
-                treeViewEventController
-                .dbRootExpandHandler(event.getSource());
-            }
+                TreeItem.<String>branchExpandedEvent(),
+                event -> {
+                    treeViewEventController
+                            .dbRootExpandHandler(event.getSource());
+                }
         );
+        return rootDatabases;
+    }
 
+    public VBox getSidebar() {
         TextField searchInput = new TextInput("Search").getTextField();
-        TreeView<String> databaseTreeView = getStringTreeView(rootDatabases);
+        TreeView<String> databaseTreeView = buildTreeView(getConnectionRoot());
         VBox sidebar = new VBox(searchInput, databaseTreeView);
         VBox.setVgrow(databaseTreeView, Priority.ALWAYS);
 

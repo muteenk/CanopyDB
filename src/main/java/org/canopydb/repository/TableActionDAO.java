@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TableActionDAO {
-    public TableData getTableData(String table, String database) throws SQLException {
-        String sql = "SELECT * FROM `" + database + "`.`"+ table +"` LIMIT 300 OFFSET 0;";
+    public TableData getTableData(String table, String database, String sql) throws SQLException {
+//        String sql = "SELECT * FROM `" + database + "`.`"+ table +"` LIMIT 300 OFFSET 0;";
         TableData tableDataObject = new TableData(table, database);
 
         try (Connection conn = DatabasePool.getConnection();

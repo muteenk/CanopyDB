@@ -110,11 +110,14 @@ A major focus of the project is ensuring that heavy database operations never bl
 * [x] Basic UI Setup
 * [x] Threadpool Setup
 * [x] Connection Databases and table list fetching
+* [ ] Handle Connection Loading and Error Properly
 * [x] Displaying tables
+* [ ] Handle Table loading and Error Properly
 * [x] Multi-tab interface
 * [ ] Table Column(s) Sorting
 * [ ] Table Pagination
 * [ ] Table Filtering
+* [ ] Available Table Search
 * [ ] Query editor
 * [ ] Parallel query execution
 * [ ] Query cancellation

@@ -2,6 +2,7 @@ package org.canopydb.ui.organisms;
 
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -20,24 +21,34 @@ public class Workspace {
         activeTables = new HashSet<>();
         tabs = new TabPane();
         workspace = new VBox(tabs);
+        VBox.setVgrow(tabs, Priority.ALWAYS);
     }
 
     public VBox getWorkspace() {
         return workspace;
     }
 
-    public void addTable(TableData tableData) {
-        TableView<List<String>> tableView = new TableComponent(tableData).getTable();
-        String tablePath = tableData.getTablePath();
-        Tab newTab = new Tab(tablePath);
-        newTab.setContent(tableView);
-        newTab.setOnClosed(event -> {
+    private Tab buildTab(String tablePath, TableView<List<String>> tableView) {
+        Tab tab = new Tab(tablePath);
+        tab.setContent(tableView);
+        tab.setOnClosed(event -> {
             activeTables.remove(tablePath);
         });
-        tabs.getTabs().add(newTab);
-        activeTables.add(tablePath);
+        return tab;
+    }
 
-        VBox.setVgrow(tabs, Priority.ALWAYS);
+    public void addTable(TableData tableData) {
+        TableView<List<String>> tableView = new TableComponent(tableData).getTable();
+//        tableView.setOnSort(event -> {
+//            event.consume();
+//            TableColumn<List<String>, ?> selectedColumn = tableView.getSortOrder().getFirst();
+//            TableColumn.SortType sortType = selectedColumn.getSortType();
+//
+//        });
+
+        String tablePath = tableData.getTablePath();
+        tabs.getTabs().add(buildTab(tablePath, tableView));
+        activeTables.add(tablePath);
     }
 
     public boolean isTableOpen(String table) {

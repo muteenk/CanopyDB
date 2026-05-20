@@ -32,5 +32,5 @@ public class TableData {
         return this.rows;
     }
 
-    public String getTablePath() {return this.databaseName + "." + this.tableName;}
+    public String getTablePath() {return this.databaseName + "/" + this.tableName;}
 }

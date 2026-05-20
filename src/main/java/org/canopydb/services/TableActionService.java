@@ -2,6 +2,7 @@ package org.canopydb.services;
 
 import org.canopydb.config.ThreadPool;
 import org.canopydb.entities.TableData;
+import org.canopydb.queries.TableQuery;
 import org.canopydb.repository.TableActionDAO;
 
 import java.sql.SQLException;
@@ -13,7 +14,8 @@ public class TableActionService {
     public CompletableFuture<TableData> loadTableDataAsync(String table, String database){
         return CompletableFuture.supplyAsync(() -> {
             try {
-                return tableActionDAO.getTableData(table, database);
+                TableQuery query = new TableQuery(database, table);
+                return tableActionDAO.getTableData(table, database, query.getQuery());
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

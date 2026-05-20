@@ -6,3 +6,4 @@ import org.canopydb.entities.TableData;
 public interface TableDataAppendAction {
     void render(TableData tableData);
 }
+

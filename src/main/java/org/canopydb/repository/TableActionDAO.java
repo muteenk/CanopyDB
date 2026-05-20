@@ -11,7 +11,7 @@ import java.util.List;
 public class TableActionDAO {
     public TableData getTableData(String table, String database) throws SQLException {
         String sql = "SELECT * FROM `" + database + "`.`"+ table +"` LIMIT 300 OFFSET 0;";
-        TableData tableDataObject = new TableData();
+        TableData tableDataObject = new TableData(table, database);
 
         try (Connection conn = DatabasePool.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);

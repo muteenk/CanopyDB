@@ -4,15 +4,18 @@ import javafx.application.Platform;
 import javafx.scene.control.TreeItem;
 import org.canopydb.services.ConnectionMetadataService;
 import org.canopydb.services.TableActionService;
+import org.canopydb.ui.interfaces.TableActiveCheck;
 import org.canopydb.ui.interfaces.TableDataAppendAction;
 
 public class TreeViewEventController {
-    ConnectionMetadataService connectionMetadataService = new ConnectionMetadataService();
-    TableActionService tableActionService = new TableActionService();
-    TableDataAppendAction tableDataAppendAction;
+    private final ConnectionMetadataService connectionMetadataService = new ConnectionMetadataService();
+    private final TableActionService tableActionService = new TableActionService();
+    private final TableDataAppendAction tableDataAppendAction;
+    private final TableActiveCheck tableActiveCheck;
 
-    public TreeViewEventController(TableDataAppendAction tableDataAppendAction){
+    public TreeViewEventController(TableDataAppendAction tableDataAppendAction, TableActiveCheck tableActiveCheck){
         this.tableDataAppendAction = tableDataAppendAction;
+        this.tableActiveCheck = tableActiveCheck;
     }
 
     private int getNodeDepth(TreeItem<String> item){
@@ -99,6 +102,7 @@ public class TreeViewEventController {
             TreeItem<String> selectedItem
     ) {
         if (selectedItem != null && isTableNode(selectedItem)) {
+            if (tableActiveCheck.isActive(selectedItem.getValue())) return;
             tableActionService.loadTableDataAsync(
                     selectedItem.getValue(),
                     selectedItem.getParent().getValue()

@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Renderer {
     private Parent build() {
         MiddlePane middle = new MiddlePane();
-        Sidebar sidebar = new Sidebar(middle::addTable);
+        Sidebar sidebar = new Sidebar(middle::addTable, middle::isTableActive);
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(sidebar.getSidebar());
         borderPane.setCenter(middle.getMiddle());

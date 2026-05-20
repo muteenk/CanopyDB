@@ -7,14 +7,15 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TreeViewEventController;
 import org.canopydb.ui.atoms.TextInput;
+import org.canopydb.ui.interfaces.TableActiveCheck;
 import org.canopydb.ui.interfaces.TableDataAppendAction;
 
 
 public class Sidebar {
-    TreeViewEventController treeViewEventController;
+    private final TreeViewEventController treeViewEventController;
 
-    public Sidebar(TableDataAppendAction tableDataAppendAction) {
-        treeViewEventController = new TreeViewEventController(tableDataAppendAction);
+    public Sidebar(TableDataAppendAction tableDataAppendAction, TableActiveCheck tableActiveCheck) {
+        treeViewEventController = new TreeViewEventController(tableDataAppendAction, tableActiveCheck);
     }
 
     private TreeView<String> getStringTreeView(TreeItem<String> rootDatabases) {

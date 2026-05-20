@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TableData {
-    List<String> headers;
-    List<List<String>> rows;
+    private final List<String> headers;
+    private final List<List<String>> rows;
+    private final String tableName;
+    private final String databaseName;
 
-    public TableData() {
+    public TableData(String table, String database) {
+        tableName = table;
+        databaseName = database;
         headers = new ArrayList<>();
         rows = new ArrayList<>();
     }
@@ -27,4 +31,6 @@ public class TableData {
     public List<List<String>> getRows() {
         return this.rows;
     }
+
+    public String getTablePath() {return this.databaseName + "." + this.tableName;}
 }

@@ -2,8 +2,6 @@ package org.canopydb.controllers;
 
 import javafx.application.Platform;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import javafx.scene.input.MouseEvent;
 import org.canopydb.services.ConnectionMetadataService;
 import org.canopydb.services.TableActionService;
 import org.canopydb.ui.interfaces.TableDataAppendAction;
@@ -11,6 +9,11 @@ import org.canopydb.ui.interfaces.TableDataAppendAction;
 public class TreeViewEventController {
     ConnectionMetadataService connectionMetadataService = new ConnectionMetadataService();
     TableActionService tableActionService = new TableActionService();
+    TableDataAppendAction tableDataAppendAction;
+
+    public TreeViewEventController(TableDataAppendAction tableDataAppendAction){
+        this.tableDataAppendAction = tableDataAppendAction;
+    }
 
     private int getNodeDepth(TreeItem<String> item){
         // Level 0 = Root Server ("Databases" Root)
@@ -93,20 +96,17 @@ public class TreeViewEventController {
     }
 
     public void nodeClickEventHandler(
-            MouseEvent event,
-            TableDataAppendAction tableDataAppendAction,
-            TreeView<String> databaseTreeView
+            TreeItem<String> selectedItem
     ) {
-        if (event.getClickCount() == 2) {
-            TreeItem<String> selectedItem = databaseTreeView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null && isTableNode(selectedItem)) {
-                tableActionService.loadTableDataAsync(
-                        selectedItem.getValue(),
-                        selectedItem.getParent().getValue()
-                ).thenAccept(data -> {
-                    Platform.runLater(() -> {tableDataAppendAction.render(data);});
+        if (selectedItem != null && isTableNode(selectedItem)) {
+            tableActionService.loadTableDataAsync(
+                    selectedItem.getValue(),
+                    selectedItem.getParent().getValue()
+            ).thenAccept(data -> {
+                Platform.runLater(() -> {
+                    tableDataAppendAction.render(data);
                 });
-            }
+            });
         }
     }
 }

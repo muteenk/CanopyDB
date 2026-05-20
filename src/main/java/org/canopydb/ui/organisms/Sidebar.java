@@ -1,32 +1,33 @@
 package org.canopydb.ui.organisms;
 
-import javafx.application.Platform;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TreeViewEventController;
-import org.canopydb.services.ConnectionMetadataService;
-import org.canopydb.services.TableActionService;
 import org.canopydb.ui.atoms.TextInput;
 import org.canopydb.ui.interfaces.TableDataAppendAction;
 
 
 public class Sidebar {
-    private final TreeViewEventController treeViewEventController = new TreeViewEventController();
-    private final TableDataAppendAction tableDataAppendAction;
+    TreeViewEventController treeViewEventController;
 
     public Sidebar(TableDataAppendAction tableDataAppendAction) {
-        this.tableDataAppendAction = tableDataAppendAction;
+        treeViewEventController = new TreeViewEventController(tableDataAppendAction);
     }
 
     private TreeView<String> getStringTreeView(TreeItem<String> rootDatabases) {
         TreeView<String> databaseTreeView = new TreeView<>(rootDatabases);
         databaseTreeView.setOnMouseClicked(
-                event -> treeViewEventController.nodeClickEventHandler(
-                    event, tableDataAppendAction, databaseTreeView
-                )
+                event -> {
+                    if (event.getClickCount() == 2) {
+                        TreeItem<String> selectedItem = databaseTreeView.getSelectionModel().getSelectedItem();
+                        treeViewEventController.nodeClickEventHandler(
+                                selectedItem
+                        );
+                    }
+                }
         );
         return databaseTreeView;
     }

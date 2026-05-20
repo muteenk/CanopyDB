@@ -8,24 +8,22 @@ import javafx.scene.layout.VBox;
 import org.canopydb.entities.TableData;
 import org.canopydb.ui.molecules.TableComponent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-public class MiddlePane {
-    private final VBox middleArea;
+public class Workspace {
+    private final VBox workspace;
     private final TabPane tabs;
     private final HashSet<String> activeTables;
 
-    public MiddlePane(){
+    public Workspace(){
         activeTables = new HashSet<>();
         tabs = new TabPane();
-        middleArea = new VBox(tabs);
+        workspace = new VBox(tabs);
     }
 
-    public VBox getMiddle() {
-        return middleArea;
+    public VBox getWorkspace() {
+        return workspace;
     }
 
     public void addTable(TableData tableData) {
@@ -42,9 +40,7 @@ public class MiddlePane {
         VBox.setVgrow(tabs, Priority.ALWAYS);
     }
 
-    public boolean isTableActive(String table) {
+    public boolean isTableOpen(String table) {
         return activeTables.contains(table);
     }
-
-
 }

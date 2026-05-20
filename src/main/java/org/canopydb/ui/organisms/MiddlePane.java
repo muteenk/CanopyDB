@@ -15,7 +15,7 @@ public class MiddlePane {
     }
 
     public void addTable(TableData tableData) {
-        TableView<List<String>> tableView = TableComponent.buildTable(tableData);
+        TableView<List<String>> tableView = new TableComponent(tableData).getTable();
         middleArea.getChildren().clear();
         middleArea.getChildren().add(tableView);
         VBox.setVgrow(tableView, Priority.ALWAYS);

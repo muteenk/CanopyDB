@@ -11,6 +11,8 @@ import org.canopydb.services.TableActionService;
 import org.canopydb.ui.atoms.TextInput;
 import org.canopydb.ui.interfaces.TableDataAppendAction;
 
+import java.util.List;
+
 
 public class Sidebar {
     private final ConnectionMetadataService connectionMetadataService = new ConnectionMetadataService();
@@ -58,12 +60,72 @@ public class Sidebar {
         return databaseTreeView;
     }
 
+    private void dbExpandHandler(TreeItem<String> node) {
+        if (node.getChildren().isEmpty()) return;
+        String firstChildValue = node.getChildren().getFirst().getValue();
+        if (!firstChildValue.equals("Loading") && !firstChildValue.equals("Error")){
+            return;
+        }
+
+        connectionMetadataService
+        .loadDBTablesAsync(node.getValue())
+        .thenAccept(tables -> {
+            Platform.runLater(() -> {
+                if (!node.getChildren().isEmpty()) node.getChildren().clear();
+                for (String table: tables){
+                    TreeItem<String> tableItem = new TreeItem<>(table);
+                    node.getChildren().add(tableItem);
+                }
+            });
+        })
+        .exceptionally(error -> {
+            System.err.println("Failed to fetch tables: " + error.getMessage());
+            if (!node.getChildren().isEmpty()) node.getChildren().clear();
+            node.getChildren().add(new TreeItem<>("Error"));
+            return null;
+        });
+    }
+
+    private void dbRootExpandHandler(TreeItem<String> node) {
+        if (node.getChildren().isEmpty()) return;
+        String firstChildValue = node.getChildren().getFirst().getValue();
+        if (!firstChildValue.equals("Loading") &&
+                !firstChildValue.equals("Error")){
+            return;
+        }
+
+        connectionMetadataService
+        .loadDatabaseAsync()
+        .thenAccept(dbList -> {
+            Platform.runLater(() -> {
+                if (!node.getChildren().isEmpty()) node.getChildren().clear();
+                for (String dbName : dbList) {
+                    TreeItem<String> dbItem = new TreeItem<>(dbName);
+                    dbItem.getChildren().add(new TreeItem<>("Loading"));
+                    dbItem.addEventHandler(TreeItem.<String>branchExpandedEvent(), dbEvent -> {
+                        dbExpandHandler(dbEvent.getSource());
+                    });
+                    node.getChildren().add(dbItem);
+                }
+            });
+        })
+        .exceptionally(error -> {
+            Platform.runLater(() -> {
+                System.err.println("Failed to fetch databases: " + error.getMessage());
+                if (!node.getChildren().isEmpty()) node.getChildren().clear();
+                node.getChildren().add(new TreeItem<>("Error"));
+            });
+            return null;
+        });
+    }
+
     public VBox getSidebar() {
         TreeItem<String> rootDatabases = new TreeItem<>("Databases");
         rootDatabases.getChildren().add(new TreeItem<>("Loading"));
-        rootDatabases.addEventHandler(TreeItem.<String>branchExpandedEvent(), event -> {
-            connectionMetadataService.loadDatabasesAsync(event.getSource());
-        });
+        rootDatabases.addEventHandler(
+            TreeItem.<String>branchExpandedEvent(),
+            event -> {dbRootExpandHandler(event.getSource());}
+        );
 
         TextField searchInput = new TextInput("Search").getTextField();
         TreeView<String> databaseTreeView = getStringTreeView(rootDatabases);

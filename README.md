@@ -105,27 +105,32 @@ A major focus of the project is ensuring that heavy database operations never bl
 ## Planned Features
 
 ### Phase 1
-
 * [x] JavaFX application setup
 * [x] DB Connection Pool Setup 
 * [x] Basic UI Setup
-* [x] Connection Database and Table Fetching
+* [x] Threadpool Setup
+* [x] Connection Databases and table list fetching
+* [x] Displaying tables
+* [x] Multi-tab interface
+* [ ] Table Column(s) Sorting
+* [ ] Table Pagination
+* [ ] Table Filtering
 * [ ] Query editor
-* [ ] Multi-tab interface
 * [ ] Parallel query execution
 * [ ] Query cancellation
 * [ ] Result table rendering
+* [ ] Query history
+* [ ] Connection management
 
 ### Phase 2
 
-* [ ] Query history
-* [ ] Connection management
+* [ ] Table Data Editing
 * [ ] Lazy schema loading
+* [ ] Create Tables
+* [ ] Delete Tables
+* [ ] Table Schema Editing
 * [ ] Export results
 * [ ] Improved keyboard workflow
-
-### Phase 3
-
 * [ ] Streaming large result sets
 * [ ] Virtualized table rendering
 * [ ] PostgreSQL support

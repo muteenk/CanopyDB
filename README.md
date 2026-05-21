@@ -114,6 +114,7 @@ A major focus of the project is ensuring that heavy database operations never bl
 * [x] Displaying tables
 * [ ] Handle Table loading and Error Properly
 * [x] Multi-tab interface
+* [x] Table Single Column Sorting
 * [ ] Table Column(s) Sorting
 * [ ] Table Pagination
 * [ ] Table Filtering

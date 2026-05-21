@@ -69,35 +69,6 @@ public class Workspace {
             );
             return true;
         });
-
-//        tableView.setOnSort(event -> {
-//            event.consume();
-//
-//            ObservableList<TableColumn<List<String>, ?>> sortOrder = tableView.getSortOrder();
-//            if (!sortOrder.isEmpty()) {
-//                TableColumn<List<String>, ?> column = sortOrder.getFirst();
-//
-//                if (column.getSortType() == TableColumn.SortType.ASCENDING) {
-//                    column.setSortType(TableColumn.SortType.DESCENDING);
-//                } else {
-//                    column.setSortType(TableColumn.SortType.ASCENDING);
-//                }
-//
-//                String orderBy = column.getText();
-//                int orderDirection = (column.getSortType() == TableColumn.SortType.ASCENDING) ? 0 : 1;
-//
-//                tableViewEventController.tableReRender(
-//                    tableName,
-//                    databaseName,
-//                    orderBy,
-//                    orderDirection,
-//                    tableView
-//                );
-//                // 3. Trigger your SQL reload here
-//                // List<MyData> newData = database.fetchSorted(columnName, direction);
-//                // tableView.getItems().setAll(newData);
-//            }
-//        });
     }
 
     public void addTable(TableData tableData) {
@@ -117,7 +88,6 @@ public class Workspace {
     public void updateTable(TableData tableData, TableView<List<String>> tableView) {
         TableComponent.updateTableContents(tableData, tableView);
         activeTables.put(tableData.getTablePath(), tableData);
-//        this.setSortEventListener(tableData.getTableName(), tableData.getDatabaseName(), tableView);
     }
 
     public boolean isTableOpen(String table) {

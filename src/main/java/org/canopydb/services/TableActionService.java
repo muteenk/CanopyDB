@@ -16,7 +16,7 @@ public class TableActionService {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 TableQuery query = new TableQuery(database, table);
-                query.setOrderColumns(orderBy, orderDirection);
+                query.setOrderColumn(orderBy, orderDirection);
                 return tableActionDAO.getTableData(table, database, query.getQuery());
             } catch (SQLException e) {
                 throw new RuntimeException(e);

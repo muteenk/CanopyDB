@@ -1,4 +1,4 @@
-package org.canopydb.ui.molecules;
+package org.canopydb.ui.utils;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -10,10 +10,9 @@ import org.canopydb.entities.TableData;
 import java.util.List;
 
 public class TableComponent {
-    TableView<List<String>> tableView;
 
-    public TableComponent(TableData table){
-        tableView = new TableView<>();
+    public static TableView<List<String>> buildTableComponent(TableData table){
+        TableView<List<String>> tableView = new TableView<>();
         List<String> tableHeaders = table.getHeaders();
         for (int i = 0; i < tableHeaders.size(); i++) {
             final int columnIndex = i;
@@ -28,6 +27,7 @@ public class TableComponent {
 
         ObservableList<List<String>> observableRows = FXCollections.observableArrayList(table.getRows());
         tableView.setItems(observableRows);
+        return tableView;
     }
 
     public static void debugLogTableData(TableData table) {
@@ -44,7 +44,8 @@ public class TableComponent {
         }
     }
 
-    public TableView<List<String>> getTable() {
-        return tableView;
+    public static void updateTableContents(TableData table, TableView<List<String>> tableView){
+        ObservableList<List<String>> observableRows = FXCollections.observableArrayList(table.getRows());
+        tableView.setItems(observableRows);
     }
 }

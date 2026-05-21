@@ -5,15 +5,15 @@ import javafx.scene.control.TreeItem;
 import org.canopydb.services.ConnectionMetadataService;
 import org.canopydb.services.TableActionService;
 import org.canopydb.ui.interfaces.TableActiveCheck;
-import org.canopydb.ui.interfaces.TableDataAppendAction;
+import org.canopydb.ui.interfaces.TableOpenAction;
 
 public class TreeViewEventController {
     private final ConnectionMetadataService connectionMetadataService = new ConnectionMetadataService();
     private final TableActionService tableActionService = new TableActionService();
-    private final TableDataAppendAction tableDataAppendAction;
+    private final TableOpenAction tableDataAppendAction;
     private final TableActiveCheck tableActiveCheck;
 
-    public TreeViewEventController(TableDataAppendAction tableDataAppendAction, TableActiveCheck tableActiveCheck){
+    public TreeViewEventController(TableOpenAction tableDataAppendAction, TableActiveCheck tableActiveCheck){
         this.tableDataAppendAction = tableDataAppendAction;
         this.tableActiveCheck = tableActiveCheck;
     }
@@ -102,14 +102,22 @@ public class TreeViewEventController {
             TreeItem<String> selectedItem
     ) {
         if (selectedItem != null && isTableNode(selectedItem)) {
-            if (tableActiveCheck.isActive(selectedItem.getValue())) return;
+            String path = selectedItem.getParent().getValue() + "/" + selectedItem.getValue();
+            if (tableActiveCheck.isActive(path)) return;
             tableActionService.loadTableDataAsync(
                     selectedItem.getValue(),
-                    selectedItem.getParent().getValue()
+                    selectedItem.getParent().getValue(),
+                    "",
+                    0
             ).thenAccept(data -> {
                 Platform.runLater(() -> {
                     tableDataAppendAction.render(data);
                 });
+            }).exceptionally(error -> {
+                Platform.runLater(() -> {
+                    // TODO: HANDLE TABLE LOADING FAILURE
+                });
+                return null;
             });
         }
     }

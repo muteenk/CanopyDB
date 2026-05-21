@@ -32,5 +32,9 @@ public class TableData {
         return this.rows;
     }
 
+    public String getTableName() {return this.tableName;}
+
+    public String getDatabaseName() {return this.databaseName;}
+
     public String getTablePath() {return this.databaseName + "/" + this.tableName;}
 }

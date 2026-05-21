@@ -31,6 +31,7 @@ public class TableQuery {
 
     public void setOrderColumns(String orderColumn, int orderDirection) {
         this.orderColumns.clear();
+        if (orderColumn.isEmpty()) return;
         this.orderColumns = List.of(orderColumn);
         this.orderDirection = orderDirection;
     }
@@ -39,7 +40,7 @@ public class TableQuery {
         StringBuilder sql = new StringBuilder();
         sql
             .append("SELECT\n")
-            .append(this.getStringifiedColumns(this.columns))
+            .append(String.join(", ", this.columns)).append("\n")
             .append("FROM `").append(this.databaseName).append("`.`").append(this.tableName).append("`\n");
 
         if (!this.where.isEmpty()){
@@ -47,9 +48,9 @@ public class TableQuery {
         }
 
         if (!this.orderColumns.isEmpty()){
-            sql.append("ORDER BY ").append(this.getStringifiedColumns(this.orderColumns)).append(" ");
-            if (orderDirection == 0) sql.append("ASC");
-            else sql.append("DESC");
+            sql.append("ORDER BY ").append(String.join(", ", this.orderColumns)).append(" ");
+            if (orderDirection == 0) sql.append("ASC\n");
+            else sql.append("DESC\n");
         }
 
         sql.append("LIMIT ").append(this.limit).append(" OFFSET ").append(this.offset);

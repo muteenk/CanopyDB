@@ -8,13 +8,13 @@ import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TreeViewEventController;
 import org.canopydb.ui.atoms.TextInput;
 import org.canopydb.ui.interfaces.TableActiveCheck;
-import org.canopydb.ui.interfaces.TableDataAppendAction;
+import org.canopydb.ui.interfaces.TableOpenAction;
 
 
 public class Sidebar {
     private final TreeViewEventController treeViewEventController;
 
-    public Sidebar(TableDataAppendAction tableDataAppendAction, TableActiveCheck tableActiveCheck) {
+    public Sidebar(TableOpenAction tableDataAppendAction, TableActiveCheck tableActiveCheck) {
         treeViewEventController = new TreeViewEventController(tableDataAppendAction, tableActiveCheck);
     }
 

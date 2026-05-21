@@ -11,10 +11,12 @@ import java.util.concurrent.CompletableFuture;
 public class TableActionService {
     TableActionDAO tableActionDAO = new TableActionDAO();
 
-    public CompletableFuture<TableData> loadTableDataAsync(String table, String database){
+    public CompletableFuture<TableData> loadTableDataAsync(
+            String table, String database, String orderBy, int orderDirection){
         return CompletableFuture.supplyAsync(() -> {
             try {
                 TableQuery query = new TableQuery(database, table);
+                query.setOrderColumns(orderBy, orderDirection);
                 return tableActionDAO.getTableData(table, database, query.getQuery());
             } catch (SQLException e) {
                 throw new RuntimeException(e);

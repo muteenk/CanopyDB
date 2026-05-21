@@ -3,7 +3,7 @@ package org.canopydb.ui.interfaces;
 import org.canopydb.entities.TableData;
 
 @FunctionalInterface
-public interface TableDataAppendAction {
+public interface TableOpenAction {
     void render(TableData tableData);
 }
 

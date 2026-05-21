@@ -9,6 +9,7 @@ import org.canopydb.controllers.TreeViewEventController;
 import org.canopydb.ui.atoms.TextInput;
 import org.canopydb.ui.interfaces.TableActiveCheck;
 import org.canopydb.ui.interfaces.TableOpenAction;
+import org.canopydb.utils.Constants;
 
 
 public class Sidebar {
@@ -36,7 +37,7 @@ public class Sidebar {
 
     private TreeItem<String> getConnectionRoot() {
         TreeItem<String> rootDatabases = new TreeItem<>("Connection");
-        rootDatabases.getChildren().add(new TreeItem<>("Loading"));
+        rootDatabases.getChildren().add(new TreeItem<>(Constants.LOADING));
         rootDatabases.addEventHandler(
                 TreeItem.<String>branchExpandedEvent(),
                 event -> {

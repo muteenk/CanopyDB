@@ -7,6 +7,8 @@ import org.canopydb.services.TableActionService;
 import org.canopydb.ui.interfaces.TableActiveCheck;
 import org.canopydb.ui.interfaces.TableOpenAction;
 import org.canopydb.ui.utils.TreeViewComponent;
+import org.canopydb.utils.Constants;
+import org.canopydb.utils.TableUtilities;
 
 
 public class TreeViewEventController {
@@ -23,7 +25,7 @@ public class TreeViewEventController {
     public void dbExpandHandler(TreeItem<String> node) {
         if (node.getChildren().isEmpty()) return;
         String firstChildValue = node.getChildren().getFirst().getValue();
-        if (!firstChildValue.equals("Loading") && !firstChildValue.equals("Error")){
+        if (!firstChildValue.equals(Constants.LOADING) && !firstChildValue.equals(Constants.FAILED)){
             return;
         }
 
@@ -42,7 +44,7 @@ public class TreeViewEventController {
             Platform.runLater(() -> {
                 System.err.println("Failed to fetch tables: " + error.getMessage());
                 if (!node.getChildren().isEmpty()) node.getChildren().clear();
-                node.getChildren().add(new TreeItem<>("Error"));
+                node.getChildren().add(new TreeItem<>(Constants.FAILED));
             });
             return null;
         });
@@ -51,8 +53,8 @@ public class TreeViewEventController {
     public void dbRootExpandHandler(TreeItem<String> node) {
         if (node.getChildren().isEmpty()) return;
         String firstChildValue = node.getChildren().getFirst().getValue();
-        if (!firstChildValue.equals("Loading") &&
-                !firstChildValue.equals("Error")){
+        if (!firstChildValue.equals(Constants.LOADING) &&
+                !firstChildValue.equals(Constants.FAILED)){
             return;
         }
 
@@ -63,7 +65,7 @@ public class TreeViewEventController {
                 if (!node.getChildren().isEmpty()) node.getChildren().clear();
                 for (String dbName : dbList) {
                     TreeItem<String> dbItem = new TreeItem<>(dbName);
-                    dbItem.getChildren().add(new TreeItem<>("Loading"));
+                    dbItem.getChildren().add(new TreeItem<>(Constants.LOADING));
                     dbItem.addEventHandler(TreeItem.<String>branchExpandedEvent(), dbEvent -> {
                         dbExpandHandler(dbEvent.getSource());
                     });
@@ -75,7 +77,7 @@ public class TreeViewEventController {
             Platform.runLater(() -> {
                 System.err.println("Failed to fetch databases: " + error.getMessage());
                 if (!node.getChildren().isEmpty()) node.getChildren().clear();
-                node.getChildren().add(new TreeItem<>("Error"));
+                node.getChildren().add(new TreeItem<>(Constants.FAILED));
             });
             return null;
         });
@@ -85,8 +87,10 @@ public class TreeViewEventController {
             TreeItem<String> selectedItem
     ) {
         if (selectedItem != null && TreeViewComponent.isTableNode(selectedItem)) {
-            String path = selectedItem.getParent().getValue() + "/" + selectedItem.getValue();
-            if (tableActiveCheck.isActive(path)) return;
+            if (tableActiveCheck.isActive(TableUtilities.tablePath(
+                    selectedItem.getParent().getValue(),
+                    selectedItem.getValue()
+            ))) return;
             tableActionService.loadTableDataAsync(
                     selectedItem.getValue(),
                     selectedItem.getParent().getValue()

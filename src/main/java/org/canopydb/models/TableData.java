@@ -1,7 +1,7 @@
-package org.canopydb.entities;
+package org.canopydb.models;
 
-import org.canopydb.queries.Order;
 import org.canopydb.queries.TableQuery;
+import org.canopydb.utils.TableUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ public class TableData {
     private final String databaseName;
     private final List<String> headers = new ArrayList<>();
     private final List<List<String>> rows = new ArrayList<>();
-    private TableQuery tableQuery;
+    private final TableQuery tableQuery;
 
     public TableData(String table, String database, TableQuery query) {
         tableName = table;
@@ -39,9 +39,7 @@ public class TableData {
 
     public String getDatabaseName() {return this.databaseName;}
 
-    public String getTablePath() {return this.databaseName + "/" + this.tableName;}
+    public String getTablePath() {return TableUtilities.tablePath(this.databaseName, this.tableName);}
 
     public TableQuery getTableQuery() {return this.tableQuery;}
-
-    public void setTableQuery(TableQuery updatedQuery) {tableQuery = updatedQuery;}
 }

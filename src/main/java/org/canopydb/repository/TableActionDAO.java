@@ -1,7 +1,7 @@
 package org.canopydb.repository;
 
 import org.canopydb.config.DatabasePool;
-import org.canopydb.entities.TableData;
+import org.canopydb.models.TableData;
 import org.canopydb.queries.TableQuery;
 
 import java.sql.*;
@@ -15,8 +15,8 @@ public class TableActionDAO {
         TableData tableDataObject = new TableData(table, database, query);
 
         try (Connection conn = DatabasePool.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+             PreparedStatement pStmt = conn.prepareStatement(sql);
+             ResultSet rs = pStmt.executeQuery()) {
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
 

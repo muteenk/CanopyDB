@@ -18,7 +18,7 @@ public class TableQuery {
         columns.add("*");
     }
 
-    public void setOrderColumn(String orderColumn, int orderDirection) {
+    public void setOrderColumn(String orderColumn, Order.OrderDirection orderDirection) {
         this.order.setOrder(orderColumn, orderDirection);
     }
 
@@ -37,7 +37,7 @@ public class TableQuery {
 
         if (!this.order.getColumn().isEmpty()){
             sql.append("ORDER BY ").append(String.join(", ", this.order.getColumn())).append(" ");
-            if (this.order.getDirection() == 0) sql.append("ASC\n");
+            if (this.order.getDirection() == Order.OrderDirection.ASC) sql.append("ASC\n");
             else sql.append("DESC\n");
         }
 

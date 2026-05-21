@@ -1,8 +1,7 @@
 package org.canopydb.ui.interfaces;
 
-import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
-import org.canopydb.entities.TableData;
+import org.canopydb.models.TableData;
 
 import java.util.List;
 

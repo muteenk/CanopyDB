@@ -15,8 +15,8 @@ public class MetadataDAO {
         String sql = "SHOW DATABASES";
 
         try (Connection conn = DatabasePool.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+             PreparedStatement pStmt = conn.prepareStatement(sql);
+             ResultSet rs = pStmt.executeQuery()) {
 
             while (rs.next()) {
                 // The column name returned by MySQL is "Database"
@@ -31,12 +31,12 @@ public class MetadataDAO {
         String sql = "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = ?";
 
         try (Connection conn = DatabasePool.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pStmt = conn.prepareStatement(sql)) {
 
             // Bind the database name safely to prevent SQL Injection
-            pstmt.setString(1, database);
+            pStmt.setString(1, database);
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            try (ResultSet rs = pStmt.executeQuery()) {
                 while (rs.next()) {
                     // Column 1 contains the TABLE_NAME string
                     String tableName = rs.getString(1);

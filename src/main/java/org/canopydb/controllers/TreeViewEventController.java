@@ -89,9 +89,7 @@ public class TreeViewEventController {
             if (tableActiveCheck.isActive(path)) return;
             tableActionService.loadTableDataAsync(
                     selectedItem.getValue(),
-                    selectedItem.getParent().getValue(),
-                    "",
-                    0
+                    selectedItem.getParent().getValue()
             ).thenAccept(data -> {
                 Platform.runLater(() -> {
                     tableDataAppendAction.render(data);

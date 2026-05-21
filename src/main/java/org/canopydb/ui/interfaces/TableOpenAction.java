@@ -1,6 +1,6 @@
 package org.canopydb.ui.interfaces;
 
-import org.canopydb.entities.TableData;
+import org.canopydb.models.TableData;
 
 @FunctionalInterface
 public interface TableOpenAction {

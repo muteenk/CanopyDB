@@ -5,7 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import org.canopydb.entities.TableData;
+import org.canopydb.models.TableData;
 
 import java.util.List;
 

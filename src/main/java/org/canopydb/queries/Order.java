@@ -2,14 +2,19 @@ package org.canopydb.queries;
 
 public class Order {
     private String col = "";
-    private int direction = 0;
+    private OrderDirection direction = OrderDirection.ASC;
 
-    public void setOrder(String col, int direction) {
+    public enum OrderDirection {
+        ASC,
+        DESC
+    }
+
+    public void setOrder(String col, OrderDirection direction) {
         this.col = col;
         this.direction = direction;
     }
 
     public String getColumn() {return this.col;}
 
-    public int getDirection() {return this.direction;}
+    public OrderDirection getDirection() {return this.direction;}
 }

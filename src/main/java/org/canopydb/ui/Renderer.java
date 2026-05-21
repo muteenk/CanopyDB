@@ -11,7 +11,10 @@ import java.util.Objects;
 public class Renderer {
     private Parent build() {
         Workspace workspace = new Workspace();
-        Sidebar sidebar = new Sidebar(workspace::addTable, workspace::isTableOpen);
+        Sidebar sidebar = new Sidebar(
+                workspace::addTable,
+                workspace::isTableOpen
+        );
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(sidebar.getSidebar());
         borderPane.setCenter(workspace.getWorkspace());

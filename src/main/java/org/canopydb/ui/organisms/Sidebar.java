@@ -14,8 +14,8 @@ import org.canopydb.ui.interfaces.TableOpenAction;
 public class Sidebar {
     private final TreeViewEventController treeViewEventController;
 
-    public Sidebar(TableOpenAction tableDataAppendAction, TableActiveCheck tableActiveCheck) {
-        treeViewEventController = new TreeViewEventController(tableDataAppendAction, tableActiveCheck);
+    public Sidebar(TableOpenAction tableOpenAction, TableActiveCheck tableActiveCheck) {
+        treeViewEventController = new TreeViewEventController(tableOpenAction, tableActiveCheck);
     }
 
     private TreeView<String> buildTreeView(TreeItem<String> rootDatabases) {
@@ -23,7 +23,8 @@ public class Sidebar {
         databaseTreeView.setOnMouseClicked(
                 event -> {
                     if (event.getClickCount() == 2) {
-                        TreeItem<String> selectedItem = databaseTreeView.getSelectionModel().getSelectedItem();
+                        TreeItem<String> selectedItem = databaseTreeView
+                                .getSelectionModel().getSelectedItem();
                         treeViewEventController.nodeClickEventHandler(
                                 selectedItem
                         );

@@ -1,7 +1,5 @@
 package org.canopydb.ui.organisms;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -9,12 +7,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TableViewEventController;
-import org.canopydb.entities.TableData;
+import org.canopydb.models.TableData;
 import org.canopydb.queries.Order;
 import org.canopydb.ui.utils.TableComponent;
+import org.canopydb.utils.TableUtilities;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 public class Workspace {
@@ -52,13 +50,15 @@ public class Workspace {
         tableView.setSortPolicy(tv -> {
             if (tv.getSortOrder().isEmpty()) return true;
             String orderBy = "";
-            int orderDirection = 0;
+            Order.OrderDirection orderDirection = Order.OrderDirection.ASC;
             TableColumn<List<String>, ?> selectedColumn = tv.getSortOrder().getFirst();
             orderBy = selectedColumn.getText();
 
-            Order order = activeTables.get(databaseName + "/" + tableName).getTableQuery().getOrder();
+            Order order = activeTables
+                    .get(TableUtilities.tablePath(databaseName, tableName))
+                    .getTableQuery().getOrder();
             if (order.getColumn().equals(orderBy)) {
-                orderDirection = order.getDirection() == 0 ? 1 : 0;
+                orderDirection = order.getDirection() == Order.OrderDirection.ASC ? Order.OrderDirection.DESC : Order.OrderDirection.ASC;
             }
             tableViewEventController.tableReRender(
                     tableName,
@@ -74,8 +74,7 @@ public class Workspace {
     public void addTable(TableData tableData) {
         TableView<List<String>> tableView = TableComponent.buildTableComponent(tableData);
         String tablePath = tableData.getTablePath();
-        Tab newTab = buildTab(tablePath, tableView);
-        tabs.getTabs().add(newTab);
+        tabs.getTabs().add(buildTab(tablePath, tableView));
         activeTables.put(tablePath, tableData);
 
         this.setSortEventListener(

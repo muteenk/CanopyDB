@@ -3,6 +3,7 @@ package org.canopydb.controllers;
 import javafx.application.Platform;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
+import org.canopydb.queries.Order;
 import org.canopydb.services.TableActionService;
 import org.canopydb.ui.interfaces.TableOpenAction;
 import org.canopydb.ui.interfaces.TableUpdateAction;
@@ -21,7 +22,7 @@ public class TableViewEventController {
             String tableName,
             String databaseName,
             String orderBy,
-            int orderDirection,
+            Order.OrderDirection orderDirection,
             TableView<List<String>> tableView
     ) {
         tableActionService.loadTableDataAsync(tableName, databaseName, orderBy, orderDirection)

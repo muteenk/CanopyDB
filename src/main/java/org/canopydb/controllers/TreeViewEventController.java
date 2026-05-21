@@ -6,6 +6,8 @@ import org.canopydb.services.ConnectionMetadataService;
 import org.canopydb.services.TableActionService;
 import org.canopydb.ui.interfaces.TableActiveCheck;
 import org.canopydb.ui.interfaces.TableOpenAction;
+import org.canopydb.ui.utils.TreeViewComponent;
+
 
 public class TreeViewEventController {
     private final ConnectionMetadataService connectionMetadataService = new ConnectionMetadataService();
@@ -16,25 +18,6 @@ public class TreeViewEventController {
     public TreeViewEventController(TableOpenAction tableDataAppendAction, TableActiveCheck tableActiveCheck){
         this.tableDataAppendAction = tableDataAppendAction;
         this.tableActiveCheck = tableActiveCheck;
-    }
-
-    private int getNodeDepth(TreeItem<String> item){
-        // Level 0 = Root Server ("Databases" Root)
-        // Level 1 = Database Node ("Database")
-        // Level 2 = Table Node
-
-        int depth = 0;
-        TreeItem<String> current = item;
-        while (current.getParent() != null) {
-            depth++;
-            current = current.getParent();
-        }
-
-        return depth;
-    }
-
-    private boolean isTableNode(TreeItem<String> item) {
-        return getNodeDepth(item) == 2;
     }
 
     public void dbExpandHandler(TreeItem<String> node) {
@@ -101,7 +84,7 @@ public class TreeViewEventController {
     public void nodeClickEventHandler(
             TreeItem<String> selectedItem
     ) {
-        if (selectedItem != null && isTableNode(selectedItem)) {
+        if (selectedItem != null && TreeViewComponent.isTableNode(selectedItem)) {
             String path = selectedItem.getParent().getValue() + "/" + selectedItem.getValue();
             if (tableActiveCheck.isActive(path)) return;
             tableActionService.loadTableDataAsync(

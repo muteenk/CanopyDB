@@ -17,7 +17,7 @@ public class TableActionService {
             try {
                 TableQuery query = new TableQuery(database, table);
                 query.setOrderColumn(orderBy, orderDirection);
-                return tableActionDAO.getTableData(table, database, query.getQuery());
+                return tableActionDAO.getTableData(table, database, query);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

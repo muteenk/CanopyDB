@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TableQuery {
-    private String databaseName;
-    private String tableName;
+    private final String databaseName;
+    private final String tableName;
     private final List<String> columns = new ArrayList<>();
     private final int limit = 300;
     private int offset = 0;
@@ -21,6 +21,8 @@ public class TableQuery {
     public void setOrderColumn(String orderColumn, int orderDirection) {
         this.order.setOrder(orderColumn, orderDirection);
     }
+
+    public Order getOrder() {return this.order;}
 
     public String getQuery(){
         StringBuilder sql = new StringBuilder();

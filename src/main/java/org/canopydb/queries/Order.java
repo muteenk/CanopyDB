@@ -1,8 +1,5 @@
 package org.canopydb.queries;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Order {
     private String col = "";
     private int direction = 0;

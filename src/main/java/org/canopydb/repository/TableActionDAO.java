@@ -2,16 +2,17 @@ package org.canopydb.repository;
 
 import org.canopydb.config.DatabasePool;
 import org.canopydb.entities.TableData;
+import org.canopydb.queries.TableQuery;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TableActionDAO {
-    public TableData getTableData(String table, String database, String sql) throws SQLException {
-//        String sql = "SELECT * FROM `" + database + "`.`"+ table +"` LIMIT 300 OFFSET 0;";
-        System.out.println(sql);
-        TableData tableDataObject = new TableData(table, database);
+    public TableData getTableData(String table, String database, TableQuery query) throws SQLException {
+        String sql = query.getQuery();
+        System.out.println(sql);    // TODO: REMOVE
+        TableData tableDataObject = new TableData(table, database, query);
 
         try (Connection conn = DatabasePool.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);

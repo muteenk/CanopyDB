@@ -10,6 +10,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TableViewEventController;
 import org.canopydb.entities.TableData;
+import org.canopydb.queries.Order;
 import org.canopydb.ui.utils.TableComponent;
 
 import java.util.HashMap;
@@ -43,16 +44,22 @@ public class Workspace {
         return tab;
     }
 
-    private void setSortEventListener(String tableName, String databaseName, TableView<List<String>> tableView){
+    private void setSortEventListener(
+            String tableName,
+            String databaseName,
+            TableView<List<String>> tableView
+    ){
         tableView.setSortPolicy(tv -> {
-            System.out.println("\n SORT POLICY TRIGGERED \n");
             if (tv.getSortOrder().isEmpty()) return true;
             String orderBy = "";
             int orderDirection = 0;
             TableColumn<List<String>, ?> selectedColumn = tv.getSortOrder().getFirst();
-            TableColumn.SortType sortType = selectedColumn.getSortType();
             orderBy = selectedColumn.getText();
-            orderDirection = sortType == TableColumn.SortType.ASCENDING ? 0 : 1;
+
+            Order order = activeTables.get(databaseName + "/" + tableName).getTableQuery().getOrder();
+            if (order.getColumn().equals(orderBy)) {
+                orderDirection = order.getDirection() == 0 ? 1 : 0;
+            }
             tableViewEventController.tableReRender(
                     tableName,
                     databaseName,
@@ -109,6 +116,7 @@ public class Workspace {
 
     public void updateTable(TableData tableData, TableView<List<String>> tableView) {
         TableComponent.updateTableContents(tableData, tableView);
+        activeTables.put(tableData.getTablePath(), tableData);
 //        this.setSortEventListener(tableData.getTableName(), tableData.getDatabaseName(), tableView);
     }
 

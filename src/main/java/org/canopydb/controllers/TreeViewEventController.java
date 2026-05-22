@@ -4,8 +4,10 @@ import javafx.application.Platform;
 import javafx.scene.control.TreeItem;
 import org.canopydb.services.ConnectionMetadataService;
 import org.canopydb.services.TableActionService;
+import org.canopydb.ui.interfaces.PushNotification;
 import org.canopydb.ui.interfaces.TableActiveCheck;
 import org.canopydb.ui.interfaces.TableOpenAction;
+import org.canopydb.ui.molecules.Notification;
 import org.canopydb.ui.utils.TreeViewComponent;
 import org.canopydb.utils.Constants;
 import org.canopydb.utils.TableUtilities;
@@ -16,10 +18,12 @@ public class TreeViewEventController {
     private final TableActionService tableActionService = new TableActionService();
     private final TableOpenAction tableDataAppendAction;
     private final TableActiveCheck tableActiveCheck;
+    private final PushNotification pushNotification;
 
-    public TreeViewEventController(TableOpenAction tableDataAppendAction, TableActiveCheck tableActiveCheck){
+    public TreeViewEventController(TableOpenAction tableDataAppendAction, TableActiveCheck tableActiveCheck, PushNotification pushNotification){
         this.tableDataAppendAction = tableDataAppendAction;
         this.tableActiveCheck = tableActiveCheck;
+        this.pushNotification = pushNotification;
     }
 
     public void dbExpandHandler(TreeItem<String> node) {
@@ -71,6 +75,11 @@ public class TreeViewEventController {
                     });
                     node.getChildren().add(dbItem);
                 }
+                pushNotification.push(
+                        "Databases Fetched",
+                        "List of Databases was fetched",
+                        Notification.NotificationType.SUCCESS
+                );
             });
         })
         .exceptionally(error -> {

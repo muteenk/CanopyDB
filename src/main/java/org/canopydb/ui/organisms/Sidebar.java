@@ -7,6 +7,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TreeViewEventController;
 import org.canopydb.ui.atoms.TextInput;
+import org.canopydb.ui.interfaces.PushNotification;
 import org.canopydb.ui.interfaces.TableActiveCheck;
 import org.canopydb.ui.interfaces.TableOpenAction;
 import org.canopydb.utils.Constants;
@@ -15,8 +16,8 @@ import org.canopydb.utils.Constants;
 public class Sidebar {
     private final TreeViewEventController treeViewEventController;
 
-    public Sidebar(TableOpenAction tableOpenAction, TableActiveCheck tableActiveCheck) {
-        treeViewEventController = new TreeViewEventController(tableOpenAction, tableActiveCheck);
+    public Sidebar(TableOpenAction tableOpenAction, TableActiveCheck tableActiveCheck, PushNotification pushNotification) {
+        treeViewEventController = new TreeViewEventController(tableOpenAction, tableActiveCheck, pushNotification);
     }
 
     private TreeView<String> buildTreeView(TreeItem<String> rootDatabases) {

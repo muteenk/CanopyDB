@@ -9,10 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TableActionDAO {
-    public TableData getTableData(String table, String database, TableQuery query) throws SQLException {
-        String sql = query.getQuery();
+    public TableData getTableData(String sql) throws SQLException {
         System.out.println(sql);    // TODO: REMOVE
-        TableData tableDataObject = new TableData(table, database, query);
+        TableData tableDataObject = new TableData();
 
         try (Connection conn = DatabasePool.getConnection();
              PreparedStatement pStmt = conn.prepareStatement(sql);

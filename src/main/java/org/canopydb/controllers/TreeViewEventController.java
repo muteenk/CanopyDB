@@ -107,9 +107,9 @@ public class TreeViewEventController {
             tableActionService.loadTableDataAsync(
                     selectedItem.getValue(),
                     selectedItem.getParent().getValue()
-            ).thenAccept(data -> {
+            ).thenAccept(session -> {
                 Platform.runLater(() -> {
-                    tableDataAppendAction.render(data);
+                    tableDataAppendAction.render(session);
                 });
             }).exceptionally(error -> {
                 Platform.runLater(() -> {

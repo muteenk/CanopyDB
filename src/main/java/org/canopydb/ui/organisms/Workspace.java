@@ -8,6 +8,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TableViewEventController;
 import org.canopydb.models.TableData;
+import org.canopydb.models.TableSession;
 import org.canopydb.queries.Order;
 import org.canopydb.ui.interfaces.PushNotification;
 import org.canopydb.ui.utils.TableComponent;
@@ -19,7 +20,7 @@ import java.util.List;
 public class Workspace {
     private final VBox workspace;
     private final TabPane tabs;
-    private final HashMap<String, TableData> activeTables;
+    private final HashMap<String, TableSession> activeTables;
     private final TableViewEventController tableViewEventController;
 
     public Workspace(PushNotification pushNotification){
@@ -47,50 +48,37 @@ public class Workspace {
     }
 
     private void setSortEventListener(
-            String tableName,
-            String databaseName,
+            TableSession tableSession,
             TableView<List<String>> tableView
     ){
         tableView.setSortPolicy(tv -> {
             if (tv.getSortOrder().isEmpty()) return true;
-            String orderBy = "";
-            Order.OrderDirection orderDirection = Order.OrderDirection.ASC;
             TableColumn<List<String>, ?> selectedColumn = tv.getSortOrder().getFirst();
-            orderBy = selectedColumn.getText();
-
-            Order order = activeTables
-                    .get(TableUtilities.tablePath(databaseName, tableName))
-                    .getTableQuery().getOrder();
-            if (order.getColumn().equals(orderBy)) {
-                orderDirection = order.getDirection() == Order.OrderDirection.ASC ? Order.OrderDirection.DESC : Order.OrderDirection.ASC;
-            }
+            String orderBy = selectedColumn.getText();
+            tableSession.setQueryOrder(orderBy);
             tableViewEventController.tableReRender(
-                    tableName,
-                    databaseName,
-                    orderBy,
-                    orderDirection,
+                    tableSession,
                     tv
             );
             return true;
         });
     }
 
-    public void addTable(TableData tableData) {
-        TableView<List<String>> tableView = TableComponent.buildTableComponent(tableData);
-        String tablePath = tableData.getTablePath();
+    public void addTable(TableSession tableSession) {
+        TableView<List<String>> tableView = TableComponent.buildTableComponent(tableSession.getTableData());
+        String tablePath = tableSession.getTablePath();
         tabs.getTabs().add(buildTab(tablePath, tableView));
-        activeTables.put(tablePath, tableData);
+        activeTables.put(tablePath, tableSession);
 
         this.setSortEventListener(
-                tableData.getTableName(),
-                tableData.getDatabaseName(),
+                tableSession,
                 tableView
         );
     }
 
-    public void updateTable(TableData tableData, TableView<List<String>> tableView) {
-        TableComponent.updateTableContents(tableData, tableView);
-        activeTables.put(tableData.getTablePath(), tableData);
+    public void updateTable(TableSession tableSession, TableView<List<String>> tableView) {
+        TableComponent.updateTableContents(tableSession.getTableData(), tableView);
+        activeTables.put(tableSession.getTablePath(), tableSession);
     }
 
     public boolean isTableOpen(String table) {

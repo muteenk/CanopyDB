@@ -3,6 +3,7 @@ package org.canopydb.controllers;
 import javafx.application.Platform;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
+import org.canopydb.models.TableSession;
 import org.canopydb.queries.Order;
 import org.canopydb.services.TableActionService;
 import org.canopydb.ui.interfaces.PushNotification;
@@ -23,16 +24,13 @@ public class TableViewEventController {
     }
 
     public void tableReRender(
-            String tableName,
-            String databaseName,
-            String orderBy,
-            Order.OrderDirection orderDirection,
+            TableSession tableSession,
             TableView<List<String>> tableView
     ) {
-        tableActionService.loadTableDataAsync(tableName, databaseName, orderBy, orderDirection)
-                .thenAccept(table -> {
+        tableActionService.loadTableDataAsync(tableSession)
+                .thenAccept(session -> {
                     Platform.runLater(() -> {
-                        tableUpdateAction.render(table, tableView);
+                        tableUpdateAction.render(session, tableView);
                     });
                 }).exceptionally(error -> {
                     Platform.runLater(() -> {

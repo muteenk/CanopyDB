@@ -110,21 +110,23 @@ A major focus of the project is ensuring that heavy database operations never bl
 * [x] Basic UI Setup
 * [x] Threadpool Setup
 * [x] Connection Databases and table list fetching
-* [ ] Handle Connection Loading and Error Properly
+* [x] Handle Connection Loading and Error Properly
 * [x] Displaying tables
-* [ ] Handle Table loading and Error Properly
+* [x] Push Notifications
+* [ ] Handle Table loading 
+* [x] Handle Error Properly
 * [x] Multi-tab interface
 * [x] Table Single Column Sorting
 * [ ] Table Column(s) Sorting
 * [ ] Table Pagination
 * [ ] Table Filtering
+* [ ] Connection management
 * [ ] Available Table Search
 * [ ] Query editor
 * [ ] Parallel query execution
 * [ ] Query cancellation
 * [ ] Result table rendering
 * [ ] Query history
-* [ ] Connection management
 
 ### Phase 2
 

@@ -303,3 +303,88 @@
     -fx-shape: "";
     -fx-padding: 0;
 }
+
+/* =========================================================
+   Notification Container
+   ========================================================= */
+
+.notification-container {
+    -fx-padding: 20;
+    -fx-spacing: 10;
+}
+
+/* =========================================================
+   Base Notification
+   ========================================================= */
+
+.notification {
+    -fx-padding: 12 18;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+
+    -fx-effect: dropshadow(
+        gaussian,
+        rgba(0, 0, 0, 0.35),
+        14,
+        0.25,
+        0,
+        3
+    );
+}
+
+
+/* =========================================================
+   Notification Title
+   ========================================================= */
+
+.notification-title {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+}
+
+
+/* =========================================================
+   Notification Message
+   ========================================================= */
+
+.notification-message {
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-font-size: 12px;
+}
+
+
+/* =========================================================
+   Success Notification
+   ========================================================= */
+
+.notification-success {
+    -fx-background-color: #1f8b4c;
+    -fx-border-color: #39d98a;
+    -fx-border-width: 1;
+}
+
+
+/* =========================================================
+   Danger Notification
+   ========================================================= */
+
+.notification-danger {
+    -fx-background-color: #8b1f2a;
+    -fx-border-color: #ff5c6c;
+    -fx-border-width: 1;
+}
+
+
+/* =========================================================
+   Info Notification
+   ========================================================= */
+
+.notification-info {
+    -fx-background-color: #1f4f8b;
+    -fx-border-color: #5ca9ff;
+    -fx-border-width: 1;
+}

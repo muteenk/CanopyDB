@@ -42,6 +42,7 @@ public class Sidebar {
         rootDatabases.addEventHandler(
                 TreeItem.<String>branchExpandedEvent(),
                 event -> {
+                    if (event.getSource() != rootDatabases) return;
                     treeViewEventController
                             .dbRootExpandHandler(event.getSource());
                 }

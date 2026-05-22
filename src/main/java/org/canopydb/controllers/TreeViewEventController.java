@@ -42,6 +42,11 @@ public class TreeViewEventController {
                     TreeItem<String> tableItem = new TreeItem<>(table);
                     node.getChildren().add(tableItem);
                 }
+                pushNotification.push(
+                        "Tables Fetched",
+                        "Tables for '" + node.getValue() + "' are fetched",
+                        Notification.NotificationType.SUCCESS
+                );
             });
         })
         .exceptionally(error -> {
@@ -71,6 +76,7 @@ public class TreeViewEventController {
                     TreeItem<String> dbItem = new TreeItem<>(dbName);
                     dbItem.getChildren().add(new TreeItem<>(Constants.LOADING));
                     dbItem.addEventHandler(TreeItem.<String>branchExpandedEvent(), dbEvent -> {
+                        if (dbEvent.getSource() != dbItem) return;
                         dbExpandHandler(dbEvent.getSource());
                     });
                     node.getChildren().add(dbItem);
@@ -106,6 +112,11 @@ public class TreeViewEventController {
             ).thenAccept(data -> {
                 Platform.runLater(() -> {
                     tableDataAppendAction.render(data);
+                    pushNotification.push(
+                            "Table Fetched",
+                            selectedItem.getValue() + " table fetched",
+                            Notification.NotificationType.SUCCESS
+                    );
                 });
             }).exceptionally(error -> {
                 Platform.runLater(() -> {

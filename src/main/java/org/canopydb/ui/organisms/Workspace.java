@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TableViewEventController;
 import org.canopydb.models.TableData;
 import org.canopydb.queries.Order;
+import org.canopydb.ui.interfaces.PushNotification;
 import org.canopydb.ui.utils.TableComponent;
 import org.canopydb.utils.TableUtilities;
 
@@ -21,8 +22,11 @@ public class Workspace {
     private final HashMap<String, TableData> activeTables;
     private final TableViewEventController tableViewEventController;
 
-    public Workspace(){
-        tableViewEventController = new TableViewEventController(this::updateTable);
+    public Workspace(PushNotification pushNotification){
+        tableViewEventController = new TableViewEventController(
+                this::updateTable,
+                pushNotification
+        );
         activeTables = new HashMap<>();
         tabs = new TabPane();
         workspace = new VBox(tabs);

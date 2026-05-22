@@ -28,7 +28,9 @@ public class Renderer {
                 Pos.BOTTOM_RIGHT
         );
 
-        Workspace workspace = new Workspace();
+        Workspace workspace = new Workspace(
+                notification::pushNotification
+        );
         Sidebar sidebar = new Sidebar(
                 workspace::addTable,
                 workspace::isTableOpen,

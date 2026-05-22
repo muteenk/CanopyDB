@@ -42,18 +42,17 @@ public class TreeViewEventController {
                     TreeItem<String> tableItem = new TreeItem<>(table);
                     node.getChildren().add(tableItem);
                 }
-                pushNotification.push(
-                        "Tables Fetched",
-                        "Tables for '" + node.getValue() + "' are fetched",
-                        Notification.NotificationType.SUCCESS
-                );
             });
         })
         .exceptionally(error -> {
             Platform.runLater(() -> {
-                System.err.println("Failed to fetch tables: " + error.getMessage());
                 if (!node.getChildren().isEmpty()) node.getChildren().clear();
                 node.getChildren().add(new TreeItem<>(Constants.FAILED));
+                pushNotification.push(
+                        "Failed to fetch tables !",
+                        error.getMessage(),
+                        Notification.NotificationType.DANGER
+                );
             });
             return null;
         });
@@ -81,18 +80,17 @@ public class TreeViewEventController {
                     });
                     node.getChildren().add(dbItem);
                 }
-                pushNotification.push(
-                        "Databases Fetched",
-                        "List of Databases was fetched",
-                        Notification.NotificationType.SUCCESS
-                );
             });
         })
         .exceptionally(error -> {
             Platform.runLater(() -> {
-                System.err.println("Failed to fetch databases: " + error.getMessage());
                 if (!node.getChildren().isEmpty()) node.getChildren().clear();
                 node.getChildren().add(new TreeItem<>(Constants.FAILED));
+                pushNotification.push(
+                        "Failed to fetch databases !",
+                        error.getMessage(),
+                        Notification.NotificationType.DANGER
+                );
             });
             return null;
         });
@@ -112,15 +110,14 @@ public class TreeViewEventController {
             ).thenAccept(data -> {
                 Platform.runLater(() -> {
                     tableDataAppendAction.render(data);
-                    pushNotification.push(
-                            "Table Fetched",
-                            selectedItem.getValue() + " table fetched",
-                            Notification.NotificationType.SUCCESS
-                    );
                 });
             }).exceptionally(error -> {
                 Platform.runLater(() -> {
-                    // TODO: HANDLE TABLE LOADING FAILURE
+                    pushNotification.push(
+                            "Failed to fetch table !",
+                            error.getMessage(),
+                            Notification.NotificationType.DANGER
+                    );
                 });
                 return null;
             });

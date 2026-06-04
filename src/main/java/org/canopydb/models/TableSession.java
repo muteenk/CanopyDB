@@ -9,6 +9,7 @@ public class TableSession {
     private final String databaseName;
     private TableData tableData;
     private final TableQuery tableQuery;
+    private int totalRowCount;
 
     public TableSession(
             String tableName, String databaseName
@@ -17,6 +18,7 @@ public class TableSession {
         this.databaseName = databaseName;
         this.tableData = new TableData();
         this.tableQuery = new TableQuery(databaseName, tableName);
+        this.totalRowCount = 0;
     }
 
     public String getTablePath() {return TableUtilities.tablePath(this.databaseName, this.tableName);}
@@ -27,6 +29,8 @@ public class TableSession {
 
     public TableQuery getTableQuery() {return this.tableQuery;}
 
+    public void setTotalRowCount(int count) {totalRowCount=count;}
+    public int getTotalRowCount() {return this.totalRowCount;}
 
     public void setQueryOrder(
             String orderBy
@@ -40,5 +44,7 @@ public class TableSession {
     }
 
     public String emitQuery() {return tableQuery.getQuery();}
+    public String emitCountQuery() {return tableQuery.getRowCountQuery();}
+
 
 }

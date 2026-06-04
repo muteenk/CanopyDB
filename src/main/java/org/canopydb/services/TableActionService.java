@@ -18,6 +18,7 @@ public class TableActionService {
             try {
                 TableSession session = new TableSession(table, database);
                 session.setTableData(tableActionDAO.getTableData(session.emitQuery()));
+                session.setTotalRowCount(tableActionDAO.getTableDataCount(session.emitCountQuery()));
                 return session;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -29,6 +30,7 @@ public class TableActionService {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 session.setTableData(tableActionDAO.getTableData(session.emitQuery()));
+                session.setTotalRowCount(tableActionDAO.getTableDataCount(session.emitCountQuery()));
                 return session;
             } catch (SQLException e) {
                 throw new RuntimeException(e);

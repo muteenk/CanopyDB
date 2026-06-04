@@ -1,9 +1,7 @@
 package org.canopydb.ui.organisms;
 
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TableViewEventController;
@@ -38,11 +36,28 @@ public class Workspace {
         return workspace;
     }
 
-    private Tab buildTab(String tablePath, TableView<List<String>> tableView) {
-        Tab tab = new Tab(tablePath);
-        tab.setContent(tableView);
+    private void buildPaginator(HBox tableFooter, int totalRows) {
+        Button left = new Button("Prev");
+        Label paginationLabel = new Label("300 of " + totalRows);
+        Button right = new Button("Next");
+        tableFooter.getChildren().addAll(left, paginationLabel, right);
+    }
+
+    private VBox buildTabContent(TableView<List<String>> tableView, int totalRows) {
+        VBox tableBox = new VBox();
+        HBox tableFooter = new HBox();
+        tableFooter.setPrefHeight(40);
+        buildPaginator(tableFooter, totalRows);
+        VBox.setVgrow(tableView, Priority.ALWAYS);
+        tableBox.getChildren().addAll(tableView, tableFooter);
+        return tableBox;
+    }
+
+    private Tab buildTab(TableSession tableSession, TableView<List<String>> tableView) {
+        Tab tab = new Tab(tableSession.getTablePath());
+        tab.setContent(buildTabContent(tableView, tableSession.getTotalRowCount()));
         tab.setOnClosed(event -> {
-            activeTables.remove(tablePath);
+            activeTables.remove(tableSession.getTablePath());
         });
         return tab;
     }
@@ -66,9 +81,8 @@ public class Workspace {
 
     public void addTable(TableSession tableSession) {
         TableView<List<String>> tableView = TableComponent.buildTableComponent(tableSession.getTableData());
-        String tablePath = tableSession.getTablePath();
-        tabs.getTabs().add(buildTab(tablePath, tableView));
-        activeTables.put(tablePath, tableSession);
+        tabs.getTabs().add(buildTab(tableSession, tableView));
+        activeTables.put(tableSession.getTablePath(), tableSession);
 
         this.setSortEventListener(
                 tableSession,

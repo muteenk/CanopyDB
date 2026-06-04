@@ -24,12 +24,35 @@ public class TableQuery {
 
     public Order getOrder() {return this.order;}
 
+    public int[] getLimitOffset() {return new int[]{ this.limit, this.offset };}
+
     public String getQuery(){
         StringBuilder sql = new StringBuilder();
         sql
             .append("SELECT\n")
             .append(String.join(", ", this.columns)).append("\n")
             .append("FROM `").append(this.databaseName).append("`.`").append(this.tableName).append("`\n");
+
+        if (!this.where.isEmpty()){
+            sql.append("WHERE\n").append(this.where);
+        }
+
+        if (!this.order.getColumn().isEmpty()){
+            sql.append("ORDER BY ").append(String.join(", ", this.order.getColumn())).append(" ");
+            if (this.order.getDirection() == Order.OrderDirection.ASC) sql.append("ASC\n");
+            else sql.append("DESC\n");
+        }
+
+        sql.append("LIMIT ").append(this.limit).append(" OFFSET ").append(this.offset);
+        sql.append(";");
+        return sql.toString();
+    }
+
+    public String getRowCountQuery() {
+        StringBuilder sql = new StringBuilder();
+        sql.append(
+                "SELECT\n\tCOUNT(*) AS row_count\nFROM `"
+        ).append(this.databaseName).append("`.`").append(this.tableName).append("`\n");
 
         if (!this.where.isEmpty()){
             sql.append("WHERE\n").append(this.where);

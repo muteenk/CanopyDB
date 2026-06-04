@@ -35,4 +35,14 @@ public class TableActionDAO {
             return tableDataObject;
         }
     }
+
+    public int getTableDataCount(String sql) throws SQLException {
+        try (Connection conn = DatabasePool.getConnection();
+             PreparedStatement pStmt = conn.prepareStatement(sql);
+             ResultSet rs = pStmt.executeQuery()) {
+            int tableDataCount = 0;
+            if (rs.next()) tableDataCount = rs.getInt("row_count");
+            return tableDataCount;
+        }
+    }
 }

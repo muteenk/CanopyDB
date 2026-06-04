@@ -36,18 +36,18 @@ public class Workspace {
         return workspace;
     }
 
-    private void buildPaginator(HBox tableFooter, int totalRows) {
+    private void buildPaginator(HBox tableFooter, int[] rowRange, int totalRows) {
         Button left = new Button("Prev");
-        Label paginationLabel = new Label("300 of " + totalRows);
+        Label paginationLabel = new Label(rowRange[0] + " - " + rowRange[1] + " of " + totalRows);
         Button right = new Button("Next");
         tableFooter.getChildren().addAll(left, paginationLabel, right);
     }
 
-    private VBox buildTabContent(TableView<List<String>> tableView, int totalRows) {
+    private VBox buildTabContent(TableView<List<String>> tableView, int[] rowRange, int totalRows) {
         VBox tableBox = new VBox();
         HBox tableFooter = new HBox();
         tableFooter.setPrefHeight(40);
-        buildPaginator(tableFooter, totalRows);
+        buildPaginator(tableFooter, rowRange, totalRows);
         VBox.setVgrow(tableView, Priority.ALWAYS);
         tableBox.getChildren().addAll(tableView, tableFooter);
         return tableBox;
@@ -55,7 +55,7 @@ public class Workspace {
 
     private Tab buildTab(TableSession tableSession, TableView<List<String>> tableView) {
         Tab tab = new Tab(tableSession.getTablePath());
-        tab.setContent(buildTabContent(tableView, tableSession.getTotalRowCount()));
+        tab.setContent(buildTabContent(tableView, tableSession.getFetchedRowsRange(), tableSession.getTotalRowCount()));
         tab.setOnClosed(event -> {
             activeTables.remove(tableSession.getTablePath());
         });

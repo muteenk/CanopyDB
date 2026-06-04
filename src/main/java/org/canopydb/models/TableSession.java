@@ -24,13 +24,18 @@ public class TableSession {
     public String getTablePath() {return TableUtilities.tablePath(this.databaseName, this.tableName);}
 
     public void setTableData(TableData data) {this.tableData=data;}
-
     public TableData getTableData() {return this.tableData;}
 
     public TableQuery getTableQuery() {return this.tableQuery;}
 
     public void setTotalRowCount(int count) {totalRowCount=count;}
     public int getTotalRowCount() {return this.totalRowCount;}
+
+    public int[] getFetchedRowsRange() {
+        int limit = tableQuery.getLimit();
+        int offset = tableQuery.getOffset();
+        return new int[]{ offset+1, Math.min(limit, totalRowCount) };
+    }
 
     public void setQueryOrder(
             String orderBy

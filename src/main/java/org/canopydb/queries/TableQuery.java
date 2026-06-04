@@ -24,7 +24,9 @@ public class TableQuery {
 
     public Order getOrder() {return this.order;}
 
-    public int[] getLimitOffset() {return new int[]{ this.limit, this.offset };}
+    public int getLimit() {return this.limit;}
+
+    public int getOffset() {return this.offset;}
 
     public String getQuery(){
         StringBuilder sql = new StringBuilder();

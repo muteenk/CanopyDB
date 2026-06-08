@@ -59,14 +59,6 @@ public class TableQuery {
         if (!this.where.isEmpty()){
             sql.append("WHERE\n").append(this.where);
         }
-
-        if (!this.order.getColumn().isEmpty()){
-            sql.append("ORDER BY ").append(String.join(", ", this.order.getColumn())).append(" ");
-            if (this.order.getDirection() == Order.OrderDirection.ASC) sql.append("ASC\n");
-            else sql.append("DESC\n");
-        }
-
-        sql.append("LIMIT ").append(this.limit).append(" OFFSET ").append(this.offset);
         sql.append(";");
         return sql.toString();
     }

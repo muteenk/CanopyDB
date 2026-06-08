@@ -29,12 +29,13 @@ public class TableSession {
     public TableQuery getTableQuery() {return this.tableQuery;}
 
     public void setTotalRowCount(int count) {totalRowCount=count;}
-    public int getTotalRowCount() {return this.totalRowCount;}
 
     public TablePagination getPaginationData() {
-        int limit = tableQuery.getLimit();
-        int offset = tableQuery.getOffset();
-        return new TablePagination(Math.min(limit, totalRowCount), offset+1, totalRowCount);
+        return new TablePagination(
+                tableQuery.getLimit(),
+                tableQuery.getOffset(),
+                totalRowCount
+        );
     }
 
     public void setQueryOrder(

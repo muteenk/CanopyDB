@@ -1,6 +1,7 @@
 package org.canopydb.ui.organisms;
 
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -41,8 +42,10 @@ public class Workspace {
         Button left = new Button("◀");
         Button right = new Button("▶");
 
+//        right.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {});
+
         Label paginationLabel = new Label(
-                pagination.limit() + " - " + pagination.offset() + " of " + pagination.totalRows()
+                (pagination.offset()+1) + " - " + Math.min(pagination.offset() + pagination.limit(), pagination.totalRows()) + " of " + pagination.totalRows()
         );
 
         tableFooter.getStyleClass().add("table-footer");

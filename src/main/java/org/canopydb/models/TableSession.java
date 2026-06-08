@@ -31,10 +31,10 @@ public class TableSession {
     public void setTotalRowCount(int count) {totalRowCount=count;}
     public int getTotalRowCount() {return this.totalRowCount;}
 
-    public int[] getFetchedRowsRange() {
+    public TablePagination getPaginationData() {
         int limit = tableQuery.getLimit();
         int offset = tableQuery.getOffset();
-        return new int[]{ offset+1, Math.min(limit, totalRowCount) };
+        return new TablePagination(Math.min(limit, totalRowCount), offset+1, totalRowCount);
     }
 
     public void setQueryOrder(

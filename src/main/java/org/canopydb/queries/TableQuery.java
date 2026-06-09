@@ -27,6 +27,7 @@ public class TableQuery {
     public int getLimit() {return this.limit;}
 
     public int getOffset() {return this.offset;}
+    public void setOffset(int offset) {this.offset=offset;}
 
     public String getQuery(){
         StringBuilder sql = new StringBuilder();

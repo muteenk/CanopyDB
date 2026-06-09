@@ -38,12 +38,21 @@ public class Workspace {
         return workspace;
     }
 
-    private void buildPaginator(HBox tableFooter, TablePagination pagination) {
+    private void buildPaginator(HBox tableFooter, TableSession tableSession, TableView<List<String>> tableView) {
         Button left = new Button("◀");
         Button right = new Button("▶");
 
-//        right.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {});
+        left.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            boolean isPrev = tableSession.getPreviousPage();
+            if (isPrev) tableViewEventController.tableReRender(tableSession, tableView);
+        });
 
+        right.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            boolean isNext = tableSession.getNextPage();
+            if (isNext) tableViewEventController.tableReRender(tableSession, tableView);
+        });
+
+        TablePagination pagination = tableSession.getPaginationData();
         Label paginationLabel = new Label(
                 (pagination.offset()+1) + " - " + Math.min(pagination.offset() + pagination.limit(), pagination.totalRows()) + " of " + pagination.totalRows()
         );
@@ -62,11 +71,11 @@ public class Workspace {
         );
     }
 
-    private VBox buildTabContent(TableView<List<String>> tableView, TablePagination pagination) {
+    private VBox buildTabContent(TableView<List<String>> tableView, TableSession tableSession) {
         VBox tableBox = new VBox();
         HBox tableFooter = new HBox();
         tableFooter.setPrefHeight(40);
-        buildPaginator(tableFooter, pagination);
+        buildPaginator(tableFooter, tableSession, tableView);
         VBox.setVgrow(tableView, Priority.ALWAYS);
         tableBox.getChildren().addAll(tableView, tableFooter);
         return tableBox;
@@ -74,7 +83,7 @@ public class Workspace {
 
     private Tab buildTab(TableSession tableSession, TableView<List<String>> tableView) {
         Tab tab = new Tab(tableSession.getTablePath());
-        tab.setContent(buildTabContent(tableView, tableSession.getPaginationData()));
+        tab.setContent(buildTabContent(tableView, tableSession));
         tab.setOnClosed(event -> {
             activeTables.remove(tableSession.getTablePath());
         });

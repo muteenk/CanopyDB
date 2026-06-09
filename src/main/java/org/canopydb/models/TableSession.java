@@ -38,6 +38,30 @@ public class TableSession {
         );
     }
 
+    public boolean getNextPage() {
+        int limit = tableQuery.getLimit();
+        int offset = tableQuery.getOffset();
+
+        if ((offset + limit) < totalRowCount) {
+            int nextOffset = offset + limit;
+            tableQuery.setOffset(nextOffset);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean getPreviousPage() {
+        int limit = tableQuery.getLimit();
+        int offset = tableQuery.getOffset();
+
+        if ((offset - limit) >= 0) {
+            int nextOffset = Math.max(0, offset - limit);
+            tableQuery.setOffset(nextOffset);
+            return true;
+        }
+        return false;
+    }
+
     public void setQueryOrder(
             String orderBy
     ) {

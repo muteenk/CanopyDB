@@ -9,6 +9,7 @@ public class TableSession {
     private final String databaseName;
     private TableData tableData;
     private final TableQuery tableQuery;
+    private int tabId;
     private int totalRowCount;
 
     public TableSession(
@@ -19,6 +20,7 @@ public class TableSession {
         this.tableData = new TableData();
         this.tableQuery = new TableQuery(databaseName, tableName);
         this.totalRowCount = 0;
+        this.tabId = -1;
     }
 
     public String getTablePath() {return TableUtilities.tablePath(this.databaseName, this.tableName);}
@@ -29,6 +31,9 @@ public class TableSession {
     public TableQuery getTableQuery() {return this.tableQuery;}
 
     public void setTotalRowCount(int count) {totalRowCount=count;}
+
+    public void setTabId(int tabId) {this.tabId = tabId;}
+    public int getTabId() {return this.tabId;}
 
     public TablePagination getPaginationData() {
         return new TablePagination(

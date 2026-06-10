@@ -1,5 +1,6 @@
 package org.canopydb.ui.organisms;
 
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -71,11 +72,16 @@ public class Workspace {
         );
     }
 
-    private VBox buildTabContent(TableView<List<String>> tableView, TableSession tableSession) {
-        VBox tableBox = new VBox();
+    private HBox buildFooter(TableView<List<String>> tableView, TableSession tableSession) {
         HBox tableFooter = new HBox();
         tableFooter.setPrefHeight(40);
         buildPaginator(tableFooter, tableSession, tableView);
+        return tableFooter;
+    }
+
+    private VBox buildTabContent(TableView<List<String>> tableView, TableSession tableSession) {
+        VBox tableBox = new VBox();
+        HBox tableFooter = buildFooter(tableView, tableSession);
         VBox.setVgrow(tableView, Priority.ALWAYS);
         tableBox.getChildren().addAll(tableView, tableFooter);
         return tableBox;
@@ -87,6 +93,7 @@ public class Workspace {
         tab.setOnClosed(event -> {
             activeTables.remove(tableSession.getTablePath());
         });
+
         return tab;
     }
 
@@ -110,8 +117,8 @@ public class Workspace {
     public void addTable(TableSession tableSession) {
         TableView<List<String>> tableView = TableComponent.buildTableComponent(tableSession.getTableData());
         tabs.getTabs().add(buildTab(tableSession, tableView));
+        tableSession.setTabId(tabs.getTabs().size()-1);
         activeTables.put(tableSession.getTablePath(), tableSession);
-
         this.setSortEventListener(
                 tableSession,
                 tableView
@@ -120,6 +127,11 @@ public class Workspace {
 
     public void updateTable(TableSession tableSession, TableView<List<String>> tableView) {
         TableComponent.updateTableContents(tableSession.getTableData(), tableView);
+        Tab tab = tabs.getTabs().get(tableSession.getTabId());
+        VBox tableBox = (VBox) tab.getContent();
+        HBox tableFooter = buildFooter(tableView, tableSession);
+        tableBox.getChildren().removeLast();
+        tableBox.getChildren().add(tableFooter);
         activeTables.put(tableSession.getTablePath(), tableSession);
     }
 

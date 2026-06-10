@@ -20,7 +20,6 @@ public class Workspace {
     private final VBox workspace = new VBox();
     private final TabPane tabs = new TabPane();
 
-    private final HashMap<String, TableSession> activeSessions = new HashMap<>();
     private final HashMap<String, TableTab> activeTabs = new HashMap<>();
 
     private final TableViewEventController tableViewEventController;
@@ -39,25 +38,19 @@ public class Workspace {
     }
 
     public void addNewSession(TableSession tableSession) {
-        String tablePath = tableSession.getTablePath();
-        TableTab tabSession = new TableTab(tableSession, tableViewEventController);
-        activeSessions.put(tableSession.getTablePath(), tableSession);
-        activeTabs.put(tableSession.getTablePath(), tabSession);
+        TableTab tableTab = new TableTab(tableSession, tableViewEventController);
+        activeTabs.put(tableSession.getTablePath(), tableTab);
 
-        Tab tab = tabSession.getTab();
+        Tab tab = tableTab.getTab();
         tab.setOnClosed(event -> {
-            activeSessions.remove(tablePath);
-            activeTabs.remove(tablePath);
+            activeTabs.remove(tableSession.getTablePath());
         });
         tabs.getTabs().add(tab);
     }
 
     public void updateTable(TableSession tableSession) {
         activeTabs.get(tableSession.getTablePath()).updateSession(tableSession);
-        activeSessions.put(tableSession.getTablePath(), tableSession);
     }
 
-    public boolean isSessionActive(String table) {
-        return activeSessions.containsKey(table);
-    }
+    public boolean isSessionActive(String table) {return activeTabs.containsKey(table);}
 }

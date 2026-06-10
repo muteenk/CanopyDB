@@ -18,9 +18,11 @@ public class TableTab {
     private final Tab tab;
     private TableTabFooter footer;
 
+    private TableSession tableSession;
     private final TableViewEventController tableViewEventController;
 
     public TableTab(TableSession tableSession, TableViewEventController tableViewEventController) {
+        this.tableSession = tableSession;
         this.tableViewEventController = tableViewEventController;
 
         this.tableView = TableComponent.buildTableComponent(tableSession.getTableData());
@@ -33,20 +35,20 @@ public class TableTab {
             return true;
         });
 
-        this.tab = buildTab(tableSession);
+        this.tab = buildTab();
     }
 
     public Tab getTab() {
         return this.tab;
     }
 
-    private Tab buildTab(TableSession tableSession) {
+    private Tab buildTab() {
         Tab tab = new Tab(tableSession.getTablePath());
-        tab.setContent(buildTabContent(tableSession));
+        tab.setContent(buildTabContent());
         return tab;
     }
 
-    private VBox buildTabContent(TableSession tableSession) {
+    private VBox buildTabContent() {
         VBox tableBox = new VBox();
         this.footer = new TableTabFooter(tableSession, tableViewEventController);
         VBox.setVgrow(tableView, Priority.ALWAYS);
@@ -54,8 +56,9 @@ public class TableTab {
         return tableBox;
     }
 
-    public void updateSession(TableSession tableSession) {
-        TableComponent.updateTableContents(tableSession.getTableData(), tableView);
-        this.footer.updatePagination(tableSession);
+    public void updateSession(TableSession updatedSession) {
+        this.tableSession = updatedSession;
+        TableComponent.updateTableContents(this.tableSession.getTableData(), tableView);
+        this.footer.updatePagination(this.tableSession);
     }
 }

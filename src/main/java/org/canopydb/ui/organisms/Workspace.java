@@ -55,13 +55,20 @@ public class Workspace {
 
         TablePagination pagination = tableSession.getPaginationData();
         Label paginationLabel = new Label(
-                (pagination.offset()+1) + " - " + Math.min(pagination.offset() + pagination.limit(), pagination.totalRows()) + " of " + pagination.totalRows()
+                ((pagination.totalRows() > 0) ? pagination.offset()+1 : 0) +
+                        " - " +
+                Math.min(pagination.offset() + pagination.limit(), pagination.totalRows()) +
+                        " of " +
+                pagination.totalRows()
         );
 
         tableFooter.getStyleClass().add("table-footer");
 
         left.getStyleClass().add("pagination-button");
         right.getStyleClass().add("pagination-button");
+
+        left.setDisable(!tableSession.hasPrevious());
+        right.setDisable(!tableSession.hasNext());
 
         paginationLabel.getStyleClass().add("pagination-label");
 

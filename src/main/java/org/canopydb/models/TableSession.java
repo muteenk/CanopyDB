@@ -43,6 +43,16 @@ public class TableSession {
         );
     }
 
+    public boolean hasNext() {
+        int limit = tableQuery.getLimit();
+        int offset = tableQuery.getOffset();
+        return ((offset + limit) < totalRowCount);
+    }
+
+    public boolean hasPrevious() {
+        return tableQuery.getOffset() > 0;
+    }
+
     public boolean getNextPage() {
         int limit = tableQuery.getLimit();
         int offset = tableQuery.getOffset();

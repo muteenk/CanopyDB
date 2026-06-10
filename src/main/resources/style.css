@@ -416,6 +416,12 @@
    Pagination Buttons
    ========================================================= */
 
+.pagination-button:disabled {
+    -fx-background-color: #5c5c5c;
+    -fx-text-fill: #bdbdbd;
+    -fx-opacity: 1;
+}
+
 .pagination-button {
     -fx-background-color: #363840;
     -fx-text-fill: white;

@@ -32,8 +32,8 @@ public class Renderer {
                 notification::pushNotification
         );
         Sidebar sidebar = new Sidebar(
-                workspace::addTable,
-                workspace::isTableOpen,
+                workspace::addNewSession,
+                workspace::isSessionActive,
                 notification::pushNotification
         );
         app.setLeft(sidebar.getSidebar());

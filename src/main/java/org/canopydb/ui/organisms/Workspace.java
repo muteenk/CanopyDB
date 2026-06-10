@@ -18,10 +18,20 @@ import org.canopydb.utils.TableUtilities;
 import java.util.HashMap;
 import java.util.List;
 
+/*                  Workspace Responsibility
+* The single responsibility for Workspace is to manage sessions.
+* Neither table internals nor tab internals, just sessions.
+*
+* A session here refers to an active tab along with its table session component.
+* */
+
 public class Workspace {
-    private final VBox workspace;
-    private final TabPane tabs;
-    private final HashMap<String, TableSession> activeTables;
+    private final VBox workspace = new VBox();
+    private final TabPane tabs = new TabPane();
+
+    private final HashMap<String, TableSession> activeSessions = new HashMap<>();
+    private final HashMap<String, Tab> activeTabs = new HashMap<>();
+
     private final TableViewEventController tableViewEventController;
 
     public Workspace(PushNotification pushNotification){
@@ -29,9 +39,7 @@ public class Workspace {
                 this::updateTable,
                 pushNotification
         );
-        activeTables = new HashMap<>();
-        tabs = new TabPane();
-        workspace = new VBox(tabs);
+        workspace.getChildren().add(tabs);
         VBox.setVgrow(tabs, Priority.ALWAYS);
     }
 
@@ -98,7 +106,9 @@ public class Workspace {
         Tab tab = new Tab(tableSession.getTablePath());
         tab.setContent(buildTabContent(tableView, tableSession));
         tab.setOnClosed(event -> {
-            activeTables.remove(tableSession.getTablePath());
+            String tablePath = tableSession.getTablePath();
+            activeSessions.remove(tablePath);
+            activeTabs.remove(tablePath);
         });
 
         return tab;
@@ -121,11 +131,12 @@ public class Workspace {
         });
     }
 
-    public void addTable(TableSession tableSession) {
+    public void addNewSession(TableSession tableSession) {
         TableView<List<String>> tableView = TableComponent.buildTableComponent(tableSession.getTableData());
-        tabs.getTabs().add(buildTab(tableSession, tableView));
-        tableSession.setTabId(tabs.getTabs().size()-1);
-        activeTables.put(tableSession.getTablePath(), tableSession);
+        Tab newTab = buildTab(tableSession, tableView);
+        tabs.getTabs().add(newTab);
+        activeSessions.put(tableSession.getTablePath(), tableSession);
+        activeTabs.put(tableSession.getTablePath(), newTab);
         this.setSortEventListener(
                 tableSession,
                 tableView
@@ -134,15 +145,15 @@ public class Workspace {
 
     public void updateTable(TableSession tableSession, TableView<List<String>> tableView) {
         TableComponent.updateTableContents(tableSession.getTableData(), tableView);
-        Tab tab = tabs.getTabs().get(tableSession.getTabId());
+        Tab tab = activeTabs.get(tableSession.getTablePath());
         VBox tableBox = (VBox) tab.getContent();
         HBox tableFooter = buildFooter(tableView, tableSession);
         tableBox.getChildren().removeLast();
         tableBox.getChildren().add(tableFooter);
-        activeTables.put(tableSession.getTablePath(), tableSession);
+        activeSessions.put(tableSession.getTablePath(), tableSession);
     }
 
-    public boolean isTableOpen(String table) {
-        return activeTables.containsKey(table);
+    public boolean isSessionActive(String table) {
+        return activeSessions.containsKey(table);
     }
 }

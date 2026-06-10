@@ -1,17 +1,11 @@
 package org.canopydb.controllers;
 
 import javafx.application.Platform;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableView;
 import org.canopydb.models.TableSession;
-import org.canopydb.queries.Order;
 import org.canopydb.services.TableActionService;
 import org.canopydb.ui.interfaces.PushNotification;
-import org.canopydb.ui.interfaces.TableOpenAction;
 import org.canopydb.ui.interfaces.TableUpdateAction;
 import org.canopydb.ui.molecules.Notification;
-
-import java.util.List;
 
 public class TableViewEventController {
     TableActionService tableActionService = new TableActionService();
@@ -24,13 +18,12 @@ public class TableViewEventController {
     }
 
     public void tableReRender(
-            TableSession tableSession,
-            TableView<List<String>> tableView
+            TableSession tableSession
     ) {
         tableActionService.loadTableDataAsync(tableSession)
                 .thenAccept(session -> {
                     Platform.runLater(() -> {
-                        tableUpdateAction.render(session, tableView);
+                        tableUpdateAction.render(session);
                     });
                 }).exceptionally(error -> {
                     Platform.runLater(() -> {

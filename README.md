@@ -1,4 +1,4 @@
-# CanopyDB
+# CanopyDB (Development Stage)
 *A lightweight, fast, and modern SQL client built for developers.*
 
 ---

@@ -48,7 +48,7 @@ public class TableSession {
         return tableQuery.getOffset() > 0;
     }
 
-    public boolean getNextPage() {
+    public boolean setNextOffset() {
         int limit = tableQuery.getLimit();
         int offset = tableQuery.getOffset();
 
@@ -60,7 +60,7 @@ public class TableSession {
         return false;
     }
 
-    public boolean getPreviousPage() {
+    public boolean setPreviousOffset() {
         int limit = tableQuery.getLimit();
         int offset = tableQuery.getOffset();
 

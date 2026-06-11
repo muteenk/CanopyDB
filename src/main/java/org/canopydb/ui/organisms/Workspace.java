@@ -26,7 +26,7 @@ public class Workspace {
 
     public Workspace(PushNotification pushNotification){
         tableViewEventController = new TableViewEventController(
-                this::updateTable,
+                this::updateSession,
                 pushNotification
         );
         workspace.getChildren().add(tabs);
@@ -48,7 +48,7 @@ public class Workspace {
         tabs.getTabs().add(tab);
     }
 
-    public void updateTable(TableSession tableSession) {
+    public void updateSession(TableSession tableSession) {
         activeTabs.get(tableSession.getTablePath()).updateSession(tableSession);
     }
 

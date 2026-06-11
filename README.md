@@ -27,6 +27,8 @@ Others are beautiful and fast, but locked behind a paywall.
 
 CanopyDB exists to bridge that gap.
 
+![Project Screenshot](assets/Screenshot1.png)
+
 ---
 
 ## Philosophy

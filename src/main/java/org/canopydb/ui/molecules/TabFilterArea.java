@@ -4,6 +4,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TableViewEventController;
 import org.canopydb.models.TableSession;
@@ -28,14 +30,27 @@ public class TabFilterArea {
             clearAllFilterInputs();
         });
 
-        filterArea.getChildren().add(new HBox(addNewFilter, clearAllFilters));
+        HBox controls = new HBox(
+                addNewFilter,
+                clearAllFilters
+        );
+        filterArea.getChildren().add(controls);
+
+        filterArea.getStyleClass().add("filter-area");
+        controls.getStyleClass().add("filter-toolbar");
     }
 
     private HBox buildFilterInput() {
         TextField filterInput = new TextInput("Enter filter query").getTextField();
         Button filterToggle = new Button("Apply");
-        Button removeFilter = new Button(" - ");
+        Button removeFilter = new Button(" – ");
         HBox filterBox = new HBox(filterInput, filterToggle, removeFilter);
+
+        filterToggle.getStyleClass().add("filter-apply-button");
+        removeFilter.getStyleClass().add("filter-apply-button");
+        filterInput.getStyleClass().add("filter-input");
+        filterBox.getStyleClass().add("filter-row");
+        HBox.setHgrow(filterInput, Priority.ALWAYS);
 
         removeFilter.addEventHandler(MouseEvent.MOUSE_CLICKED, _ -> {
             removeFilterInput(filterBox);

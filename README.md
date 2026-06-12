@@ -115,11 +115,11 @@ A major focus of the project is ensuring that heavy database operations never bl
 * [x] Handle Connection Loading and Error Properly
 * [x] Displaying tables
 * [x] Push Notifications
-* [ ] Handle Table loading 
+* [ ] Handle Table loading state 
 * [x] Handle Error Properly
 * [x] Multi-tab interface
 * [x] Table Single Column Sorting
-* [ ] Table Column(s) Sorting
+* [ ] Multi-Column Sorting
 * [x] Table Pagination
 * [ ] Table Filtering
 * [ ] Connection management

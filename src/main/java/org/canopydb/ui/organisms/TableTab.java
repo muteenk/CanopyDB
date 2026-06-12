@@ -1,21 +1,20 @@
 package org.canopydb.ui.organisms;
 
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TableViewEventController;
-import org.canopydb.models.TablePagination;
 import org.canopydb.models.TableSession;
+import org.canopydb.ui.molecules.TabFilterArea;
 import org.canopydb.ui.molecules.TableTabFooter;
 import org.canopydb.ui.utils.TableComponent;
 
 import java.util.List;
 
 public class TableTab {
-    private final TableView<List<String>> tableView;
     private final Tab tab;
+    private TabFilterArea filterArea;
+    private final TableView<List<String>> tableView;
     private TableTabFooter footer;
 
     private TableSession tableSession;
@@ -50,9 +49,17 @@ public class TableTab {
 
     private VBox buildTabContent() {
         VBox tableBox = new VBox();
+
+        this.filterArea = new TabFilterArea(tableSession, tableViewEventController);
         this.footer = new TableTabFooter(tableSession, tableViewEventController);
+
+        tableBox.getChildren().addAll(
+                this.filterArea.getFilterArea(),
+                tableView,
+                this.footer.getTableFooter()
+        );
+
         VBox.setVgrow(tableView, Priority.ALWAYS);
-        tableBox.getChildren().addAll(tableView, this.footer.getTableFooter());
         return tableBox;
     }
 

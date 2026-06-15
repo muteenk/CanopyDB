@@ -6,6 +6,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import org.canopydb.utils.Constants;
 
+import java.util.UUID;
+
 public class FilterBox {
     private final TextField filterInput = new TextInput("Enter filter query").getTextField();
     private final Button filterToggle = new Button(Constants.APPLY);
@@ -14,8 +16,9 @@ public class FilterBox {
 
     private final String filterID;
 
-    public FilterBox(String filterID) {
-        this.filterID = filterID;
+    public FilterBox() {
+        this.filterID = UUID.randomUUID().toString();
+
         filterToggle.getStyleClass().add("filter-apply-button");
         removeFilter.getStyleClass().add("filter-apply-button");
         filterInput.getStyleClass().add("filter-input");
@@ -24,6 +27,8 @@ public class FilterBox {
 
         filterBox.getChildren().addAll(filterInput, filterToggle, removeFilter);
     }
+
+    public String getFilterID() {return this.filterID;}
 
     public HBox getFilterBox() {
         return filterBox;

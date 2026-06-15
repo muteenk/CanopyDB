@@ -10,17 +10,33 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TableViewEventController;
 import org.canopydb.models.TableSession;
+import org.canopydb.ui.atoms.FilterBox;
 import org.canopydb.ui.atoms.TextInput;
+import org.canopydb.utils.Constants;
+
+import java.util.HashMap;
+import java.util.UUID;
+import java.util.logging.Filter;
 
 
 public class TabFilterArea {
-    private final VBox filterArea = new VBox();
+    private final VBox filterMain = new VBox(); // parent container
+    private final VBox filterArea = new VBox(); // container for input boxes
+
     private final Button addNewFilter = new Button("Add Filter");
     private final Button clearAllFilters = new Button("Clear Filters");
+
+    private final HashMap<String, FilterBox> filters = new HashMap<>();
+
+    private final TableSession tableSession;
+    private final TableViewEventController tableViewEventController;
 
     private final int MAX_INPUT_COUNT = 10;
 
     public TabFilterArea(TableSession tableSession, TableViewEventController tableViewEventController) {
+        this.tableSession = tableSession;
+        this.tableViewEventController = tableViewEventController;
+
         addNewFilter.addEventHandler(MouseEvent.MOUSE_CLICKED, _ -> {
             addFilterInput();
         });
@@ -38,30 +54,46 @@ public class TabFilterArea {
 
         filterArea.getStyleClass().add("filter-area");
         controls.getStyleClass().add("filter-toolbar");
+
+        filterMain.getChildren().addAll(filterArea, controls);
     }
 
-    private HBox buildFilterInput() {
-        TextField filterInput = new TextInput("Enter filter query").getTextField();
-        Button filterToggle = new Button("Apply");
-        Button removeFilter = new Button(" – ");
-        HBox filterBox = new HBox(filterInput, filterToggle, removeFilter);
+    private FilterBox buildFilterInput() {
+        UUID uuid = UUID.randomUUID();
+        FilterBox filterBox = new FilterBox(uuid.toString());
 
-        filterToggle.getStyleClass().add("filter-apply-button");
-        removeFilter.getStyleClass().add("filter-apply-button");
-        filterInput.getStyleClass().add("filter-input");
-        filterBox.getStyleClass().add("filter-row");
-        HBox.setHgrow(filterInput, Priority.ALWAYS);
-
-        filterInput.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+        filterBox.getFilterInput().addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 event.consume();
-                filterToggle.setText("Applied");
+                if (filterBox.getFilterInput().getText().equals(Constants.APPLIED)) return;
+                String input = filterBox.getFilterInput().getText();
+                if (input.isEmpty()) return;
+                filterBox.getFilterToggle().setText(Constants.APPLIED);
+                tableSession.getTableQuery().addFilter(uuid.toString(), input);
+                tableViewEventController.tableReRender(tableSession);
             }
         });
-        filterToggle.addEventHandler(MouseEvent.MOUSE_CLICKED, _ -> {
-            filterToggle.setText("Applied");
+        filterBox.getFilterToggle().addEventHandler(MouseEvent.MOUSE_CLICKED, _ -> {
+            String input = filterBox.getFilterInput().getText();
+            if (input.isEmpty()) return;
+
+            String filterState = filterBox.getFilterToggle().getText();
+            if (filterState.equals(Constants.APPLY)) {
+                filterBox.getFilterToggle().setText(Constants.APPLIED);
+                tableSession.getTableQuery().addFilter(uuid.toString(), input);
+                tableViewEventController.tableReRender(tableSession);
+            } else {
+                filterBox.getFilterToggle().setText(Constants.APPLY);
+                tableSession.getTableQuery().removeFilter(uuid.toString());
+                tableViewEventController.tableReRender(tableSession);
+            }
         });
-        removeFilter.addEventHandler(MouseEvent.MOUSE_CLICKED, _ -> {
+        filterBox.getRemoveFilter().addEventHandler(MouseEvent.MOUSE_CLICKED, _ -> {
+            String input = filterBox.getFilterInput().getText();
+            if (!input.isEmpty()) {
+                tableSession.getTableQuery().removeFilter(uuid.toString());
+                tableViewEventController.tableReRender(tableSession);
+            }
             removeFilterInput(filterBox);
         });
 
@@ -70,23 +102,25 @@ public class TabFilterArea {
 
     private void addFilterInput() {
         int currentSize = this.filterArea.getChildren().size();
-        if (currentSize > MAX_INPUT_COUNT) return;
-        filterArea.getChildren().addFirst(buildFilterInput());
-        this.addNewFilter.setDisable(currentSize == MAX_INPUT_COUNT);
+        if (currentSize >= MAX_INPUT_COUNT) return;
+        filterArea.getChildren().addFirst(buildFilterInput().getFilterBox());
+        this.addNewFilter.setDisable(currentSize == MAX_INPUT_COUNT-1);
         this.clearAllFilters.setDisable(false);
     }
 
-    private void removeFilterInput(HBox filterBox){
-        filterArea.getChildren().remove(filterBox);
+    private void removeFilterInput(FilterBox filterBox){
+        filterArea.getChildren().remove(filterBox.getFilterBox());
         this.addNewFilter.setDisable(false);
-        this.clearAllFilters.setDisable(this.filterArea.getChildren().size() == 1);
+        this.clearAllFilters.setDisable(this.filterArea.getChildren().isEmpty());
     }
 
     private void clearAllFilterInputs() {
-        filterArea.getChildren().remove(0, this.filterArea.getChildren().size()-1);
+        filterArea.getChildren().clear();
+        tableSession.getTableQuery().clearFilter();
+        tableViewEventController.tableReRender(tableSession);
         this.addNewFilter.setDisable(false);
         this.clearAllFilters.setDisable(true);
     }
 
-    public VBox getFilterArea() {return this.filterArea;}
+    public VBox getFilterArea() {return this.filterMain;}
 }

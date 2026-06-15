@@ -1,7 +1,9 @@
 package org.canopydb.queries;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TableQuery {
     private final String databaseName;
@@ -10,7 +12,7 @@ public class TableQuery {
     private final int limit = 300;
     private int offset = 0;
     private final Order order = new Order();
-    private String where = "";
+    private final Map<String, String> where = new HashMap<>();
 
     public TableQuery(String databaseName, String tableName) {
         this.databaseName = databaseName;
@@ -29,6 +31,15 @@ public class TableQuery {
     public int getOffset() {return this.offset;}
     public void setOffset(int offset) {this.offset=offset;}
 
+    private String formatQuery(String filterQuery) {
+        return "( " + filterQuery + " )";
+    }
+    public void addFilter(String key, String filterQuery) {
+        where.put(key, formatQuery(filterQuery));
+    }
+    public void removeFilter(String key) {where.remove(key);}
+    public void clearFilter() {where.clear();}
+
     public String getQuery(){
         StringBuilder sql = new StringBuilder();
         sql
@@ -37,7 +48,9 @@ public class TableQuery {
             .append("FROM `").append(this.databaseName).append("`.`").append(this.tableName).append("`\n");
 
         if (!this.where.isEmpty()){
-            sql.append("WHERE\n").append(this.where);
+            List<String> filters = new ArrayList<>();
+            for (Map.Entry<String, String> entry : where.entrySet()) filters.add(entry.getValue());
+            sql.append("WHERE\n\t").append(String.join(" AND\n\t", filters)).append("\n");
         }
 
         if (!this.order.getColumn().isEmpty()){
@@ -58,8 +71,11 @@ public class TableQuery {
         ).append(this.databaseName).append("`.`").append(this.tableName).append("`\n");
 
         if (!this.where.isEmpty()){
-            sql.append("WHERE\n").append(this.where);
+            List<String> filters = new ArrayList<>();
+            for (Map.Entry<String, String> entry : where.entrySet()) filters.add(entry.getValue());
+            sql.append("WHERE\n\t").append(String.join(" AND\n\t", filters)).append("\n");
         }
+
         sql.append(";");
         return sql.toString();
     }

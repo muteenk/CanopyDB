@@ -27,6 +27,7 @@ public class TableViewEventController {
                     });
                 }).exceptionally(error -> {
                     Platform.runLater(() -> {
+                        System.out.println(error.getMessage());
                         pushNotification.push(
                                 "Failed to reload table !",
                                 error.getMessage(),

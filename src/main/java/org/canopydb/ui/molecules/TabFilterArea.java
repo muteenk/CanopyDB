@@ -101,7 +101,7 @@ public class TabFilterArea {
         if (input.isEmpty()) return;
 
         filterBox.setApplied(true);
-        tableSession.getTableQuery().addFilter(filterBox.getFilterID(), input);
+        tableSession.addQueryFilter(filterBox.getFilterID(), input);
         tableViewEventController.tableReRender(tableSession);
     }
 
@@ -109,7 +109,7 @@ public class TabFilterArea {
         if (!filterBox.isApplied()) return;
 
         filterBox.setApplied(false);
-        tableSession.getTableQuery().removeFilter(filterBox.getFilterID());
+        tableSession.removeQueryFilter(filterBox.getFilterID());
         tableViewEventController.tableReRender(tableSession);
     }
 
@@ -121,7 +121,7 @@ public class TabFilterArea {
 
     private void clearAllFilterInputs() {
         filterArea.getChildren().clear();
-        tableSession.getTableQuery().clearFilter();
+        tableSession.clearQueryFilters();
         tableViewEventController.tableReRender(tableSession);
         this.addNewFilter.setDisable(false);
         this.clearAllFilters.setDisable(true);

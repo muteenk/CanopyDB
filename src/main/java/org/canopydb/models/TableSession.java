@@ -83,6 +83,14 @@ public class TableSession {
         tableQuery.setOrderColumn(orderBy, orderDirection);
     }
 
+    public void addQueryFilter(String key, String filterQuery) {
+        this.tableQuery.addFilter(key, filterQuery);
+    }
+    public void removeQueryFilter(String key){
+        this.tableQuery.removeFilter(key);
+    }
+    public void clearQueryFilters() {this.tableQuery.clearFilter();}
+
     public String emitQuery() {return tableQuery.getQuery();}
     public String emitCountQuery() {return tableQuery.getRowCountQuery();}
 

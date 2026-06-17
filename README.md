@@ -114,16 +114,20 @@ A major focus of the project is ensuring that heavy database operations never bl
 * [x] Connection Databases and table list fetching
 * [x] Handle Connection Loading and Error Properly
 * [x] Displaying tables
-* [x] Push Notifications
-* [ ] Handle Table loading state 
+* [ ] Handling column and headers default lengths
+* [x] Notification Popups
 * [x] Handle Error Properly
+* [ ] Cleaner Errors
+* [ ] Better Error Display
+* [ ] Handle Table loading state 
+* [ ] Push Notifications
 * [x] Multi-tab interface
 * [x] Table Single Column Sorting
 * [ ] Multi-Column Sorting
 * [x] Table Pagination
-* [ ] Table Filtering
+* [x] Table Filtering
+* [ ] Search tables
 * [ ] Connection management
-* [ ] Available Table Search
 * [ ] Query editor
 * [ ] Parallel query execution
 * [ ] Query cancellation

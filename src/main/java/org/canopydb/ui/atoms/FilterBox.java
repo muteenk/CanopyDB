@@ -14,6 +14,7 @@ public class FilterBox {
     private final Button removeFilter = new Button(" – ");
     private final HBox filterBox = new HBox();
 
+    private boolean appliedState = false;
     private final String filterID;
 
     public FilterBox() {
@@ -44,5 +45,11 @@ public class FilterBox {
 
     public Button getRemoveFilter() {
         return removeFilter;
+    }
+
+    public boolean isApplied() {return this.appliedState;}
+    public void setApplied(boolean state){
+        this.appliedState = state;
+        this.filterToggle.setText((this.appliedState) ? Constants.APPLIED : Constants.APPLY);
     }
 }

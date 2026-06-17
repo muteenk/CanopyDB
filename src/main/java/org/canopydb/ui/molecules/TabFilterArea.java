@@ -10,7 +10,6 @@ import org.canopydb.controllers.TableViewEventController;
 import org.canopydb.models.TableSession;
 import org.canopydb.profile.Performance;
 import org.canopydb.ui.atoms.FilterBox;
-import org.canopydb.utils.Constants;
 
 
 public class TabFilterArea {
@@ -62,8 +61,7 @@ public class TabFilterArea {
                 event.consume();
                 applyFilter(filterBox);
             } else {
-                if (filterBox.getFilterToggle().getText().equals(Constants.APPLIED))
-                    unapplyFilter(filterBox);
+                if (filterBox.isApplied()) unapplyFilter(filterBox);
             }
         });
 
@@ -86,25 +84,24 @@ public class TabFilterArea {
         String input = filterBox.getFilterInput().getText();
         if (input.isEmpty()) return;
 
-        String filterState = filterBox.getFilterToggle().getText();
-        if (filterState.equals(Constants.APPLY)) applyFilter(filterBox);
+        if (!filterBox.isApplied()) applyFilter(filterBox);
         else unapplyFilter(filterBox);
     }
 
     private void applyFilter(FilterBox filterBox) {
-        if (filterBox.getFilterToggle().getText().equals(Constants.APPLIED)) return;
+        if (filterBox.isApplied()) return;
         String input = filterBox.getFilterInput().getText();
         if (input.isEmpty()) return;
 
-        filterBox.getFilterToggle().setText(Constants.APPLIED);
+        filterBox.setApplied(true);
         tableSession.getTableQuery().addFilter(filterBox.getFilterID(), input);
         tableViewEventController.tableReRender(tableSession);
     }
 
     private void unapplyFilter(FilterBox filterBox) {
-        if (filterBox.getFilterToggle().getText().equals(Constants.APPLY)) return;
+        if (!filterBox.isApplied()) return;
 
-        filterBox.getFilterToggle().setText(Constants.APPLY);
+        filterBox.setApplied(false);
         tableSession.getTableQuery().removeFilter(filterBox.getFilterID());
         tableViewEventController.tableReRender(tableSession);
     }

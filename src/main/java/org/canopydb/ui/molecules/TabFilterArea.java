@@ -60,10 +60,17 @@ public class TabFilterArea {
             if (event.getCode() == KeyCode.ENTER) {     // to handle enter event on input bar
                 event.consume();
                 applyFilter(filterBox);
-            } else {
-                if (filterBox.isApplied()) unapplyFilter(filterBox);
             }
         });
+
+        // Handling every filter input box text change
+        filterBox.getFilterInput()
+                .textProperty()
+                .addListener((obs, oldValue, newValue) -> {
+                    if (filterBox.isApplied()) {
+                        unapplyFilter(filterBox);
+                    }
+                });
 
         // apply button handler
         filterBox.getFilterToggle().addEventHandler(

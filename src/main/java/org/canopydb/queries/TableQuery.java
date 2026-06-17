@@ -30,15 +30,23 @@ public class TableQuery {
 
     public int getOffset() {return this.offset;}
     public void setOffset(int offset) {this.offset=offset;}
+    public void resetOffset() {setOffset(0);}
 
-    private String formatQuery(String filterQuery) {
+    private String formatFilterText(String filterQuery) {
         return "( " + filterQuery + " )";
     }
     public void addFilter(String key, String filterQuery) {
-        where.put(key, formatQuery(filterQuery));
+        where.put(key, formatFilterText(filterQuery));
+        resetOffset();
     }
-    public void removeFilter(String key) {where.remove(key);}
-    public void clearFilter() {where.clear();}
+    public void removeFilter(String key) {
+        where.remove(key);
+        resetOffset();
+    }
+    public void clearFilter() {
+        where.clear();
+        resetOffset();
+    }
 
     public String getQuery(){
         StringBuilder sql = new StringBuilder();

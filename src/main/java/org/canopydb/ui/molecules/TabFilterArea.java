@@ -8,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TableViewEventController;
 import org.canopydb.models.TableSession;
+import org.canopydb.profile.Performance;
 import org.canopydb.ui.atoms.FilterBox;
 import org.canopydb.utils.Constants;
 
@@ -48,6 +49,7 @@ public class TabFilterArea {
         int MAX_INPUT_COUNT = 10;
         if (currentSize >= MAX_INPUT_COUNT) return;
         filterArea.getChildren().addFirst(buildFilterInput().getFilterBox());
+        Performance.logMemory();
         this.addNewFilter.setDisable(currentSize == MAX_INPUT_COUNT -1);
         this.clearAllFilters.setDisable(false);
     }

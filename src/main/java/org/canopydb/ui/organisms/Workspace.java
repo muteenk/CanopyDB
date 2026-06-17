@@ -5,6 +5,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TableViewEventController;
 import org.canopydb.models.TableSession;
+import org.canopydb.profile.Performance;
 import org.canopydb.ui.interfaces.PushNotification;
 
 import java.util.HashMap;
@@ -46,6 +47,7 @@ public class Workspace {
             activeTabs.remove(tableSession.getTablePath());
         });
         tabs.getTabs().add(tab);
+        Performance.logMemory();
     }
 
     public void updateSession(TableSession tableSession) {

@@ -3,41 +3,30 @@ package org.canopydb.ui;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import org.canopydb.ui.molecules.Notification;
-import org.canopydb.ui.organisms.Workspace;
-import org.canopydb.ui.organisms.Sidebar;
+import org.canopydb.ui.scenes.WorkspaceScene;
 
 import java.util.Objects;
 
 public class Renderer {
-    private final StackPane root = new StackPane();
-    private final Notification notification = new Notification();
-
     private Parent build() {
-        BorderPane app = new BorderPane();
+        StackPane root = new StackPane();
+
+        Notification notification = new Notification();
+        SceneManager sceneManager = new SceneManager();
+
+        WorkspaceScene workspaceScene = new WorkspaceScene(notification);
+        sceneManager.setScene(workspaceScene.getScene());
+
         root.getChildren().addAll(
-                app,
+                sceneManager.getScene(),
                 notification.getContainer()
         );
         StackPane.setAlignment(
                 notification.getContainer(),
                 Pos.BOTTOM_RIGHT
         );
-
-        Workspace workspace = new Workspace(
-                notification::pushNotification
-        );
-        Sidebar sidebar = new Sidebar(
-                workspace::addNewSession,
-                workspace::isSessionActive,
-                notification::pushNotification
-        );
-        app.setLeft(sidebar.getSidebar());
-        app.setCenter(workspace.getWorkspace());
 
         return root;
     }

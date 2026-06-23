@@ -53,9 +53,12 @@ public class Sidebar {
     }
 
     public VBox getSidebar() {
-        TextField searchInput = new TextInput("Search").getTextField();
+//        TextField searchInput = new TextInput("Search").getTextField();
         TreeView<String> databaseTreeView = buildTreeView(getConnectionRoot());
-        VBox sidebar = new VBox(searchInput, databaseTreeView);
+        VBox sidebar = new VBox(
+//                searchInput,
+                databaseTreeView
+        );
         VBox.setVgrow(databaseTreeView, Priority.ALWAYS);
 
         return sidebar;

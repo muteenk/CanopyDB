@@ -522,35 +522,163 @@
 
 
 /* =========================================================
+   Connection Screen
+   ========================================================= */
+
+.connection-content-area {
+    -fx-background-color: #1f232a;
+    -fx-alignment: center;
+}
+
+/* =========================================================
+   Connection Sidebar
+   ========================================================= */
+
+.connection-sidebar {
+    -fx-min-width: 280;
+    -fx-pref-width: 300;
+    -fx-max-width: 320;
+
+    -fx-padding: 16;
+    -fx-spacing: 12;
+}
+
+.connection-search {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 9 12;
+    -fx-font-size: 13px;
+}
+
+.connection-new-button {
+    -fx-background-color: #5C3E94;
+    -fx-text-fill: white;
+
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+
+    -fx-padding: 10 16;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+
+    -fx-cursor: hand;
+}
+
+.connection-new-button:hover {
+    -fx-background-color: #6d4db0;
+}
+
+.connection-new-button:pressed {
+    -fx-background-color: #4e3480;
+}
+
+.connection-list {
+    -fx-padding: 4 0 0 0;
+}
+
+.connection-list-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.connection-list-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* =========================================================
+   Connection Cards
+   ========================================================= */
+
+.connection-card {
+    -fx-background-color: #363840;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+
+    -fx-padding: 14 16;
+    -fx-spacing: 4;
+
+    -fx-cursor: hand;
+}
+
+.connection-card:hover {
+    -fx-background-color: #3f434b;
+}
+
+.connection-card-selected {
+    -fx-background-color: #5C3E94;
+}
+
+.connection-card-selected:hover {
+    -fx-background-color: #6d4db0;
+}
+
+.connection-card-name {
+    -fx-text-fill: #f0f3f6;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+.connection-card-host {
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 12px;
+}
+
+.connection-card-selected .connection-card-name,
+.connection-card-selected .connection-card-host {
+    -fx-text-fill: #ffffff;
+}
+
+.connection-label {
+    -fx-padding: 2 8;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #ffffff;
+}
+
+.connection-label-local {
+    -fx-background-color: #2ea043;
+}
+
+.connection-label-dev {
+    -fx-background-color: #388bfd;
+}
+
+.connection-label-prod {
+    -fx-background-color: #da3633;
+}
+
+.connection-label-testing {
+    -fx-background-color: #d4a72c;
+}
+
+/* =========================================================
    Connection Welcome Screen
    ========================================================= */
 
 .connection-welcome {
     -fx-alignment: center;
-    -fx-spacing: 12;
-
-    -fx-padding: 40;
+    -fx-spacing: 28;
+    -fx-padding: 48;
 }
 
-.welcome-logo {
-    -fx-font-size: 72px;
-}
-
-.welcome-title {
-    -fx-font-size: 34px;
-    -fx-font-weight: bold;
-
-    -fx-text-fill: #f5f5f5;
+.connection-logo {
+    -fx-opacity: 1;
 }
 
 .welcome-subtitle {
-    -fx-font-size: 14px;
+    -fx-font-size: 15px;
+    -fx-line-spacing: 3px;
 
     -fx-text-fill: #8b949e;
-
     -fx-text-alignment: center;
-
     -fx-alignment: center;
+
+    -fx-wrap-text: true;
 }
 
 /* =========================================================
@@ -559,10 +687,149 @@
 
 .connection-form {
     -fx-alignment: center;
-
-    -fx-spacing: 12;
-
     -fx-padding: 40;
+}
 
-    -fx-max-width: 420;
+.connection-form-card {
+    -fx-background-color: #2b2d31;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+
+    -fx-padding: 28 32;
+    -fx-spacing: 0;
+
+    -fx-min-width: 420;
+    -fx-pref-width: 450;
+    -fx-max-width: 480;
+
+    -fx-effect: dropshadow(
+        gaussian,
+        rgba(0, 0, 0, 0.25),
+        16,
+        0.2,
+        0,
+        4
+    );
+}
+
+.connection-form-title {
+    -fx-text-fill: #f5f5f5;
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+}
+
+.connection-form-fields {
+    -fx-padding: 4 0 0 0;
+}
+
+.connection-form-field {
+    -fx-fill-width: true;
+}
+
+.connection-form-label {
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
+.connection-form-input {
+    -fx-background-color: #363840;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #8b949e;
+
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: transparent;
+
+    -fx-padding: 9 12;
+    -fx-font-size: 13px;
+}
+
+.connection-form-input:focused {
+    -fx-border-color: #5C3E94;
+    -fx-border-width: 1;
+}
+
+.connection-form-combo {
+    -fx-background-color: #363840;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: transparent;
+
+    -fx-font-size: 13px;
+}
+
+.connection-form-combo .list-cell {
+    -fx-background-color: #363840;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 6 12;
+}
+
+.connection-form-combo:focused {
+    -fx-border-color: #5C3E94;
+    -fx-border-width: 1;
+}
+
+.connection-form-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.connection-form-combo .arrow {
+    -fx-background-color: #8b949e;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #2b2d31;
+    -fx-border-color: #363840;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #373b41;
+}
+
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: #5C3E94;
+    -fx-text-fill: #ffffff;
+}
+
+.connection-form-actions {
+    -fx-padding: 8 0 0 0;
+    -fx-alignment: center;
+}
+
+.connection-button {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+
+    -fx-padding: 9 18;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+
+    -fx-cursor: hand;
+}
+
+.connection-button-primary {
+    -fx-background-color: #5C3E94;
+    -fx-text-fill: white;
+}
+
+.connection-button-primary:hover {
+    -fx-background-color: #6d4db0;
+}
+
+.connection-button-primary:pressed {
+    -fx-background-color: #4e3480;
+}
+
+.connection-button-secondary {
+    -fx-background-color: #363840;
+    -fx-text-fill: #d0d7de;
+}
+
+.connection-button-secondary:hover {
+    -fx-background-color: #4a4d55;
+}
+
+.connection-button-secondary:pressed {
+    -fx-background-color: #2f3238;
 }

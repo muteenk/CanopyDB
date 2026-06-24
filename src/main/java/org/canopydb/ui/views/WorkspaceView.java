@@ -2,6 +2,8 @@ package org.canopydb.ui.views;
 
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
+import org.canopydb.config.DatabasePool;
+import org.canopydb.models.SavedConnection;
 import org.canopydb.ui.interfaces.View;
 import org.canopydb.ui.organisms.workspace.Sidebar;
 import org.canopydb.ui.organisms.workspace.Workspace;
@@ -9,7 +11,8 @@ import org.canopydb.ui.organisms.workspace.Workspace;
 public class WorkspaceView implements View {
     private final BorderPane app = new BorderPane();
 
-    public WorkspaceView() {
+    public WorkspaceView(SavedConnection connection) {
+        DatabasePool.connect(connection);
         Workspace workspace = new Workspace();
         Sidebar sidebar = new Sidebar(
                 workspace::addNewSession,

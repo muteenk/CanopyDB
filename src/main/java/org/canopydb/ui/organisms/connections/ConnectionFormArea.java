@@ -155,9 +155,11 @@ public class ConnectionFormArea {
                     connection.getName() + " was saved successfully.",
                     NotificationManager.NotificationType.SUCCESS
             );
+
+            ViewManager.pushView(new WorkspaceView(connection).getView());
         });
 
-        connectButton.setOnAction(e -> ViewManager.pushView(new WorkspaceView().getView()));
+//        connectButton.setOnAction(e -> ViewManager.pushView(new WorkspaceView().getView()));
 
         VBox card = new VBox(20, formTitle, fields, actions);
         card.getStyleClass().add("connection-form-card");

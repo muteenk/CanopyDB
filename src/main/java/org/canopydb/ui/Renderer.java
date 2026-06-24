@@ -3,9 +3,9 @@ package org.canopydb.ui;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
-import org.canopydb.ui.interfaces.Scene;
+import org.canopydb.ui.interfaces.View;
 import org.canopydb.ui.singletons.NotificationManager;
-import org.canopydb.ui.scenes.ConnectionScene;
+import org.canopydb.ui.views.ConnectionView;
 import org.canopydb.ui.singletons.SceneManager;
 
 import java.util.Objects;
@@ -14,8 +14,8 @@ public class Renderer {
     private Parent build() {
         StackPane root = new StackPane();
 
-        Scene initScene = new ConnectionScene();
-        SceneManager.pushScene(initScene.getScene());
+        View initScene = new ConnectionView();
+        SceneManager.pushScene(initScene.getView());
 
         root.getChildren().addAll(
                 SceneManager.sceneStack,

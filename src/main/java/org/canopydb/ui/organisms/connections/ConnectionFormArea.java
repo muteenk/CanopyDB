@@ -7,8 +7,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import org.canopydb.ui.singletons.SceneManager;
 import org.canopydb.ui.atoms.TextInput;
-import org.canopydb.ui.interfaces.Scene;
-import org.canopydb.ui.scenes.WorkspaceScene;
+import org.canopydb.ui.interfaces.View;
+import org.canopydb.ui.views.WorkspaceView;
 
 public class ConnectionFormArea {
     private final VBox connectionFormArea = new VBox();
@@ -23,8 +23,8 @@ public class ConnectionFormArea {
         Button testConnection = new Button("Test Connection");
         Button connect = new Button("Connect");
         connect.addEventHandler(MouseEvent.MOUSE_CLICKED, _ -> {
-            Scene workspaceScene = new WorkspaceScene();
-            SceneManager.pushScene(workspaceScene.getScene());
+            View workspaceScene = new WorkspaceView();
+            SceneManager.pushScene(workspaceScene.getView());
         });
 
         connectionFormArea.getChildren().addAll(host, port, username, password, close, testConnection, connect);

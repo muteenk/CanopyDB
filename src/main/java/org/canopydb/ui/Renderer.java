@@ -4,8 +4,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 import org.canopydb.ui.interfaces.Scene;
-import org.canopydb.ui.molecules.Notification;
+import org.canopydb.ui.singletons.NotificationManager;
 import org.canopydb.ui.scenes.ConnectionScene;
+import org.canopydb.ui.singletons.SceneManager;
 
 import java.util.Objects;
 
@@ -18,10 +19,10 @@ public class Renderer {
 
         root.getChildren().addAll(
                 SceneManager.sceneStack,
-                Notification.notificationContainer
+                NotificationManager.notificationContainer
         );
         StackPane.setAlignment(
-                Notification.notificationContainer,
+                NotificationManager.notificationContainer,
                 Pos.BOTTOM_RIGHT
         );
 

@@ -1,6 +1,6 @@
-package org.canopydb.profile;
+package org.canopydb.config;
 
-public class Performance {
+public class Profiler {
     public static void logMemory() {
         Runtime runtime = Runtime.getRuntime();
 

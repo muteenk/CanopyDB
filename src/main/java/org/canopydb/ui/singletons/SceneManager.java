@@ -1,4 +1,4 @@
-package org.canopydb.ui;
+package org.canopydb.ui.singletons;
 
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;

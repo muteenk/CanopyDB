@@ -1,8 +1,8 @@
 package org.canopydb.ui.interfaces;
 
-import org.canopydb.ui.molecules.Notification;
+import org.canopydb.ui.singletons.NotificationManager;
 
 @FunctionalInterface
 public interface PushNotification {
-    void push(String title, String message, Notification.NotificationType notificationType);
+    void push(String title, String message, NotificationManager.NotificationType notificationType);
 }

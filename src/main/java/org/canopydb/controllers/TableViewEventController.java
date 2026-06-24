@@ -3,9 +3,8 @@ package org.canopydb.controllers;
 import javafx.application.Platform;
 import org.canopydb.models.TableSession;
 import org.canopydb.services.TableActionService;
-import org.canopydb.ui.interfaces.PushNotification;
 import org.canopydb.ui.interfaces.TableUpdateAction;
-import org.canopydb.ui.molecules.Notification;
+import org.canopydb.ui.singletons.NotificationManager;
 
 public class TableViewEventController {
     TableActionService tableActionService = new TableActionService();
@@ -26,10 +25,10 @@ public class TableViewEventController {
                 }).exceptionally(error -> {
                     Platform.runLater(() -> {
                         System.out.println(error.getMessage());
-                        Notification.pushNotification(
+                        NotificationManager.pushNotification(
                                 "Failed to reload table !",
                                 error.getMessage(),
-                                Notification.NotificationType.DANGER
+                                NotificationManager.NotificationType.DANGER
                         );
                     });
                     return null;

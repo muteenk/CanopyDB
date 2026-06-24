@@ -1,4 +1,4 @@
-package org.canopydb.ui.molecules;
+package org.canopydb.ui.singletons;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
@@ -9,7 +9,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-public class Notification {
+public class NotificationManager {
     public enum NotificationType {
         INFO,
         SUCCESS,

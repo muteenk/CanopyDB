@@ -3,7 +3,6 @@ package org.canopydb.ui.scenes;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 import org.canopydb.ui.interfaces.Scene;
-import org.canopydb.ui.molecules.Notification;
 import org.canopydb.ui.organisms.workspace.Sidebar;
 import org.canopydb.ui.organisms.workspace.Workspace;
 

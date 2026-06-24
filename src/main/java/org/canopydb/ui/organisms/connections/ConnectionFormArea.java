@@ -5,7 +5,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import org.canopydb.ui.SceneManager;
+import org.canopydb.ui.singletons.SceneManager;
 import org.canopydb.ui.atoms.TextInput;
 import org.canopydb.ui.interfaces.Scene;
 import org.canopydb.ui.scenes.WorkspaceScene;

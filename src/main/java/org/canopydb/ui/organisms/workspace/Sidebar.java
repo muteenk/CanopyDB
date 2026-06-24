@@ -5,8 +5,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TreeViewEventController;
-import org.canopydb.profile.Performance;
-import org.canopydb.ui.interfaces.PushNotification;
+import org.canopydb.config.Profiler;
 import org.canopydb.ui.interfaces.TableActiveCheck;
 import org.canopydb.ui.interfaces.TableOpenAction;
 import org.canopydb.utils.Constants;
@@ -29,7 +28,7 @@ public class Sidebar {
                         treeViewEventController.nodeClickEventHandler(
                                 selectedItem
                         );
-                        Performance.logMemory();
+                        Profiler.logMemory();
                     }
                 }
         );

@@ -4,10 +4,9 @@ import javafx.application.Platform;
 import javafx.scene.control.TreeItem;
 import org.canopydb.services.ConnectionMetadataService;
 import org.canopydb.services.TableActionService;
-import org.canopydb.ui.interfaces.PushNotification;
 import org.canopydb.ui.interfaces.TableActiveCheck;
 import org.canopydb.ui.interfaces.TableOpenAction;
-import org.canopydb.ui.molecules.Notification;
+import org.canopydb.ui.singletons.NotificationManager;
 import org.canopydb.ui.utils.TreeViewComponent;
 import org.canopydb.utils.Constants;
 import org.canopydb.utils.TableUtilities;
@@ -46,10 +45,10 @@ public class TreeViewEventController {
             Platform.runLater(() -> {
                 if (!node.getChildren().isEmpty()) node.getChildren().clear();
                 node.getChildren().add(new TreeItem<>(Constants.FAILED));
-                Notification.pushNotification(
+                NotificationManager.pushNotification(
                         "Failed to fetch tables !",
                         error.getMessage(),
-                        Notification.NotificationType.DANGER
+                        NotificationManager.NotificationType.DANGER
                 );
             });
             return null;
@@ -84,10 +83,10 @@ public class TreeViewEventController {
             Platform.runLater(() -> {
                 if (!node.getChildren().isEmpty()) node.getChildren().clear();
                 node.getChildren().add(new TreeItem<>(Constants.FAILED));
-                Notification.pushNotification(
+                NotificationManager.pushNotification(
                         "Failed to fetch databases !",
                         error.getMessage(),
-                        Notification.NotificationType.DANGER
+                        NotificationManager.NotificationType.DANGER
                 );
             });
             return null;
@@ -111,10 +110,10 @@ public class TreeViewEventController {
                 });
             }).exceptionally(error -> {
                 Platform.runLater(() -> {
-                    Notification.pushNotification(
+                    NotificationManager.pushNotification(
                             "Failed to fetch table !",
                             error.getMessage(),
-                            Notification.NotificationType.DANGER
+                            NotificationManager.NotificationType.DANGER
                     );
                 });
                 return null;

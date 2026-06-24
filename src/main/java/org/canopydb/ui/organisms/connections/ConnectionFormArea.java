@@ -137,7 +137,7 @@ public class ConnectionFormArea {
                 NotificationManager.NotificationType.INFO
         ));
 
-        saveButton.setOnAction(e -> {
+        connectButton.setOnAction(e -> {
             SavedConnection connection = buildConnectionFromForm(
                     existing,
                     nameField,
@@ -158,8 +158,6 @@ public class ConnectionFormArea {
 
             ViewManager.pushView(new WorkspaceView(connection).getView());
         });
-
-//        connectButton.setOnAction(e -> ViewManager.pushView(new WorkspaceView().getView()));
 
         VBox card = new VBox(20, formTitle, fields, actions);
         card.getStyleClass().add("connection-form-card");

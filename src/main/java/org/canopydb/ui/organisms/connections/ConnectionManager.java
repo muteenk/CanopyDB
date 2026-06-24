@@ -9,10 +9,10 @@ import javafx.scene.layout.VBox;
 public class ConnectionManager {
     private final VBox connectionManagerArea = new VBox();
 
-    public ConnectionManager() {
+    public ConnectionManager(ConnectionFormArea formArea) {
         Button addConnectionButton = new Button("+");
-        addConnectionButton.addEventHandler(MouseEvent.MOUSE_CLICKED, _ -> {
-        });
+        addConnectionButton.setOnAction(e ->
+                formArea.showConnectionForm());
         TextField searchConnections = new TextField("Search Connections");
         HBox connectionsTopbar = new HBox();
         connectionsTopbar.getChildren().addAll(addConnectionButton, searchConnections);

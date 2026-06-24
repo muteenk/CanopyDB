@@ -10,8 +10,8 @@ public class ConnectionView implements View {
     private final BorderPane app = new BorderPane();
 
     public ConnectionView() {
-        ConnectionManager connectionManager = new ConnectionManager();
         ConnectionFormArea connectionFormArea = new ConnectionFormArea();
+        ConnectionManager connectionManager = new ConnectionManager(connectionFormArea);
         app.setLeft(connectionManager.getConnectionManagerArea());
         app.setCenter(connectionFormArea.getConnectionFormArea());
     }

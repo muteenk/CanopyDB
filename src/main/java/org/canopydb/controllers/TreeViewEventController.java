@@ -18,12 +18,10 @@ public class TreeViewEventController {
     private final TableActionService tableActionService = new TableActionService();
     private final TableOpenAction tableDataAppendAction;
     private final TableActiveCheck tableActiveCheck;
-    private final PushNotification pushNotification;
 
-    public TreeViewEventController(TableOpenAction tableDataAppendAction, TableActiveCheck tableActiveCheck, PushNotification pushNotification){
+    public TreeViewEventController(TableOpenAction tableDataAppendAction, TableActiveCheck tableActiveCheck){
         this.tableDataAppendAction = tableDataAppendAction;
         this.tableActiveCheck = tableActiveCheck;
-        this.pushNotification = pushNotification;
     }
 
     public void dbExpandHandler(TreeItem<String> node) {
@@ -48,7 +46,7 @@ public class TreeViewEventController {
             Platform.runLater(() -> {
                 if (!node.getChildren().isEmpty()) node.getChildren().clear();
                 node.getChildren().add(new TreeItem<>(Constants.FAILED));
-                pushNotification.push(
+                Notification.pushNotification(
                         "Failed to fetch tables !",
                         error.getMessage(),
                         Notification.NotificationType.DANGER
@@ -86,7 +84,7 @@ public class TreeViewEventController {
             Platform.runLater(() -> {
                 if (!node.getChildren().isEmpty()) node.getChildren().clear();
                 node.getChildren().add(new TreeItem<>(Constants.FAILED));
-                pushNotification.push(
+                Notification.pushNotification(
                         "Failed to fetch databases !",
                         error.getMessage(),
                         Notification.NotificationType.DANGER
@@ -113,7 +111,7 @@ public class TreeViewEventController {
                 });
             }).exceptionally(error -> {
                 Platform.runLater(() -> {
-                    pushNotification.push(
+                    Notification.pushNotification(
                             "Failed to fetch table !",
                             error.getMessage(),
                             Notification.NotificationType.DANGER

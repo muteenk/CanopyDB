@@ -1,4 +1,4 @@
-package org.canopydb.ui.organisms;
+package org.canopydb.ui.organisms.workspace;
 
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
@@ -25,11 +25,8 @@ public class Workspace {
 
     private final TableViewEventController tableViewEventController;
 
-    public Workspace(PushNotification pushNotification){
-        tableViewEventController = new TableViewEventController(
-                this::updateSession,
-                pushNotification
-        );
+    public Workspace(){
+        tableViewEventController = new TableViewEventController(this::updateSession);
         workspace.getChildren().add(tabs);
         VBox.setVgrow(tabs, Priority.ALWAYS);
     }

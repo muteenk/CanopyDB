@@ -10,11 +10,9 @@ import org.canopydb.ui.molecules.Notification;
 public class TableViewEventController {
     TableActionService tableActionService = new TableActionService();
     private final TableUpdateAction tableUpdateAction;
-    private final PushNotification pushNotification;
 
-    public TableViewEventController(TableUpdateAction tableUpdateAction, PushNotification pushNotification){
+    public TableViewEventController(TableUpdateAction tableUpdateAction){
         this.tableUpdateAction = tableUpdateAction;
-        this.pushNotification = pushNotification;
     }
 
     public void tableReRender(
@@ -28,7 +26,7 @@ public class TableViewEventController {
                 }).exceptionally(error -> {
                     Platform.runLater(() -> {
                         System.out.println(error.getMessage());
-                        pushNotification.push(
+                        Notification.pushNotification(
                                 "Failed to reload table !",
                                 error.getMessage(),
                                 Notification.NotificationType.DANGER

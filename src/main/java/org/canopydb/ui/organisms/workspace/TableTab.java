@@ -1,4 +1,4 @@
-package org.canopydb.ui.organisms;
+package org.canopydb.ui.organisms.workspace;
 
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;

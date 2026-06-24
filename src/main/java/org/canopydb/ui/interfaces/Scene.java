@@ -2,6 +2,6 @@ package org.canopydb.ui.interfaces;
 
 import javafx.scene.Parent;
 
-public interface SceneInterface {
+public interface Scene {
     Parent getScene();
 }

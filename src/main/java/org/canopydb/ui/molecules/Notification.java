@@ -10,10 +10,15 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 public class Notification {
-    private final VBox notificationContainer;
+    public enum NotificationType {
+        INFO,
+        SUCCESS,
+        DANGER
+    }
 
-    public Notification() {
-        notificationContainer = new VBox(10);
+    public static VBox notificationContainer = new VBox(10);
+
+    static {
         notificationContainer.getStyleClass()
                 .add("notification-container");
         notificationContainer.setMouseTransparent(true);
@@ -24,13 +29,8 @@ public class Notification {
         notificationContainer.setMaxHeight(Region.USE_PREF_SIZE);
     }
 
-    public enum NotificationType {
-        INFO,
-        SUCCESS,
-        DANGER
-    }
 
-    private void setNotificationStyle(
+    private static void setNotificationStyle(
             VBox notification,
             Label titleLabel,
             Label messageLabel,
@@ -54,7 +54,7 @@ public class Notification {
                 .add("notification-message");
     }
 
-    private void setNotificationAnimations(VBox notification) {
+    private static void setNotificationAnimations(VBox notification) {
         FadeTransition fadeIn = new FadeTransition(
                 Duration.millis(200),
                 notification
@@ -82,7 +82,7 @@ public class Notification {
         sequence.play();
     }
 
-    public void pushNotification(
+    public static void pushNotification(
             String title,
             String message,
             NotificationType notificationType
@@ -104,9 +104,5 @@ public class Notification {
                 .getChildren()
                 .add(notification);
         setNotificationAnimations(notification);
-    }
-
-    public VBox getContainer() {
-        return notificationContainer;
     }
 }

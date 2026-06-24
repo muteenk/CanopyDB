@@ -51,5 +51,12 @@ public class Workspace {
         activeTabs.get(tableSession.getTablePath()).updateSession(tableSession);
     }
 
-    public boolean isSessionActive(String table) {return activeTabs.containsKey(table);}
+    public boolean isSessionActive(String tableKey) {return activeTabs.containsKey(tableKey);}
+
+    public boolean selectActiveSession(String tableKey) {
+        if (!isSessionActive(tableKey)) return false;
+        TableTab tab = this.activeTabs.get(tableKey);
+        this.tabs.getSelectionModel().select(tab.getTab());
+        return true;
+    }
 }

@@ -13,7 +13,7 @@ public class WorkspaceView implements View {
         Workspace workspace = new Workspace();
         Sidebar sidebar = new Sidebar(
                 workspace::addNewSession,
-                workspace::isSessionActive
+                workspace::selectActiveSession
         );
         app.setLeft(sidebar.getSidebar());
         app.setCenter(workspace.getWorkspace());

@@ -6,7 +6,7 @@ import javafx.scene.layout.StackPane;
 import org.canopydb.ui.interfaces.View;
 import org.canopydb.ui.singletons.NotificationManager;
 import org.canopydb.ui.views.ConnectionView;
-import org.canopydb.ui.singletons.SceneManager;
+import org.canopydb.ui.singletons.ViewManager;
 
 import java.util.Objects;
 
@@ -15,10 +15,10 @@ public class Renderer {
         StackPane root = new StackPane();
 
         View initScene = new ConnectionView();
-        SceneManager.pushScene(initScene.getView());
+        ViewManager.pushView(initScene.getView());
 
         root.getChildren().addAll(
-                SceneManager.sceneStack,
+                ViewManager.viewStack,
                 NotificationManager.notificationContainer
         );
         StackPane.setAlignment(

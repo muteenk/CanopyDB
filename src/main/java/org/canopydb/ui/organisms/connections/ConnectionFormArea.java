@@ -5,7 +5,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import org.canopydb.ui.singletons.SceneManager;
+import org.canopydb.ui.singletons.ViewManager;
 import org.canopydb.ui.atoms.TextInput;
 import org.canopydb.ui.interfaces.View;
 import org.canopydb.ui.views.WorkspaceView;
@@ -24,7 +24,7 @@ public class ConnectionFormArea {
         Button connect = new Button("Connect");
         connect.addEventHandler(MouseEvent.MOUSE_CLICKED, _ -> {
             View workspaceScene = new WorkspaceView();
-            SceneManager.pushScene(workspaceScene.getView());
+            ViewManager.pushView(workspaceScene.getView());
         });
 
         connectionFormArea.getChildren().addAll(host, port, username, password, close, testConnection, connect);

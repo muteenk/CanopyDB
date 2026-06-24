@@ -43,6 +43,7 @@ public class Workspace {
             activeTabs.remove(tableSession.getTablePath());
         });
         tabs.getTabs().add(tab);
+        tabs.getSelectionModel().select(tab);
         Profiler.logMemory();
     }
 

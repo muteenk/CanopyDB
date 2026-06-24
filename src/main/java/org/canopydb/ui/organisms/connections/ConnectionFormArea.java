@@ -5,11 +5,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import org.canopydb.ui.singletons.ViewManager;
 import org.canopydb.ui.atoms.TextInput;
-import org.canopydb.ui.interfaces.View;
 import org.canopydb.ui.views.WorkspaceView;
 
 public class ConnectionFormArea {

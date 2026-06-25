@@ -100,6 +100,7 @@ public class ConnectionManager {
                         "localhost",
                         3306,
                         "root",
+                        "",
                         ConnectionLabel.LOCAL
                 ));
 
@@ -143,6 +144,23 @@ public class ConnectionManager {
             connections.add(connection);
             refreshConnectionList();
             selectConnection(connection.getId());
+        }
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            // Resolves the '~' home directory properly across Windows, Mac, and Linux
+            String userHome = System.getProperty("user.home");
+            Path filePath = Paths.get(userHome, ".canopydb", "connections.json");
+            File jsonFile = filePath.toFile();
+            Files.createDirectories(filePath.getParent());
+            mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, connections);
+        } catch(IOException ex){
+            NotificationManager.pushNotification(
+                    "Could not save connections",
+                    "Unable to save connection details to CanopyDB",
+                    NotificationManager.NotificationType.DANGER
+            );
         }
     }
 

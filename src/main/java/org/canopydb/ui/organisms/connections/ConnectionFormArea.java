@@ -163,7 +163,7 @@ public class ConnectionFormArea {
                 ViewManager.pushView(new WorkspaceView().getView());
 
             } catch (Exception ex) {
-
+                ex.printStackTrace();
                 NotificationManager.pushNotification(
                         "Connection Failed",
                         ex.getMessage(),
@@ -229,7 +229,7 @@ public class ConnectionFormArea {
             );
         }
 
-        return new ConnectionMeta(name, host, port, username, label);
+        return new ConnectionMeta(name, host, port, username, password, label);
     }
 
     private int parsePort(String portText) {

@@ -21,6 +21,7 @@ public class ConnectionMeta {
             String host,
             int port,
             String username,
+            String password,
             ConnectionLabel label
     ) {
         this.id = UUID.randomUUID().toString();
@@ -28,7 +29,7 @@ public class ConnectionMeta {
         this.host = host;
         this.port = port;
         this.username = username;
-        this.password = "";
+        this.password = password;
         this.label = label;
     }
 

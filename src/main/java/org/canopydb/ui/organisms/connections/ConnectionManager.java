@@ -1,16 +1,22 @@
 package org.canopydb.ui.organisms.connections;
 
-import javafx.geometry.Pos;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.models.ConnectionLabel;
-import org.canopydb.models.SavedConnection;
+import org.canopydb.models.ConnectionMeta;
 import org.canopydb.ui.atoms.TextInput;
 import org.canopydb.ui.molecules.ConnectionCard;
+import org.canopydb.ui.singletons.NotificationManager;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,7 +26,7 @@ public class ConnectionManager {
 
     private final VBox connectionManagerArea = new VBox();
     private final VBox connectionList = new VBox(8);
-    private final List<SavedConnection> connections = new ArrayList<>();
+    private List<ConnectionMeta> connections = new ArrayList<>();
     private final Map<String, ConnectionCard> connectionCards = new LinkedHashMap<>();
     private final ConnectionFormArea formArea;
 
@@ -30,7 +36,7 @@ public class ConnectionManager {
     public ConnectionManager(ConnectionFormArea formArea) {
         this.formArea = formArea;
 
-        seedSampleConnections();
+        seedSavedConnections();
         wireFormCallbacks();
 
         TextField searchField = new TextInput("Search connections").getTextField();
@@ -73,36 +79,58 @@ public class ConnectionManager {
         return connectionManagerArea;
     }
 
-    private void seedSampleConnections() {
-        connections.add(new SavedConnection(
-                "Local MySQL",
-                "localhost",
-                3306,
-                "root",
-                ConnectionLabel.LOCAL
-        ));
-        connections.add(new SavedConnection(
-                "Staging Postgres",
-                "staging.db.internal",
-                5432,
-                "canopy",
-                ConnectionLabel.DEV
-        ));
-        connections.add(new SavedConnection(
-                "Analytics Warehouse",
-                "warehouse.example.com",
-                3306,
-                "readonly",
-                ConnectionLabel.PROD
-        ));
+    private void seedSavedConnections() {
+        ObjectMapper mapper = new ObjectMapper();
+
+        // Resolves the '~' home directory properly across Windows, Mac, and Linux
+        String userHome = System.getProperty("user.home");
+        Path filePath = Paths.get(userHome, ".canopydb", "connections.json");
+        File jsonFile = filePath.toFile();
+
+        try {
+            if (!jsonFile.exists()) {
+                System.out.println("File not found. Creating default configuration...");
+
+                // Create parent directories (~/.canopydb) if they don't exist
+                Files.createDirectories(filePath.getParent());
+
+                List<ConnectionMeta> defaultConnections = new ArrayList<>();
+                defaultConnections.add(new ConnectionMeta(
+                        "Local Instance",
+                        "localhost",
+                        3306,
+                        "root",
+                        ConnectionLabel.LOCAL
+                ));
+
+                // Save to file
+                mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, defaultConnections);
+                System.out.println("Created file at: " + filePath.toAbsolutePath());
+            }
+
+            // Read and parse the file
+            // Using TypeFactory to handle a List of ConnectionConfig objects safely
+            this.connections = mapper.readValue(
+                    jsonFile,
+                    mapper.getTypeFactory().constructCollectionType(List.class, ConnectionMeta.class)
+            );
+
+        } catch (IOException e) {
+            System.err.println("Error processing the configuration file: " + e.getMessage());
+            NotificationManager.pushNotification(
+                    "Failed to load existing connections",
+                    "Could not load connections, unable to parse connections file",
+                    NotificationManager.NotificationType.DANGER
+            );
+        }
     }
 
     private void wireFormCallbacks() {
         formArea.setOnSave(this::handleSave);
     }
 
-    private void handleSave(SavedConnection connection) {
-        SavedConnection existing = findConnectionById(connection.getId());
+    private void handleSave(ConnectionMeta connection) {
+        ConnectionMeta existing = findConnectionById(connection.getId());
         if (existing != null) {
             existing.setName(connection.getName());
             existing.setHost(connection.getHost());
@@ -122,7 +150,7 @@ public class ConnectionManager {
         connectionList.getChildren().clear();
         connectionCards.clear();
 
-        for (SavedConnection connection : connections) {
+        for (ConnectionMeta connection : connections) {
             if (!matchesSearch(connection)) {
                 continue;
             }
@@ -149,7 +177,7 @@ public class ConnectionManager {
         }
     }
 
-    private boolean matchesSearch(SavedConnection connection) {
+    private boolean matchesSearch(ConnectionMeta connection) {
         if (searchQuery.isEmpty()) {
             return true;
         }
@@ -178,8 +206,8 @@ public class ConnectionManager {
         }
     }
 
-    private SavedConnection findConnectionById(String id) {
-        for (SavedConnection connection : connections) {
+    private ConnectionMeta findConnectionById(String id) {
+        for (ConnectionMeta connection : connections) {
             if (connection.getId().equals(id)) {
                 return connection;
             }

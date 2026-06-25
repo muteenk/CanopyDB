@@ -2,8 +2,7 @@ package org.canopydb.models;
 
 import java.util.UUID;
 
-public class SavedConnection {
-
+public class ConnectionMeta {
     private final String id;
     private String name;
     private String host;
@@ -12,7 +11,12 @@ public class SavedConnection {
     private String password;
     private ConnectionLabel label;
 
-    public SavedConnection(
+    // Private Default Constructor for Jackson to serialize this class
+    private ConnectionMeta() {
+        this.id = UUID.randomUUID().toString(); // Fallback ID if not in JSON
+    }
+
+    public ConnectionMeta(
             String name,
             String host,
             int port,
@@ -28,7 +32,7 @@ public class SavedConnection {
         this.label = label;
     }
 
-    public SavedConnection(
+    public ConnectionMeta(
             String id,
             String name,
             String host,
@@ -96,9 +100,5 @@ public class SavedConnection {
 
     public void setLabel(ConnectionLabel label) {
         this.label = label;
-    }
-
-    public String getHostPort() {
-        return host + ":" + port;
     }
 }

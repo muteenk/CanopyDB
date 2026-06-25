@@ -2,7 +2,7 @@ package org.canopydb.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.canopydb.models.SavedConnection;
+import org.canopydb.models.ConnectionMeta;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,10 +13,9 @@ public final class DatabasePool {
 
     private DatabasePool() {}
 
-    public static synchronized void connect(
-            SavedConnection connection
-    ) {
-
+    public static void connect(
+            ConnectionMeta connection
+    ) throws SQLException {
         if (dataSource != null) {
             dataSource.close();
         }
@@ -38,6 +37,7 @@ public final class DatabasePool {
         config.setIdleTimeout(30000);
 
         dataSource = new HikariDataSource(config);
+        dataSource.getConnection();
     }
 
     public static Connection getConnection()

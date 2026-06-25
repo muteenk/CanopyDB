@@ -6,19 +6,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.models.ConnectionLabel;
-import org.canopydb.models.SavedConnection;
+import org.canopydb.models.ConnectionMeta;
 
 public class ConnectionCard {
 
     private static final String CONNECTION_LABEL_SELECTED = "connection-card-selected";
 
     private final VBox card;
-    private final SavedConnection connection;
+    private final ConnectionMeta connection;
     private final Label envLabel;
     private final Label nameLabel;
     private final Label hostLabel;
 
-    public ConnectionCard(SavedConnection connection) {
+    public ConnectionCard(ConnectionMeta connection) {
         this.connection = connection;
 
         envLabel = new Label(connection.getLabel().getDisplayName());
@@ -32,7 +32,7 @@ public class ConnectionCard {
         nameRow.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(nameLabel, Priority.ALWAYS);
 
-        hostLabel = new Label(connection.getHostPort());
+        hostLabel = new Label(this.getConnectionHostPort());
         hostLabel.getStyleClass().add("connection-card-host");
 
         card = new VBox(6, nameRow, hostLabel);
@@ -43,8 +43,12 @@ public class ConnectionCard {
         return card;
     }
 
-    public SavedConnection getConnection() {
+    public ConnectionMeta getConnection() {
         return connection;
+    }
+
+    private String getConnectionHostPort(){
+        return connection.getHost()+":"+connection.getPort();
     }
 
     public void setSelected(boolean selected) {
@@ -59,7 +63,7 @@ public class ConnectionCard {
 
     public void refresh() {
         nameLabel.setText(connection.getName());
-        hostLabel.setText(connection.getHostPort());
+        hostLabel.setText(this.getConnectionHostPort());
         envLabel.setText(connection.getLabel().getDisplayName());
         applyLabelStyle();
     }

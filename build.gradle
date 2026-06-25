@@ -29,6 +29,7 @@ dependencies {
 
     implementation 'com.mysql:mysql-connector-j:9.3.0'
     implementation 'com.zaxxer:HikariCP:6.2.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.0'
 }
 
 application {

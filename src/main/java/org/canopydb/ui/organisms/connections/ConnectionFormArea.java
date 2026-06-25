@@ -11,13 +11,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.canopydb.config.DatabasePool;
 import org.canopydb.models.ConnectionLabel;
-import org.canopydb.models.SavedConnection;
+import org.canopydb.models.ConnectionMeta;
 import org.canopydb.ui.singletons.NotificationManager;
 import org.canopydb.ui.singletons.ViewManager;
 import org.canopydb.ui.atoms.TextInput;
 import org.canopydb.ui.views.WorkspaceView;
 
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -25,7 +27,7 @@ public class ConnectionFormArea {
 
     private final VBox connectionFormArea = new VBox();
 
-    private Consumer<SavedConnection> onSave;
+    private Consumer<ConnectionMeta> onSave;
 
     public ConnectionFormArea() {
         connectionFormArea.getStyleClass().add("connection-content-area");
@@ -37,7 +39,7 @@ public class ConnectionFormArea {
         return connectionFormArea;
     }
 
-    public void setOnSave(Consumer<SavedConnection> onSave) {
+    public void setOnSave(Consumer<ConnectionMeta> onSave) {
         this.onSave = onSave;
     }
 
@@ -49,7 +51,7 @@ public class ConnectionFormArea {
         connectionFormArea.getChildren().setAll(buildConnectionForm(null));
     }
 
-    public void showConnectionForm(SavedConnection connection) {
+    public void showConnectionForm(ConnectionMeta connection) {
         connectionFormArea.getChildren().setAll(buildConnectionForm(connection));
     }
 
@@ -81,7 +83,7 @@ public class ConnectionFormArea {
         return welcome;
     }
 
-    private VBox buildConnectionForm(SavedConnection existing) {
+    private VBox buildConnectionForm(ConnectionMeta existing) {
         boolean isNew = existing == null;
 
         Label formTitle = new Label(isNew ? "New Connection" : "Edit Connection");
@@ -121,13 +123,10 @@ public class ConnectionFormArea {
         Button testButton = new Button("Test Connection");
         testButton.getStyleClass().addAll("connection-button", "connection-button-secondary");
 
-        Button saveButton = new Button("Save");
-        saveButton.getStyleClass().addAll("connection-button", "connection-button-primary");
-
         Button connectButton = new Button("Connect");
         connectButton.getStyleClass().addAll("connection-button", "connection-button-primary");
 
-        HBox actions = new HBox(10, testButton, saveButton, connectButton);
+        HBox actions = new HBox(10, testButton, connectButton);
         actions.getStyleClass().add("connection-form-actions");
         actions.setAlignment(Pos.CENTER);
 
@@ -138,7 +137,7 @@ public class ConnectionFormArea {
         ));
 
         connectButton.setOnAction(e -> {
-            SavedConnection connection = buildConnectionFromForm(
+            ConnectionMeta connection = buildConnectionFromForm(
                     existing,
                     nameField,
                     labelField,
@@ -147,16 +146,30 @@ public class ConnectionFormArea {
                     usernameField,
                     passwordField
             );
-            if (onSave != null) {
-                onSave.accept(connection);
-            }
-            NotificationManager.pushNotification(
-                    "Connection Saved",
-                    connection.getName() + " was saved successfully.",
-                    NotificationManager.NotificationType.SUCCESS
-            );
 
-            ViewManager.pushView(new WorkspaceView(connection).getView());
+            try {
+                DatabasePool.connect(connection);
+
+                if (onSave != null) {
+                    onSave.accept(connection);
+                }
+
+                NotificationManager.pushNotification(
+                        "Connection Saved",
+                        connection.getName() + " was saved successfully.",
+                        NotificationManager.NotificationType.SUCCESS
+                );
+
+                ViewManager.pushView(new WorkspaceView().getView());
+
+            } catch (Exception ex) {
+
+                NotificationManager.pushNotification(
+                        "Connection Failed",
+                        ex.getMessage(),
+                        NotificationManager.NotificationType.DANGER
+                );
+            }
         });
 
         VBox card = new VBox(20, formTitle, fields, actions);
@@ -186,8 +199,8 @@ public class ConnectionFormArea {
         return field;
     }
 
-    private SavedConnection buildConnectionFromForm(
-            SavedConnection existing,
+    private ConnectionMeta buildConnectionFromForm(
+            ConnectionMeta existing,
             TextField nameField,
             ComboBox<ConnectionLabel> labelField,
             TextField hostField,
@@ -205,7 +218,7 @@ public class ConnectionFormArea {
         String password = passwordField.getText();
 
         if (existing != null) {
-            return new SavedConnection(
+            return new ConnectionMeta(
                     existing.getId(),
                     name,
                     host,
@@ -216,7 +229,7 @@ public class ConnectionFormArea {
             );
         }
 
-        return new SavedConnection(name, host, port, username, label);
+        return new ConnectionMeta(name, host, port, username, label);
     }
 
     private int parsePort(String portText) {

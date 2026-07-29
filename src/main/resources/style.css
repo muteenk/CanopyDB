@@ -528,6 +528,22 @@
 .connection-content-area {
     -fx-background-color: #1f232a;
     -fx-alignment: center;
+    -fx-padding: 16;
+    -fx-min-width: 0;
+    -fx-min-height: 0;
+}
+
+.connection-content-scroll {
+    -fx-background-color: #1f232a;
+    -fx-background: #1f232a;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-min-width: 0;
+    -fx-min-height: 0;
+}
+
+.connection-content-scroll > .viewport {
+    -fx-background-color: #1f232a;
 }
 
 /* =========================================================
@@ -535,7 +551,7 @@
    ========================================================= */
 
 .connection-sidebar {
-    -fx-min-width: 240;
+    -fx-min-width: 0;
     -fx-pref-width: 300;
     -fx-max-width: 560;
 
@@ -705,7 +721,8 @@
 
 .connection-form {
     -fx-alignment: center;
-    -fx-padding: 40;
+    -fx-padding: 24;
+    -fx-min-width: 0;
 }
 
 .connection-form-card {
@@ -716,7 +733,7 @@
     -fx-padding: 28 32;
     -fx-spacing: 0;
 
-    -fx-min-width: 420;
+    -fx-min-width: 0;
     -fx-pref-width: 450;
     -fx-max-width: 480;
 
@@ -823,6 +840,12 @@
 .connection-form-actions {
     -fx-padding: 8 0 0 0;
     -fx-alignment: center;
+    -fx-spacing: 10;
+    -fx-min-width: 0;
+}
+
+.connection-form-actions .button {
+    -fx-wrap-text: true;
 }
 
 .connection-button {

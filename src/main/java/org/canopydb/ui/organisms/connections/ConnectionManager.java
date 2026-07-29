@@ -66,8 +66,10 @@ public class ConnectionManager {
         ScrollPane scrollPane = new ScrollPane(connectionList);
         scrollPane.getStyleClass().add("connection-list-scroll");
         scrollPane.setFitToWidth(true);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setMinWidth(0);
+        scrollPane.setMinHeight(0);
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
         connectionManagerArea.getChildren().addAll(
@@ -77,6 +79,8 @@ public class ConnectionManager {
         );
         connectionManagerArea.getStyleClass().addAll("sidebar", "connection-sidebar");
         connectionManagerArea.setFillWidth(true);
+        connectionManagerArea.setMinWidth(0);
+        connectionManagerArea.setMinHeight(0);
 
         refreshConnectionList();
     }

@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -98,19 +99,26 @@ public class ConnectionForm {
         connectButton = new Button("Connect");
         connectButton.getStyleClass().addAll("connection-button", "connection-button-primary");
 
-        HBox actions = new HBox(10, testButton, saveButton, connectButton);
+        FlowPane actions = new FlowPane(10, 10);
+        actions.getChildren().addAll(testButton, saveButton, connectButton);
         actions.getStyleClass().add("connection-form-actions");
         actions.setAlignment(Pos.CENTER);
+        actions.setMinWidth(0);
+        actions.setPrefWrapLength(400);
 
         baseline = snapshotForm();
         wireDirtyTracking();
 
         VBox card = new VBox(20, formTitle, fields, actions);
         card.getStyleClass().add("connection-form-card");
+        card.setMinWidth(0);
+        card.setMaxWidth(480);
 
         root = new VBox(card);
         root.getStyleClass().add("connection-form");
         root.setAlignment(Pos.CENTER);
+        root.setMinWidth(0);
+        root.setMaxWidth(Double.MAX_VALUE);
     }
 
     public VBox getRoot() {

@@ -3,8 +3,10 @@ package org.canopydb.ui.organisms.connections;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.config.AppLogger;
 import org.canopydb.config.DatabasePool;
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
 public class ConnectionFormArea {
     private static final Logger LOGGER = AppLogger.getLogger(ConnectionFormArea.class);
 
+    private final ScrollPane scrollPane = new ScrollPane();
     private final VBox contentArea = new VBox();
 
     private Consumer<ConnectionMeta> onSave;
@@ -29,11 +32,25 @@ public class ConnectionFormArea {
     public ConnectionFormArea() {
         contentArea.getStyleClass().add("connection-content-area");
         contentArea.setAlignment(Pos.CENTER);
+        contentArea.setFillWidth(true);
+        contentArea.setMinWidth(0);
+        contentArea.setMinHeight(0);
+
+        scrollPane.setContent(contentArea);
+        scrollPane.getStyleClass().add("connection-content-scroll");
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(false);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setMinWidth(0);
+        scrollPane.setMinHeight(0);
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
         showWelcome();
     }
 
-    public VBox getConnectionFormArea() {
-        return contentArea;
+    public ScrollPane getConnectionFormArea() {
+        return scrollPane;
     }
 
     public void setOnSave(Consumer<ConnectionMeta> onSave) {
@@ -133,8 +150,9 @@ public class ConnectionFormArea {
         );
 
         ImageView logo = new ImageView(logoImage);
-        logo.setFitWidth(320);
+        logo.setFitWidth(280);
         logo.setPreserveRatio(true);
+        logo.setSmooth(true);
         logo.getStyleClass().add("connection-logo");
 
         Label subtitle = new Label(
@@ -143,12 +161,14 @@ public class ConnectionFormArea {
         );
         subtitle.getStyleClass().add("welcome-subtitle");
         subtitle.setWrapText(true);
-        subtitle.setMaxWidth(400);
+        subtitle.setMaxWidth(360);
         subtitle.setAlignment(Pos.CENTER);
 
         VBox welcome = new VBox(28, logo, subtitle);
         welcome.getStyleClass().add("connection-welcome");
         welcome.setAlignment(Pos.CENTER);
+        welcome.setMinWidth(0);
+        welcome.setMaxWidth(Double.MAX_VALUE);
 
         return welcome;
     }

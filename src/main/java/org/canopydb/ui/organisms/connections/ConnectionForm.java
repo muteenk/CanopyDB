@@ -121,8 +121,8 @@ public class ConnectionForm {
         return isNew;
     }
 
-    public void setOnTest(Runnable action) {
-        testButton.setOnAction(e -> action.run());
+    public void setOnTest(Consumer<ConnectionMeta> action) {
+        testButton.setOnAction(e -> action.accept(buildConnection()));
     }
 
     public void setOnSave(Consumer<ConnectionMeta> action) {
@@ -131,6 +131,10 @@ public class ConnectionForm {
 
     public void setOnConnect(Consumer<ConnectionMeta> action) {
         connectButton.setOnAction(e -> action.accept(buildConnection()));
+    }
+
+    public void setTestEnabled(boolean enabled) {
+        testButton.setDisable(!enabled);
     }
 
     /** Call after a successful save so the Save button hides until the next edit. */

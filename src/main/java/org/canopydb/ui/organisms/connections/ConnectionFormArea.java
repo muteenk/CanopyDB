@@ -1,5 +1,6 @@
 package org.canopydb.ui.organisms.connections;
 
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -7,6 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import org.canopydb.config.AppLogger;
 import org.canopydb.config.DatabasePool;
+import org.canopydb.config.ThreadPool;
 import org.canopydb.models.ConnectionMeta;
 import org.canopydb.ui.singletons.NotificationManager;
 import org.canopydb.ui.singletons.ViewManager;
@@ -53,11 +55,37 @@ public class ConnectionFormArea {
     }
 
     private void wireFormActions(ConnectionForm form) {
-        form.setOnTest(() -> NotificationManager.pushNotification(
-                "Connection Test",
-                "Connection test is not wired yet.",
-                NotificationManager.NotificationType.INFO
-        ));
+        form.setOnTest(connection -> {
+            form.setTestEnabled(false);
+            ThreadPool.getExecutor().execute(() -> {
+                try {
+                    DatabasePool.testConnection(connection);
+                    Platform.runLater(() -> {
+                        form.setTestEnabled(true);
+                        NotificationManager.pushNotification(
+                                "Connection Successful",
+                                "Successfully connected to "
+                                        + connection.getHost()
+                                        + ":"
+                                        + connection.getPort(),
+                                NotificationManager.NotificationType.SUCCESS
+                        );
+                    });
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Connection test failed", ex);
+                    Platform.runLater(() -> {
+                        form.setTestEnabled(true);
+                        NotificationManager.pushNotification(
+                                "Connection Failed",
+                                ex.getMessage() != null
+                                        ? ex.getMessage()
+                                        : "Unable to connect with the provided details.",
+                                NotificationManager.NotificationType.DANGER
+                        );
+                    });
+                }
+            });
+        });
 
         form.setOnSave(connection -> {
             if (onSave != null) {

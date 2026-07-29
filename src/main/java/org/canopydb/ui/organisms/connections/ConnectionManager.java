@@ -10,6 +10,7 @@ import org.canopydb.models.ConnectionLabel;
 import org.canopydb.models.ConnectionMeta;
 import org.canopydb.ui.atoms.TextInput;
 import org.canopydb.ui.molecules.ConnectionCard;
+import org.canopydb.config.AppLogger;
 import org.canopydb.ui.singletons.NotificationManager;
 
 import java.io.File;
@@ -22,7 +23,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
 public class ConnectionManager {
+    private static final Logger LOGGER = AppLogger.getLogger(ConnectionManager.class);
 
     private final VBox connectionManagerArea = new VBox();
     private final VBox connectionList = new VBox(8);
@@ -89,7 +95,7 @@ public class ConnectionManager {
 
         try {
             if (!jsonFile.exists()) {
-                System.out.println("File not found. Creating default configuration...");
+                LOGGER.info("Connections file not found. Creating default configuration...");
 
                 // Create parent directories (~/.canopydb) if they don't exist
                 Files.createDirectories(filePath.getParent());
@@ -106,7 +112,7 @@ public class ConnectionManager {
 
                 // Save to file
                 mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, defaultConnections);
-                System.out.println("Created file at: " + filePath.toAbsolutePath());
+                LOGGER.info("Created connections file at: " + filePath.toAbsolutePath());
             }
 
             // Read and parse the file
@@ -117,7 +123,7 @@ public class ConnectionManager {
             );
 
         } catch (IOException e) {
-            System.err.println("Error processing the configuration file: " + e.getMessage());
+            LOGGER.log(Level.WARNING, "Error processing configuration file", e);
             NotificationManager.pushNotification(
                     "Failed to load existing connections",
                     "Could not load connections, unable to parse connections file",
@@ -155,7 +161,7 @@ public class ConnectionManager {
             File jsonFile = filePath.toFile();
             Files.createDirectories(filePath.getParent());
             mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, connections);
-        } catch(IOException ex){
+        } catch (IOException ignored) {
             NotificationManager.pushNotification(
                     "Could not save connections",
                     "Unable to save connection details to CanopyDB",

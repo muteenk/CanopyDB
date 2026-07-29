@@ -8,8 +8,14 @@ import javafx.scene.control.TableView;
 import org.canopydb.models.TableData;
 
 import java.util.List;
+import java.util.logging.Logger;
+import org.canopydb.config.AppLogger;
 
 public class TableComponent {
+    private static final Logger LOGGER = AppLogger.getLogger(TableComponent.class);
+
+    private TableComponent() {
+    }
 
     public static TableView<List<String>> buildTableComponent(TableData table){
         TableView<List<String>> tableView = new TableView<>();
@@ -31,16 +37,13 @@ public class TableComponent {
     }
 
     public static void debugLogTableData(TableData table) {
-        System.out.println("------- HEADERS --------");
-        for (String col: table.getHeaders()){
-            System.out.print(col + "  ");
-        }
-        System.out.println("------- ROWS ---------");
-        for (List<String> row: table.getRows()){
-            for (String item: row){
-                System.out.print(item + "  ");
-            }
-            System.out.println(" ");
+        // Keeing this at FINE so it doesn't spam normal users.
+        LOGGER.fine("------- HEADERS --------");
+        LOGGER.fine(String.join("  ", table.getHeaders()));
+
+        LOGGER.fine("------- ROWS ---------");
+        for (List<String> row : table.getRows()) {
+            LOGGER.fine(String.join("  ", row));
         }
     }
 

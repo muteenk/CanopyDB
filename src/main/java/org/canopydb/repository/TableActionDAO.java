@@ -1,16 +1,19 @@
 package org.canopydb.repository;
 
+import org.canopydb.config.AppLogger;
 import org.canopydb.config.DatabasePool;
 import org.canopydb.models.TableData;
-import org.canopydb.queries.TableQuery;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class TableActionDAO {
+    private static final Logger LOGGER = AppLogger.getLogger(TableActionDAO.class);
+
     public TableData getTableData(String sql) throws SQLException {
-        System.out.println(sql);    // TODO: REMOVE
+        LOGGER.fine(() -> "Executing SQL: " + sql);
         TableData tableDataObject = new TableData();
 
         try (Connection conn = DatabasePool.getConnection();
@@ -20,8 +23,8 @@ public class TableActionDAO {
             int columnCount = metaData.getColumnCount();
 
             for (int i = 1; i <= columnCount; i++) {
-                String col_name = metaData.getColumnName(i);
-                tableDataObject.appendHeader(col_name);
+                String colName = metaData.getColumnName(i);
+                tableDataObject.appendHeader(colName);
             }
 
             while (rs.next()) {

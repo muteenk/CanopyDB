@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.canopydb.config.DatabasePool;
+import org.canopydb.config.AppLogger;
 import org.canopydb.models.ConnectionLabel;
 import org.canopydb.models.ConnectionMeta;
 import org.canopydb.ui.singletons.NotificationManager;
@@ -19,24 +20,26 @@ import org.canopydb.ui.singletons.ViewManager;
 import org.canopydb.ui.atoms.TextInput;
 import org.canopydb.ui.views.WorkspaceView;
 
-import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ConnectionFormArea {
+    private static final Logger LOGGER = AppLogger.getLogger(ConnectionFormArea.class);
 
-    private final VBox connectionFormArea = new VBox();
+    private final VBox contentArea = new VBox();
 
     private Consumer<ConnectionMeta> onSave;
 
     public ConnectionFormArea() {
-        connectionFormArea.getStyleClass().add("connection-content-area");
-        connectionFormArea.setAlignment(Pos.CENTER);
+        contentArea.getStyleClass().add("connection-content-area");
+        contentArea.setAlignment(Pos.CENTER);
         showWelcome();
     }
 
     public VBox getConnectionFormArea() {
-        return connectionFormArea;
+        return contentArea;
     }
 
     public void setOnSave(Consumer<ConnectionMeta> onSave) {
@@ -44,15 +47,15 @@ public class ConnectionFormArea {
     }
 
     public void showWelcome() {
-        connectionFormArea.getChildren().setAll(buildWelcome());
+        contentArea.getChildren().setAll(buildWelcome());
     }
 
     public void showConnectionForm() {
-        connectionFormArea.getChildren().setAll(buildConnectionForm(null));
+        contentArea.getChildren().setAll(buildConnectionForm(null));
     }
 
     public void showConnectionForm(ConnectionMeta connection) {
-        connectionFormArea.getChildren().setAll(buildConnectionForm(connection));
+        contentArea.getChildren().setAll(buildConnectionForm(connection));
     }
 
     private VBox buildWelcome() {
@@ -163,7 +166,7 @@ public class ConnectionFormArea {
                 ViewManager.pushView(new WorkspaceView().getView());
 
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Connection failed", ex);
                 NotificationManager.pushNotification(
                         "Connection Failed",
                         ex.getMessage(),

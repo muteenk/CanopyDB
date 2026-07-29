@@ -732,6 +732,16 @@
     -fx-font-weight: 600;
 }
 
+.connection-form-char-count {
+    -fx-text-fill: #6e7681;
+    -fx-font-size: 11px;
+    -fx-font-weight: 500;
+}
+
+.connection-form-char-count-limit {
+    -fx-text-fill: #d4a72c;
+}
+
 .connection-form-input {
     -fx-background-color: #363840;
     -fx-text-fill: #ffffff;

@@ -1,10 +1,12 @@
 package org.canopydb.ui.molecules;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TableViewEventController;
 import org.canopydb.models.TableSession;
@@ -13,10 +15,11 @@ import org.canopydb.ui.atoms.FilterBox;
 
 
 public class TabFilterArea {
-    private final VBox filterMain = new VBox(); // parent container
-    private final VBox filterArea = new VBox(); // container for input boxes
+    private static final int MAX_INPUT_COUNT = 10;
 
-    // Filter Controls
+    private final VBox filterMain = new VBox();
+    private final VBox filterRows = new VBox();
+
     private final Button addNewFilter = new Button("Add Filter");
     private final Button clearAllFilters = new Button("Clear Filters");
 
@@ -32,38 +35,38 @@ public class TabFilterArea {
         clearAllFilters.addEventHandler(MouseEvent.MOUSE_CLICKED, _ -> clearAllFilterInputs());
         clearAllFilters.setDisable(true);
 
-        HBox controls = new HBox(
-                addNewFilter,
-                clearAllFilters
-        );
-        filterArea.getChildren().add(controls);
-        filterMain.getChildren().addAll(filterArea, controls);
-
-        filterArea.getStyleClass().add("filter-area");
+        HBox controls = new HBox(8, addNewFilter, clearAllFilters);
+        controls.setAlignment(Pos.CENTER_LEFT);
         controls.getStyleClass().add("filter-toolbar");
+
+        filterRows.getStyleClass().add("filter-rows");
+        filterRows.setFillWidth(true);
+
+        filterMain.getStyleClass().add("filter-area");
+        filterMain.getChildren().addAll(controls, filterRows);
+        VBox.setVgrow(filterRows, Priority.NEVER);
     }
 
-    private void addFilterInput() {     // Inserts a new filter box to the filter area
-        int currentSize = this.filterArea.getChildren().size();
-        int MAX_INPUT_COUNT = 10;
+    private void addFilterInput() {
+        int currentSize = filterRows.getChildren().size();
         if (currentSize >= MAX_INPUT_COUNT) return;
-        filterArea.getChildren().addFirst(buildFilterInput().getFilterBox());
+
+        filterRows.getChildren().add(buildFilterInput().getFilterBox());
         Profiler.logMemory();
-        this.addNewFilter.setDisable(currentSize == MAX_INPUT_COUNT -1);
-        this.clearAllFilters.setDisable(false);
+        addNewFilter.setDisable(currentSize + 1 >= MAX_INPUT_COUNT);
+        clearAllFilters.setDisable(false);
     }
 
-    private FilterBox buildFilterInput() {      // Builds filter box
+    private FilterBox buildFilterInput() {
         FilterBox filterBox = new FilterBox();
 
         filterBox.getFilterInput().addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode() == KeyCode.ENTER) {     // to handle enter event on input bar
+            if (event.getCode() == KeyCode.ENTER) {
                 event.consume();
                 applyFilter(filterBox);
             }
         });
 
-        // Handling every filter input box text change
         filterBox.getFilterInput()
                 .textProperty()
                 .addListener((obs, oldValue, newValue) -> {
@@ -72,12 +75,10 @@ public class TabFilterArea {
                     }
                 });
 
-        // apply button handler
         filterBox.getFilterToggle().addEventHandler(
                 MouseEvent.MOUSE_CLICKED, _ -> toggleFilter(filterBox)
         );
 
-        // remove filter completely
         filterBox.getRemoveFilter().addEventHandler(MouseEvent.MOUSE_CLICKED, _ -> {
             String input = filterBox.getFilterInput().getText();
             if (!input.isEmpty()) unapplyFilter(filterBox);
@@ -114,18 +115,20 @@ public class TabFilterArea {
     }
 
     private void removeFilterInput(FilterBox filterBox){
-        filterArea.getChildren().remove(filterBox.getFilterBox());
-        this.addNewFilter.setDisable(false);
-        this.clearAllFilters.setDisable(this.filterArea.getChildren().isEmpty());
+        filterRows.getChildren().remove(filterBox.getFilterBox());
+        addNewFilter.setDisable(false);
+        clearAllFilters.setDisable(filterRows.getChildren().isEmpty());
     }
 
     private void clearAllFilterInputs() {
-        filterArea.getChildren().clear();
+        filterRows.getChildren().clear();
         tableSession.clearQueryFilters();
         tableViewEventController.tableReRender(tableSession);
-        this.addNewFilter.setDisable(false);
-        this.clearAllFilters.setDisable(true);
+        addNewFilter.setDisable(false);
+        clearAllFilters.setDisable(true);
     }
 
-    public VBox getFilterArea() {return this.filterMain;}
+    public VBox getFilterArea() {
+        return filterMain;
+    }
 }

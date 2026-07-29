@@ -1,5 +1,6 @@
 package org.canopydb.ui.atoms;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -12,7 +13,7 @@ public class FilterBox {
     private final TextField filterInput = new TextInput("Enter filter query").getTextField();
     private final Button filterToggle = new Button(Constants.APPLY);
     private final Button removeFilter = new Button(" – ");
-    private final HBox filterBox = new HBox();
+    private final HBox filterBox = new HBox(8);
 
     private boolean appliedState = false;
     private final String filterID;
@@ -24,6 +25,7 @@ public class FilterBox {
         removeFilter.getStyleClass().add("filter-apply-button");
         filterInput.getStyleClass().add("filter-input");
         filterBox.getStyleClass().add("filter-row");
+        filterBox.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(filterInput, Priority.ALWAYS);
 
         filterBox.getChildren().addAll(filterInput, filterToggle, removeFilter);

@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.canopydb.models.ConnectionLabel;
 import org.canopydb.models.ConnectionMeta;
@@ -23,17 +24,23 @@ public class ConnectionCard {
 
         envLabel = new Label(connection.getLabel().getDisplayName());
         envLabel.getStyleClass().add("connection-label");
+        envLabel.setMinWidth(Region.USE_PREF_SIZE);
         applyLabelStyle();
 
         nameLabel = new Label(connection.getName());
         nameLabel.getStyleClass().add("connection-card-name");
+        nameLabel.setMinWidth(0);
+        nameLabel.setMaxWidth(Double.MAX_VALUE);
 
         HBox nameRow = new HBox(10, envLabel, nameLabel);
         nameRow.setAlignment(Pos.CENTER_LEFT);
+        nameRow.setMinWidth(0);
         HBox.setHgrow(nameLabel, Priority.ALWAYS);
 
         hostLabel = new Label(this.getConnectionHostPort());
         hostLabel.getStyleClass().add("connection-card-host");
+        hostLabel.setMinWidth(0);
+        hostLabel.setMaxWidth(Double.MAX_VALUE);
 
         card = new VBox(6, nameRow, hostLabel);
         card.getStyleClass().add("connection-card");

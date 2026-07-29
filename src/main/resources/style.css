@@ -535,12 +535,28 @@
    ========================================================= */
 
 .connection-sidebar {
-    -fx-min-width: 280;
+    -fx-min-width: 240;
     -fx-pref-width: 300;
-    -fx-max-width: 320;
+    -fx-max-width: 560;
 
     -fx-padding: 16;
     -fx-spacing: 12;
+}
+
+.connection-split {
+    -fx-background-color: #1f232a;
+    -fx-padding: 0;
+}
+
+.connection-split > .split-pane-divider {
+    -fx-background-color: #1f232a;
+    -fx-padding: 0 2 0 2;
+    -fx-border-color: transparent;
+    -fx-cursor: h-resize;
+}
+
+.connection-split > .split-pane-divider:hover {
+    -fx-background-color: #5C3E94;
 }
 
 .connection-search {
@@ -618,11 +634,13 @@
     -fx-text-fill: #f0f3f6;
     -fx-font-size: 14px;
     -fx-font-weight: 600;
+    -fx-min-width: 0;
 }
 
 .connection-card-host {
     -fx-text-fill: #8b949e;
     -fx-font-size: 12px;
+    -fx-min-width: 0;
 }
 
 .connection-card-selected .connection-card-name,

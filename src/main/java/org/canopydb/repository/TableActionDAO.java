@@ -2,9 +2,15 @@ package org.canopydb.repository;
 
 import org.canopydb.config.AppLogger;
 import org.canopydb.config.DatabasePool;
+import org.canopydb.models.CellValue;
+import org.canopydb.models.ColumnMeta;
 import org.canopydb.models.TableData;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -23,15 +29,18 @@ public class TableActionDAO {
             int columnCount = metaData.getColumnCount();
 
             for (int i = 1; i <= columnCount; i++) {
-                String colName = metaData.getColumnName(i);
-                tableDataObject.appendHeader(colName);
+                tableDataObject.appendColumn(new ColumnMeta(
+                        metaData.getColumnLabel(i),
+                        metaData.getColumnType(i),
+                        metaData.getColumnTypeName(i)
+                ));
             }
 
             while (rs.next()) {
-                List<String> row = new ArrayList<>();
+                List<CellValue> row = new ArrayList<>(columnCount);
                 for (int i = 1; i <= columnCount; i++) {
-                    Object value = rs.getObject(i);
-                    row.add(value != null ? value.toString() : "NULL");
+                    int jdbcType = tableDataObject.getColumns().get(i - 1).getJdbcType();
+                    row.add(ResultSetValueSerializer.read(rs, i, jdbcType));
                 }
                 tableDataObject.appendRow(row);
             }

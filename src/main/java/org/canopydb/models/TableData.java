@@ -1,28 +1,33 @@
 package org.canopydb.models;
 
-import org.canopydb.queries.TableQuery;
-import org.canopydb.utils.TableUtilities;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class TableData {
-    private final List<String> headers = new ArrayList<>();
-    private final List<List<String>> rows = new ArrayList<>();
+    private final List<ColumnMeta> columns = new ArrayList<>();
+    private final List<List<CellValue>> rows = new ArrayList<>();
 
-    public void appendHeader(String col){
-        this.headers.add(col);
+    public void appendColumn(ColumnMeta column) {
+        this.columns.add(column);
     }
 
-    public void appendRow(List<String> row){
+    public void appendRow(List<CellValue> row) {
         this.rows.add(row);
     }
 
-    public List<String> getHeaders() {
-        return this.headers;
+    public List<ColumnMeta> getColumns() {
+        return this.columns;
     }
 
-    public List<List<String>> getRows() {
+    public List<String> getHeaders() {
+        List<String> headers = new ArrayList<>(columns.size());
+        for (ColumnMeta column : columns) {
+            headers.add(column.getName());
+        }
+        return headers;
+    }
+
+    public List<List<CellValue>> getRows() {
         return this.rows;
     }
 }

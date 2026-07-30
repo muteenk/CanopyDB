@@ -4,6 +4,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TableViewEventController;
+import org.canopydb.models.CellValue;
 import org.canopydb.models.TableSession;
 import org.canopydb.ui.molecules.TabFilterArea;
 import org.canopydb.ui.molecules.TableTabFooter;
@@ -14,7 +15,7 @@ import java.util.List;
 public class TableTab {
     private final Tab tab;
     private TabFilterArea filterArea;
-    private final TableView<List<String>> tableView;
+    private final TableView<List<CellValue>> tableView;
     private TableTabFooter footer;
 
     private TableSession tableSession;
@@ -27,7 +28,7 @@ public class TableTab {
         this.tableView = TableComponent.buildTableComponent(tableSession.getTableData());
         tableView.setSortPolicy(tv -> {
             if (tv.getSortOrder().isEmpty()) return true;
-            TableColumn<List<String>, ?> selectedColumn = tv.getSortOrder().getFirst();
+            TableColumn<List<CellValue>, ?> selectedColumn = tv.getSortOrder().getFirst();
             String orderBy = selectedColumn.getText();
             tableSession.setQueryOrder(orderBy);
             tableViewEventController.tableReRender(tableSession);

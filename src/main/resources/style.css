@@ -276,6 +276,7 @@
     -fx-border-width: 0 1 0 0;
 
     -fx-font-size: 13px;
+    -fx-text-overrun: ellipsis;
 }
 
 

@@ -16,15 +16,26 @@ import java.util.stream.Collectors;
 public class TableComponent {
     private static final Logger LOGGER = AppLogger.getLogger(TableComponent.class);
 
+    /** Default visible width; large cell text will ellipsize instead of stretching the column. */
+    private static final double COLUMN_PREF_WIDTH = 180;
+    private static final double COLUMN_MIN_WIDTH = 64;
+
     private TableComponent() {
     }
 
     public static TableView<List<CellValue>> buildTableComponent(TableData table) {
         TableView<List<CellValue>> tableView = new TableView<>();
+        tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+
         List<String> tableHeaders = table.getHeaders();
         for (int i = 0; i < tableHeaders.size(); i++) {
             final int columnIndex = i;
             TableColumn<List<CellValue>, String> column = new TableColumn<>(tableHeaders.get(i));
+            column.setMinWidth(COLUMN_MIN_WIDTH);
+            column.setPrefWidth(COLUMN_PREF_WIDTH);
+            // Keep max open so users can drag columns wider than the default on purpose.
+            column.setMaxWidth(Double.MAX_VALUE);
+            column.setResizable(true);
             column.setCellValueFactory(cellData -> {
                 List<CellValue> row = cellData.getValue();
                 String cellValue = (columnIndex < row.size())

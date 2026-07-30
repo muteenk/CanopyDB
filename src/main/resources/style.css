@@ -279,6 +279,61 @@
     -fx-text-overrun: ellipsis;
 }
 
+/* =========================================================
+   Table Context Menu
+   ========================================================= */
+
+.context-menu.table-context-menu {
+    -fx-background-color: #2b2d31;
+    -fx-background-insets: 0;
+    -fx-background-radius: 6;
+    -fx-border-color: #3f434b;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-padding: 4;
+    -fx-effect: dropshadow(
+        gaussian,
+        rgba(0, 0, 0, 0.35),
+        12,
+        0.2,
+        0,
+        3
+    );
+}
+
+.context-menu.table-context-menu > .scroll-pane,
+.context-menu.table-context-menu > .scroll-pane > .viewport {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.context-menu.table-context-menu .menu-item {
+    -fx-background-color: transparent;
+    -fx-background-radius: 4;
+    -fx-padding: 6 12;
+}
+
+.context-menu.table-context-menu .menu-item:focused,
+.context-menu.table-context-menu .menu-item:hover {
+    -fx-background-color: #5C3E94;
+}
+
+.context-menu.table-context-menu .menu-item > .label {
+    -fx-text-fill: #d0d7de;
+    -fx-font-size: 13px;
+}
+
+.context-menu.table-context-menu .menu-item:focused > .label,
+.context-menu.table-context-menu .menu-item:hover > .label {
+    -fx-text-fill: #ffffff;
+}
+
+.context-menu.table-context-menu .separator .line {
+    -fx-border-color: #3f434b transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
 
 /* =========================================================================
    SCROLLBARS

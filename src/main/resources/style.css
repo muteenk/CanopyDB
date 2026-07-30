@@ -16,6 +16,23 @@
     -fx-background-color: #2b2d31;
     -fx-border-color: transparent #1f232a transparent transparent;
     -fx-border-width: 0 1 0 0;
+    -fx-padding: 10;
+    -fx-spacing: 8;
+    -fx-pref-width: 260;
+    -fx-min-width: 180;
+}
+
+.sidebar-search {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 8 10;
+    -fx-font-size: 13px;
+}
+
+.sidebar-search-empty {
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 12px;
+    -fx-padding: 4 2 8 2;
 }
 
 

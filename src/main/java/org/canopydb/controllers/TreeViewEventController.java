@@ -18,9 +18,21 @@ public class TreeViewEventController {
     private final TableOpenAction tableDataAppendAction;
     private final TableActiveCheck tableActiveCheck;
 
+    private Runnable onTreeDataChanged;
+
     public TreeViewEventController(TableOpenAction tableDataAppendAction, TableActiveCheck tableActiveCheck){
         this.tableDataAppendAction = tableDataAppendAction;
         this.tableActiveCheck = tableActiveCheck;
+    }
+
+    public void setOnTreeDataChanged(Runnable onTreeDataChanged) {
+        this.onTreeDataChanged = onTreeDataChanged;
+    }
+
+    private void notifyTreeDataChanged() {
+        if (onTreeDataChanged != null) {
+            onTreeDataChanged.run();
+        }
     }
 
     public void dbExpandHandler(TreeItem<String> node) {
@@ -39,6 +51,7 @@ public class TreeViewEventController {
                     TreeItem<String> tableItem = new TreeItem<>(table);
                     node.getChildren().add(tableItem);
                 }
+                notifyTreeDataChanged();
             });
         })
         .exceptionally(error -> {
@@ -50,6 +63,7 @@ public class TreeViewEventController {
                         error.getMessage(),
                         NotificationManager.NotificationType.DANGER
                 );
+                notifyTreeDataChanged();
             });
             return null;
         });
@@ -77,6 +91,7 @@ public class TreeViewEventController {
                     });
                     node.getChildren().add(dbItem);
                 }
+                notifyTreeDataChanged();
             });
         })
         .exceptionally(error -> {
@@ -88,6 +103,7 @@ public class TreeViewEventController {
                         error.getMessage(),
                         NotificationManager.NotificationType.DANGER
                 );
+                notifyTreeDataChanged();
             });
             return null;
         });

@@ -1,4 +1,4 @@
-# CanopyDB (Development Stage)
+# CanopyDB (0.1 SNAPSHOT)
 *A lightweight, fast, and modern SQL client built for developers.*
 
 ---
@@ -114,27 +114,27 @@ A major focus of the project is ensuring that heavy database operations never bl
 * [x] Connection Databases and table list fetching
 * [x] Handle Connection Loading and Error Properly
 * [x] Displaying tables
-* [ ] Handling column and headers default lengths
+* [x] Handling column and headers default lengths
 * [x] Notification Popups
 * [x] Handle Error Properly
-* [ ] Cleaner Errors
-* [ ] Better Error Display
+* [x] Cleaner Errors
+* [x] Better Error Display
 * [ ] Handle Table loading state 
-* [ ] Push Notifications
+* [x] Push Notifications
 * [x] Multi-tab interface
 * [x] Table Single Column Sorting
 * [ ] Multi-Column Sorting
 * [x] Table Pagination
 * [x] Table Filtering
-* [ ] Search tables
-* [ ] Connection management
+* [x] Search tables
+* [x] Connection management
 * [ ] Query editor
 * [ ] Parallel query execution
 * [ ] Query cancellation
 * [ ] Result table rendering
 * [ ] Query history
 
-### Phase 2
+### Future Scope
 
 * [ ] Table Data Editing
 * [ ] Lazy schema loading
@@ -163,6 +163,16 @@ CanopyDB intentionally avoids:
 The focus is:
 
 > responsiveness, simplicity, and engineering quality.
+
+---
+
+## Documentation
+
+Developer docs for the codebase under `src/`:
+
+* [docs/README.md](docs/README.md) — docs index and “where to change what”
+* [Architecture](docs/ARCHITECTURE.md) — layers, bootstrap, connection/workspace/table flows, threading, persistence
+* [Package reference](docs/PACKAGE-REFERENCE.md) — package and class map for `org.canopydb`
 
 ---
 

@@ -15,6 +15,7 @@ import org.canopydb.models.ConnectionMeta;
 import org.canopydb.ui.singletons.NotificationManager;
 import org.canopydb.ui.singletons.ViewManager;
 import org.canopydb.ui.views.WorkspaceView;
+import org.canopydb.utils.ExceptionMessages;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -80,7 +81,7 @@ public class ConnectionFormArea {
                     Platform.runLater(() -> {
                         form.setTestEnabled(true);
                         NotificationManager.pushNotification(
-                                "Connection Successful",
+                                "Connection Test Successful",
                                 "Successfully connected to "
                                         + connection.getHost()
                                         + ":"
@@ -95,7 +96,7 @@ public class ConnectionFormArea {
                         NotificationManager.pushNotification(
                                 "Connection Failed",
                                 ex.getMessage() != null
-                                        ? ex.getMessage()
+                                        ? ExceptionMessages.userMessage(ex)
                                         : "Unable to connect with the provided details.",
                                 NotificationManager.NotificationType.DANGER
                         );
@@ -110,7 +111,7 @@ public class ConnectionFormArea {
             }
             form.markClean();
             NotificationManager.pushNotification(
-                    "Connection Saved",
+                    "Connection Saved Successfully",
                     connection.getName() + " was saved successfully.",
                     NotificationManager.NotificationType.SUCCESS
             );
@@ -125,8 +126,8 @@ public class ConnectionFormArea {
                 }
 
                 NotificationManager.pushNotification(
-                        "Connection Saved",
-                        connection.getName() + " was saved successfully.",
+                        "Connected and Connection Saved",
+                        connection.getName() + " was connected and saved successfully.",
                         NotificationManager.NotificationType.SUCCESS
                 );
 
@@ -135,7 +136,7 @@ public class ConnectionFormArea {
                 LOGGER.log(Level.SEVERE, "Connection failed", ex);
                 NotificationManager.pushNotification(
                         "Connection Failed",
-                        ex.getMessage(),
+                        ExceptionMessages.userMessage(ex),
                         NotificationManager.NotificationType.DANGER
                 );
             }

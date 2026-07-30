@@ -6,6 +6,7 @@ import org.canopydb.services.TableActionService;
 import org.canopydb.ui.interfaces.TableUpdateAction;
 import org.canopydb.ui.singletons.NotificationManager;
 import org.canopydb.config.AppLogger;
+import org.canopydb.utils.ExceptionMessages;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +35,7 @@ public class TableViewEventController {
                         );
                         NotificationManager.pushNotification(
                                 "Failed to reload table !",
-                                error.getMessage(),
+                                ExceptionMessages.userMessage(error),
                                 NotificationManager.NotificationType.DANGER
                         );
                     });

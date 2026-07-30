@@ -9,6 +9,7 @@ import org.canopydb.ui.interfaces.TableOpenAction;
 import org.canopydb.ui.singletons.NotificationManager;
 import org.canopydb.ui.utils.TreeViewComponent;
 import org.canopydb.utils.Constants;
+import org.canopydb.utils.ExceptionMessages;
 import org.canopydb.utils.TableUtilities;
 
 
@@ -60,7 +61,7 @@ public class TreeViewEventController {
                 node.getChildren().add(new TreeItem<>(Constants.FAILED));
                 NotificationManager.pushNotification(
                         "Failed to fetch tables !",
-                        error.getMessage(),
+                        ExceptionMessages.userMessage(error),
                         NotificationManager.NotificationType.DANGER
                 );
                 notifyTreeDataChanged();
@@ -100,7 +101,7 @@ public class TreeViewEventController {
                 node.getChildren().add(new TreeItem<>(Constants.FAILED));
                 NotificationManager.pushNotification(
                         "Failed to fetch databases !",
-                        error.getMessage(),
+                        ExceptionMessages.userMessage(error),
                         NotificationManager.NotificationType.DANGER
                 );
                 notifyTreeDataChanged();
@@ -128,7 +129,7 @@ public class TreeViewEventController {
                 Platform.runLater(() -> {
                     NotificationManager.pushNotification(
                             "Failed to fetch table !",
-                            error.getMessage(),
+                            ExceptionMessages.userMessage(error),
                             NotificationManager.NotificationType.DANGER
                     );
                 });

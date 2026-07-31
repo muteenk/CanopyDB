@@ -25,12 +25,12 @@ class TreeSearchTest {
     void matches_isCaseInsensitiveContains() {
         assertTrue(TreeSearch.matches("Users", "user"));
         assertFalse(TreeSearch.matches("Orders", "user"));
-        assertFalse(TreeSearch.matches("LOADING", "load")); // placeholder ignored
+        assertFalse(TreeSearch.matches("Connection", "conn")); // root placeholder ignored
     }
 
     @Test
     void findLoadedMatches_dbNameMatch_includesAllLoadedTables() {
-        TreeItem<String> db = dbWithTables("analytics", "events", "users");
+        LazyTreeItem db = loadedDbWithTables("analytics", "events", "users");
         List<TreeSearch.Match> matches = TreeSearch.findLoadedMatches(List.of(db), "analy");
 
         assertEquals(1, matches.size());
@@ -39,7 +39,7 @@ class TreeSearchTest {
 
     @Test
     void findLoadedMatches_tableNameMatch_includesParentDb() {
-        TreeItem<String> db = dbWithTables("app", "orders", "users");
+        LazyTreeItem db = loadedDbWithTables("app", "orders", "users");
         List<TreeSearch.Match> matches = TreeSearch.findLoadedMatches(List.of(db), "user");
 
         assertEquals(1, matches.size());
@@ -49,19 +49,32 @@ class TreeSearchTest {
     }
 
     @Test
-    void findLoadedMatches_skipsLoadingPlaceholderChildren() {
-        TreeItem<String> db = new TreeItem<>("app");
-        db.getChildren().add(new TreeItem<>("LOADING"));
+    void findLoadedMatches_skipsUnloadedDatabaseChildren() {
+        LazyTreeItem db = new LazyTreeItem("app");
 
-        assertTrue(TreeSearch.findLoadedMatches(List.of(db), "app").getFirst().tables().isEmpty());
+        assertTrue(TreeSearch.loadedTables(db).isEmpty());
         assertFalse(TreeSearch.hasLoadedTables(db));
+        assertEquals(1, TreeSearch.findLoadedMatches(List.of(db), "app").size());
+        assertTrue(TreeSearch.findLoadedMatches(List.of(db), "app").getFirst().tables().isEmpty());
     }
 
-    private static TreeItem<String> dbWithTables(String dbName, String... tables) {
-        TreeItem<String> db = new TreeItem<>(dbName);
+    @Test
+    void lazyTreeItem_unloadedIsNotLeaf_loadedEmptyIsLeaf() {
+        LazyTreeItem db = new LazyTreeItem("app");
+        assertFalse(db.isLeaf());
+        assertTrue(db.needsLoad());
+
+        db.markLoaded();
+        assertTrue(db.isLeaf());
+        assertTrue(db.isLoaded());
+    }
+
+    private static LazyTreeItem loadedDbWithTables(String dbName, String... tables) {
+        LazyTreeItem db = new LazyTreeItem(dbName);
         for (String table : tables) {
             db.getChildren().add(new TreeItem<>(table));
         }
+        db.markLoaded();
         return db;
     }
 }

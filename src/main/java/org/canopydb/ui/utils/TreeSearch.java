@@ -1,7 +1,6 @@
 package org.canopydb.ui.utils;
 
 import javafx.scene.control.TreeItem;
-import org.canopydb.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +18,7 @@ public final class TreeSearch {
     }
 
     public static boolean isPlaceholder(String value) {
-        return value == null
-                || value.equals(Constants.LOADING)
-                || value.equals(Constants.FAILED)
-                || value.equals("Connection");
+        return value == null || value.equals("Connection");
     }
 
     public static boolean matches(String text, String normalizedQuery) {
@@ -43,15 +39,14 @@ public final class TreeSearch {
     }
 
     /**
-     * Returns loaded tables under a DB node (excludes LOADING / FAILED placeholders).
+     * Returns loaded tables under a DB node (empty if the DB has not finished loading).
      */
     public static List<TreeItem<String>> loadedTables(TreeItem<String> database) {
         List<TreeItem<String>> tables = new ArrayList<>();
-        if (database == null || database.getChildren().isEmpty()) {
+        if (database == null) {
             return tables;
         }
-        String first = database.getChildren().getFirst().getValue();
-        if (Constants.LOADING.equals(first) || Constants.FAILED.equals(first)) {
+        if (database instanceof LazyTreeItem lazy && !lazy.isLoaded()) {
             return tables;
         }
         for (TreeItem<String> child : database.getChildren()) {

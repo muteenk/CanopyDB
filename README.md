@@ -138,7 +138,7 @@ A major focus of the project is ensuring that heavy database operations never bl
 - [x] Handle Error Properly
 - [x] Cleaner Errors
 - [x] Better Error Display
-- [ ] Handle Table loading state 
+- [ ] Handle loading states
 - [x] Push Notifications
 - [x] Multi-tab interface
 - [x] Table Single Column Sorting

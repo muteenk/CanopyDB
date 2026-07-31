@@ -142,7 +142,7 @@ Sidebar
 | Expand connection root | Load databases asynchronously |
 | Expand database | Load table names for that schema |
 | Double-click table node | Open or focus tab; fetch first page of data |
-| Placeholders | `Constants.LOADING` / `FAILED` child nodes |
+| Placeholders | Inline spinner on the expanding node (`LazyTreeItem`); failure collapses and retries on next expand |
 
 Search keeps a snapshot of the loaded tree and projects a filtered tree via `TreeSearch.findLoadedMatches`. After loads, the controller calls `onTreeDataChanged` so an active search re-applies.
 

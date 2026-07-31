@@ -32,7 +32,7 @@ Glue between UI events and services. Always marshal UI updates onto the FX threa
 
 | Class | Role |
 | --- | --- |
-| `TreeViewEventController` | DB/table expand handlers, double-click open, LOADING/FAILED placeholders, notifies tree search after data changes |
+| `TreeViewEventController` | DB/table expand handlers, double-click open, inline loaders via `LazyTreeItem`, notifies tree search after data changes |
 | `TableViewEventController` | `tableReRender` — reload session data/count after filter, sort, or page change |
 
 ---
@@ -83,7 +83,7 @@ Glue between UI events and services. Always marshal UI updates onto the FX threa
 
 | Class | Role |
 | --- | --- |
-| `Constants` | LOADING / FAILED / SUCCESS; APPLY / APPLIED filter labels |
+| `Constants` | APPLY / APPLIED filter labels |
 | `ExceptionMessages` | `userMessage(Throwable)` — unwrap for user-facing text |
 | `TableUtilities` | `tablePath(database, table)` → `"database : table"` (tab identity) |
 
@@ -176,6 +176,7 @@ Glue between UI events and services. Always marshal UI updates onto the FX threa
 | `ClipboardUtil` | Put string on system clipboard |
 | `TreeViewComponent` | Tree helpers (e.g. detect table-depth nodes) |
 | `TreeSearch` | Case-insensitive `contains` match over loaded DB/table nodes |
+| `LazyTreeItem` | Expandable tree node with UNLOADED / LOADING / LOADED + inline spinner |
 
 ---
 

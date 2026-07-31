@@ -8,7 +8,7 @@ import org.canopydb.config.Profiler;
 import org.canopydb.controllers.TreeViewEventController;
 import org.canopydb.ui.interfaces.TableActiveCheck;
 import org.canopydb.ui.interfaces.TableOpenAction;
-import org.canopydb.utils.Constants;
+import org.canopydb.ui.utils.LazyTreeItem;
 
 /**
  * Workspace left pane: connection tree shell + search composition.
@@ -17,7 +17,7 @@ import org.canopydb.utils.Constants;
 public class Sidebar {
 
     private final TreeViewEventController treeViewEventController;
-    private final TreeItem<String> connectionRoot = new TreeItem<>("Connection");
+    private final LazyTreeItem connectionRoot = new LazyTreeItem("Connection");
     private final ConnectionTreeSearch treeSearch;
 
     public Sidebar(TableOpenAction tableOpenAction, TableActiveCheck tableActiveCheck) {
@@ -43,11 +43,12 @@ public class Sidebar {
     }
 
     private TreeView<String> buildTreeView() {
-        connectionRoot.getChildren().add(new TreeItem<>(Constants.LOADING));
         connectionRoot.addEventHandler(
                 TreeItem.<String>branchExpandedEvent(),
                 event -> {
-                    if (event.getSource() != connectionRoot) return;
+                    if (event.getSource() != connectionRoot) {
+                        return;
+                    }
                     treeViewEventController.dbRootExpandHandler(connectionRoot);
                 }
         );

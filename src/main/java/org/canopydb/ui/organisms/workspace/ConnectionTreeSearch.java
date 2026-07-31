@@ -8,8 +8,8 @@ import javafx.scene.control.TreeItem;
 import javafx.util.Duration;
 import org.canopydb.controllers.TreeViewEventController;
 import org.canopydb.ui.atoms.TextInput;
+import org.canopydb.ui.utils.LazyTreeItem;
 import org.canopydb.ui.utils.TreeSearch;
-import org.canopydb.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class ConnectionTreeSearch {
 
     private static final Duration SEARCH_DEBOUNCE = Duration.millis(180);
 
-    private final TreeItem<String> connectionRoot;
+    private final LazyTreeItem connectionRoot;
     private final TreeViewEventController treeViewEventController;
 
     private final List<TreeItem<String>> canonicalDatabases = new ArrayList<>();
@@ -34,7 +34,7 @@ public class ConnectionTreeSearch {
     private boolean filtering;
 
     public ConnectionTreeSearch(
-            TreeItem<String> connectionRoot,
+            LazyTreeItem connectionRoot,
             TreeViewEventController treeViewEventController
     ) {
         this.connectionRoot = connectionRoot;
@@ -75,16 +75,15 @@ public class ConnectionTreeSearch {
     }
 
     private void refreshCanonicalDatabases() {
-        canonicalDatabases.clear();
-        if (connectionRoot.getChildren().isEmpty()) {
+        if (!connectionRoot.isLoaded()) {
+            if (!filtering) {
+                canonicalDatabases.clear();
+            }
             return;
         }
-        String first = connectionRoot.getChildren().getFirst().getValue();
-        if (Constants.LOADING.equals(first) || Constants.FAILED.equals(first)) {
-            return;
-        }
-        // Only capture when displaying the canonical tree (not a filtered projection).
+        // While filtering, canonical DB nodes are updated in place by the controller.
         if (!filtering) {
+            canonicalDatabases.clear();
             canonicalDatabases.addAll(connectionRoot.getChildren());
         }
     }
@@ -104,7 +103,6 @@ public class ConnectionTreeSearch {
 
         if (matches.isEmpty()) {
             if (canonicalDatabases.isEmpty()) {
-                // Nothing loaded yet — keep the live tree (LOADING / etc.) intact.
                 filtering = false;
                 setEmptySearchVisible(
                         true,
@@ -141,27 +139,30 @@ public class ConnectionTreeSearch {
 
     private TreeItem<String> buildProjectedDatabase(TreeSearch.Match match) {
         TreeItem<String> canonicalDb = match.database();
-        TreeItem<String> projected = new TreeItem<>(canonicalDb.getValue());
+        LazyTreeItem projected = new LazyTreeItem(canonicalDb.getValue());
 
         for (TreeItem<String> table : match.tables()) {
             projected.getChildren().add(new TreeItem<>(table.getValue()));
         }
 
-        // DB name matched but tables not loaded yet — allow expand to load, then re-filter.
-        if (match.tables().isEmpty() && !TreeSearch.hasLoadedTables(canonicalDb)) {
-            String first = canonicalDb.getChildren().isEmpty()
-                    ? null
-                    : canonicalDb.getChildren().getFirst().getValue();
-            if (Constants.LOADING.equals(first) || canonicalDb.getChildren().isEmpty()) {
-                projected.getChildren().add(new TreeItem<>(Constants.LOADING));
-                projected.addEventHandler(TreeItem.<String>branchExpandedEvent(), event -> {
-                    if (event.getSource() != projected) return;
-                    treeViewEventController.dbExpandHandler(canonicalDb);
-                });
+        if (!match.tables().isEmpty() || TreeSearch.hasLoadedTables(canonicalDb)
+                || (canonicalDb instanceof LazyTreeItem lazy && lazy.isLoaded())) {
+            projected.markLoaded();
+            if (!match.tables().isEmpty()) {
+                projected.setExpanded(true);
             }
-        } else {
-            projected.setExpanded(true);
+            return projected;
         }
+
+        // DB name matched but tables not loaded yet — expand loads the canonical node.
+        projected.addEventHandler(TreeItem.<String>branchExpandedEvent(), event -> {
+            if (event.getSource() != projected) {
+                return;
+            }
+            if (canonicalDb instanceof LazyTreeItem lazyCanonical) {
+                treeViewEventController.dbExpandHandler(lazyCanonical, projected);
+            }
+        });
 
         return projected;
     }
@@ -173,6 +174,9 @@ public class ConnectionTreeSearch {
         }
         if (!canonicalDatabases.isEmpty()) {
             connectionRoot.getChildren().setAll(canonicalDatabases);
+            if (!connectionRoot.isLoaded()) {
+                connectionRoot.markLoaded();
+            }
         }
     }
 

@@ -41,6 +41,8 @@ public class Workspace {
         Tab tab = tableTab.getTab();
         tab.setOnClosed(event -> {
             activeTabs.remove(tableSession.getTablePath());
+            tableTab.dispose();
+            Profiler.logMemory();
         });
         tabs.getTabs().add(tab);
         tabs.getSelectionModel().select(tab);

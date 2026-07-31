@@ -30,4 +30,10 @@ public class TableData {
     public List<List<CellValue>> getRows() {
         return this.rows;
     }
+
+    /** Drop row/column data so a closed tab can be GC'd sooner. */
+    public void clear() {
+        rows.clear();
+        columns.clear();
+    }
 }

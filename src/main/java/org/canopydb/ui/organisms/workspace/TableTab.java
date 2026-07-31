@@ -69,4 +69,24 @@ public class TableTab {
         TableComponent.updateTableContents(this.tableSession.getTableData(), tableView);
         this.footer.updatePagination(this.tableSession);
     }
+
+    /**
+     * Drop UI + session references so the GC can reclaim the tab's memory.
+     * Java does not let you free memory manually — only stop referencing it.
+     */
+    public void dispose() {
+        tableView.getItems().clear();
+        tableView.getColumns().clear();
+        tableView.setSortPolicy(tv -> true);
+
+        tab.setContent(null);
+        tab.setOnClosed(null);
+
+        if (tableSession != null) {
+            tableSession.dispose();
+            tableSession = null;
+        }
+        filterArea = null;
+        footer = null;
+    }
 }

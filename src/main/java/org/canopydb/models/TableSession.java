@@ -94,5 +94,10 @@ public class TableSession {
     public String emitQuery() {return tableQuery.getQuery();}
     public String emitCountQuery() {return tableQuery.getRowCountQuery();}
 
-
+    /** Release heavy data held by this session (safe to call when its tab closes). */
+    public void dispose() {
+        if (tableData != null) {
+            tableData.clear();
+        }
+    }
 }

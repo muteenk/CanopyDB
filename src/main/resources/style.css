@@ -1046,3 +1046,20 @@
 .connection-button-secondary:pressed {
     -fx-background-color: #2f3238;
 }
+
+.connection-form-busy-overlay {
+    -fx-background-color: rgba(31, 35, 42, 0.82);
+    -fx-background-radius: 12;
+    -fx-alignment: center;
+    -fx-padding: 24;
+}
+
+.connection-form-busy-indicator {
+    -fx-progress-color: #5C3E94;
+}
+
+.connection-form-busy-label {
+    -fx-text-fill: #d0d7de;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+}

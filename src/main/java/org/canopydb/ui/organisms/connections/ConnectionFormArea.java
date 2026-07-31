@@ -74,12 +74,12 @@ public class ConnectionFormArea {
 
     private void wireFormActions(ConnectionForm form) {
         form.setOnTest(connection -> {
-            form.setTestEnabled(false);
+            form.setBusy(true, "Testing connection…");
             ThreadPool.getExecutor().execute(() -> {
                 try {
                     DatabasePool.testConnection(connection);
                     Platform.runLater(() -> {
-                        form.setTestEnabled(true);
+                        form.setBusy(false, null);
                         NotificationManager.pushNotification(
                                 "Connection Test Successful",
                                 "Successfully connected to "
@@ -92,7 +92,7 @@ public class ConnectionFormArea {
                 } catch (Exception ex) {
                     LOGGER.log(Level.WARNING, "Connection test failed", ex);
                     Platform.runLater(() -> {
-                        form.setTestEnabled(true);
+                        form.setBusy(false, null);
                         NotificationManager.pushNotification(
                                 "Connection Failed",
                                 ex.getMessage() != null
@@ -118,28 +118,37 @@ public class ConnectionFormArea {
         });
 
         form.setOnConnect(connection -> {
-            try {
-                DatabasePool.connect(connection);
+            form.setBusy(true, "Connecting…");
+            ThreadPool.getExecutor().execute(() -> {
+                try {
+                    DatabasePool.connect(connection);
+                    Platform.runLater(() -> {
+                        if (onSave != null) {
+                            onSave.accept(connection);
+                        }
 
-                if (onSave != null) {
-                    onSave.accept(connection);
+                        form.setBusy(false, null);
+
+                        NotificationManager.pushNotification(
+                                "Connected and Connection Saved",
+                                connection.getName() + " was connected and saved successfully.",
+                                NotificationManager.NotificationType.SUCCESS
+                        );
+
+                        ViewManager.pushView(new WorkspaceView().getView());
+                    });
+                } catch (Exception ex) {
+                    LOGGER.log(Level.SEVERE, "Connection failed", ex);
+                    Platform.runLater(() -> {
+                        form.setBusy(false, null);
+                        NotificationManager.pushNotification(
+                                "Connection Failed",
+                                ExceptionMessages.userMessage(ex),
+                                NotificationManager.NotificationType.DANGER
+                        );
+                    });
                 }
-
-                NotificationManager.pushNotification(
-                        "Connected and Connection Saved",
-                        connection.getName() + " was connected and saved successfully.",
-                        NotificationManager.NotificationType.SUCCESS
-                );
-
-                ViewManager.pushView(new WorkspaceView().getView());
-            } catch (Exception ex) {
-                LOGGER.log(Level.SEVERE, "Connection failed", ex);
-                NotificationManager.pushNotification(
-                        "Connection Failed",
-                        ExceptionMessages.userMessage(ex),
-                        NotificationManager.NotificationType.DANGER
-                );
-            }
+            });
         });
     }
 

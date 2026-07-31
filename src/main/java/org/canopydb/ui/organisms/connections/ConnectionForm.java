@@ -8,6 +8,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyCode;
@@ -15,6 +16,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.canopydb.models.ConnectionLabel;
 import org.canopydb.models.ConnectionMeta;
@@ -44,6 +46,10 @@ public class ConnectionForm {
     private final Button testButton;
     private final Button saveButton;
     private final Button connectButton;
+
+    private final ProgressIndicator busyIndicator;
+    private final Label busyLabel;
+    private final VBox busyOverlay;
 
     private final VBox root;
     private final FormSnapshot baseline;
@@ -114,7 +120,25 @@ public class ConnectionForm {
         card.setMinWidth(0);
         card.setMaxWidth(480);
 
-        root = new VBox(card);
+        busyIndicator = new ProgressIndicator();
+        busyIndicator.setPrefSize(36, 36);
+        busyIndicator.getStyleClass().add("connection-form-busy-indicator");
+
+        busyLabel = new Label();
+        busyLabel.getStyleClass().add("connection-form-busy-label");
+
+        busyOverlay = new VBox(14, busyIndicator, busyLabel);
+        busyOverlay.getStyleClass().add("connection-form-busy-overlay");
+        busyOverlay.setAlignment(Pos.CENTER);
+        busyOverlay.setVisible(false);
+        busyOverlay.setManaged(false);
+        busyOverlay.setMouseTransparent(false);
+
+        StackPane cardStack = new StackPane(card, busyOverlay);
+        cardStack.setMaxWidth(480);
+        cardStack.setMinWidth(0);
+
+        root = new VBox(cardStack);
         root.getStyleClass().add("connection-form");
         root.setAlignment(Pos.CENTER);
         root.setMinWidth(0);
@@ -141,8 +165,23 @@ public class ConnectionForm {
         connectButton.setOnAction(e -> action.accept(buildConnection()));
     }
 
-    public void setTestEnabled(boolean enabled) {
-        testButton.setDisable(!enabled);
+    /**
+     * Shows or hides the loading overlay and disables the form while work is in progress.
+     */
+    public void setBusy(boolean busy, String message) {
+        busyLabel.setText(message == null ? "" : message);
+        busyOverlay.setVisible(busy);
+        busyOverlay.setManaged(busy);
+
+        nameField.setDisable(busy);
+        hostField.setDisable(busy);
+        portField.setDisable(busy);
+        usernameField.setDisable(busy);
+        passwordField.setDisable(busy);
+        labelField.setDisable(busy);
+        testButton.setDisable(busy);
+        saveButton.setDisable(busy);
+        connectButton.setDisable(busy);
     }
 
     /** Call after a successful save so the Save button hides until the next edit. */

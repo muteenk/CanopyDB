@@ -6,6 +6,7 @@ Guides for contributing to the JavaFX MySQL client under `src/`.
 | --- | --- |
 | [Architecture](ARCHITECTURE.md) | Layers, bootstrap, major flows, threading, persistence, styling |
 | [Package reference](PACKAGE-REFERENCE.md) | Every package and class under `org.canopydb` |
+| [Testing](TESTING.md) | How to think about tests, what to cover, how the suite is organized |
 
 ## Quick orientation
 

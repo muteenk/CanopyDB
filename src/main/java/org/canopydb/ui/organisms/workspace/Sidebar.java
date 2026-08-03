@@ -16,6 +16,10 @@ import org.canopydb.ui.utils.LazyTreeItem;
  */
 public class Sidebar {
 
+    public static final double MIN_WIDTH = 180;
+    public static final double PREF_WIDTH = 260;
+    public static final double MAX_WIDTH = 480;
+
     private final TreeViewEventController treeViewEventController;
     private final LazyTreeItem connectionRoot = new LazyTreeItem("Connection");
     private final ConnectionTreeSearch treeSearch;
@@ -37,6 +41,9 @@ public class Sidebar {
         );
         sidebar.getStyleClass().add("sidebar");
         sidebar.setFillWidth(true);
+        sidebar.setMinWidth(MIN_WIDTH);
+        sidebar.setPrefWidth(PREF_WIDTH);
+        sidebar.setMaxWidth(MAX_WIDTH);
         VBox.setVgrow(databaseTreeView, Priority.ALWAYS);
 
         return sidebar;

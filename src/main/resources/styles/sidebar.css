@@ -4,12 +4,26 @@
 
 .sidebar {
     -fx-background-color: #2b2d31;
-    -fx-border-color: transparent #1f232a transparent transparent;
-    -fx-border-width: 0 1 0 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
     -fx-padding: 10;
     -fx-spacing: 8;
-    -fx-pref-width: 260;
-    -fx-min-width: 180;
+}
+
+.workspace-split {
+    -fx-background-color: #1f232a;
+    -fx-padding: 0;
+}
+
+.workspace-split > .split-pane-divider {
+    -fx-background-color: #1f232a;
+    -fx-padding: 0 2 0 2;
+    -fx-border-color: transparent;
+    -fx-cursor: h-resize;
+}
+
+.workspace-split > .split-pane-divider:hover {
+    -fx-background-color: #5C3E94;
 }
 
 .sidebar-search {

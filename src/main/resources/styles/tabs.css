@@ -1,0 +1,70 @@
+/* =========================================================================
+   TAB PANE
+   ========================================================================= */
+
+.tab-pane {
+    -fx-background-color: #1f232a;
+}
+
+/* Background behind tabs */
+
+.tab-pane .tab-header-background {
+    -fx-background-color: #2b2d31;
+}
+
+/* Individual tabs */
+
+.tab-pane .tab {
+    -fx-background-color: #363840;
+
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+
+    -fx-padding: 7 16 7 16;
+
+    -fx-border-color: transparent #1f232a transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+/* Hover */
+
+.tab-pane .tab:hover {
+    -fx-background-color: #3b3f46;
+}
+
+/* Selected tab */
+
+.tab-pane .tab:selected {
+    -fx-background-color: #1f232a;
+}
+
+/* Tab text */
+
+.tab-pane .tab .tab-label {
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 13px;
+}
+
+/* Selected tab text */
+
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: #ffffff;
+}
+
+/* Remove ugly blue focus ring */
+
+.tab-pane *.focus-indicator {
+    -fx-border-color: transparent;
+}
+
+/* Close button */
+
+.tab-pane .tab .tab-close-button {
+    -fx-background-color: #8b949e;
+}
+
+.tab-pane .tab .tab-close-button:hover {
+    -fx-background-color: #ffffff;
+}
+
+

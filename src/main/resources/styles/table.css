@@ -1,0 +1,164 @@
+/* =========================================================================
+   TABLE VIEW
+   ========================================================================= */
+
+.table-view {
+    -fx-background-color: #1f232a;
+    -fx-control-inner-background: #1f232a;
+
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 0;
+}
+
+/* Empty background */
+
+.table-view .placeholder .label {
+    -fx-text-fill: #5f6a79;
+}
+
+/* Column header background strip */
+
+.table-view .column-header-background {
+    -fx-background-color: #2b2d31;
+}
+
+/* Fix ugly white filler space */
+
+.table-view .filler {
+    -fx-background-color: #2b2d31;
+}
+
+/* Individual column headers */
+
+.table-view .column-header {
+    -fx-background-color: #2b2d31;
+
+    -fx-border-color: transparent #2f343d #1f232a transparent;
+    -fx-border-width: 0 1 1 0;
+
+    -fx-padding: 8 6 8 6;
+}
+
+/* Column resize line */
+.table-view .column-resize-line {
+    -fx-background-color: #5C3E94;
+    -fx-pref-width: 2px;
+}
+
+/* Header drag area visibility */
+.table-view .column-header:hover {
+    -fx-background-color: #32353c;
+}
+
+/* Column header text */
+
+.table-view .column-header .label {
+    -fx-text-fill: #8b949e;
+
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* Table rows */
+
+.table-view .table-row-cell {
+    -fx-background-color: #1f232a;
+    -fx-text-fill: #d0d7de;
+
+    -fx-table-cell-border-color: transparent;
+}
+
+/* Alternate rows */
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: #23272e;
+}
+
+/* Hover */
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: #373b41;
+}
+
+/* Selected row */
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #5C3E94;
+}
+
+/* Selected row text */
+
+.table-view .table-row-cell:selected .table-cell {
+    -fx-text-fill: #ffffff;
+}
+
+/* Individual cells */
+
+.table-view .table-cell {
+    -fx-text-fill: #d0d7de;
+
+    -fx-padding: 8 10 8 10;
+
+    -fx-border-color: transparent #2f343d transparent transparent;
+    -fx-border-width: 0 1 0 0;
+
+    -fx-font-size: 13px;
+    -fx-text-overrun: ellipsis;
+}
+
+/* =========================================================
+   Table Context Menu
+   ========================================================= */
+
+.context-menu.table-context-menu {
+    -fx-background-color: #2b2d31;
+    -fx-background-insets: 0;
+    -fx-background-radius: 6;
+    -fx-border-color: #3f434b;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-padding: 4;
+    -fx-effect: dropshadow(
+        gaussian,
+        rgba(0, 0, 0, 0.35),
+        12,
+        0.2,
+        0,
+        3
+    );
+}
+
+.context-menu.table-context-menu > .scroll-pane,
+.context-menu.table-context-menu > .scroll-pane > .viewport {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.context-menu.table-context-menu .menu-item {
+    -fx-background-color: transparent;
+    -fx-background-radius: 4;
+    -fx-padding: 6 12;
+}
+
+.context-menu.table-context-menu .menu-item:focused,
+.context-menu.table-context-menu .menu-item:hover {
+    -fx-background-color: #5C3E94;
+}
+
+.context-menu.table-context-menu .menu-item > .label {
+    -fx-text-fill: #d0d7de;
+    -fx-font-size: 13px;
+}
+
+.context-menu.table-context-menu .menu-item:focused > .label,
+.context-menu.table-context-menu .menu-item:hover > .label {
+    -fx-text-fill: #ffffff;
+}
+
+.context-menu.table-context-menu .separator .line {
+    -fx-border-color: #3f434b transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+

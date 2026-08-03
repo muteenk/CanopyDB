@@ -34,7 +34,10 @@ src/main/java/org/canopydb/
     └── utils/                      # TableComponent, tree helpers, clipboard
 
 src/main/resources/
-├── style.css
+├── styles/                         # split stylesheets (see Renderer)
+│   ├── base.css
+│   ├── workspace-related…          # topbar, sidebar, tree, tabs, table, …
+│   └── connections.css
 └── assets/logo.png
 ```
 
@@ -83,7 +86,7 @@ Launch.main
              NotificationManager.notificationContainer  (bottom-right)
            ]
            push ConnectionView
-           Scene 1280×720 + /style.css
+           Scene 1280×720 + /styles/*.css
          stage.show()
     → Main.stop() → ThreadPool.shutdown()
 ```
@@ -216,7 +219,7 @@ Maps each JDBC cell to `CellValue` with type-aware rules so display (and future 
 
 ## Styling
 
-Single stylesheet: `src/main/resources/style.css`.
+Single theme, split files under `src/main/resources/styles/`, loaded in order by `Renderer` via `scene.getStylesheets().add(...)`.
 
 - Dark surfaces (`#1f232a`, `#2b2d31`), accent `#5C3E94`
 - Java attaches style classes (`getStyleClass().add(...)`); CSS owns colors/spacing

@@ -1,0 +1,47 @@
+/* =========================================================================
+   TREE VIEW
+   ========================================================================= */
+
+.tree-view {
+    -fx-background-color: #2b2d31;
+    -fx-control-inner-background: #2b2d31;
+
+    -fx-background-insets: 0;
+    -fx-padding: 4 0 0 0;
+}
+
+/* Tree cells */
+
+.tree-cell {
+    -fx-background-color: #2b2d31;
+    -fx-text-fill: #d0d7de;
+
+    -fx-padding: 6 10 6 10;
+    -fx-font-size: 13px;
+}
+
+/* Hover */
+
+.tree-cell:hover {
+    -fx-background-color: #373b41;
+}
+
+/* Selected */
+
+.tree-cell:selected {
+    -fx-background-color: #5C3E94;
+    -fx-text-fill: white;
+}
+
+/* Remove ugly focus ring */
+
+.tree-view:focused,
+.tree-cell:focused {
+    -fx-background-insets: 0;
+}
+
+.tree-node-loader {
+    -fx-progress-color: #c9a0ff;
+}
+
+

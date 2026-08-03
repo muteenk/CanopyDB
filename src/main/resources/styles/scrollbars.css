@@ -1,0 +1,42 @@
+/* =========================================================================
+   SCROLLBARS
+   ========================================================================= */
+
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: #1f232a;
+}
+
+/* Thumb */
+
+.scroll-bar .thumb {
+    -fx-background-color: #363840;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #4a4f57;
+}
+
+/* Track */
+
+.scroll-bar .track {
+    -fx-background-color: #1f232a;
+}
+
+/* Increment/decrement buttons */
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: #1f232a;
+    -fx-padding: 0;
+}
+
+/* Remove arrows */
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+

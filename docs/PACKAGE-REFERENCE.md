@@ -93,7 +93,7 @@ Glue between UI events and services. Always marshal UI updates onto the FX threa
 
 | Class | Role |
 | --- | --- |
-| `Renderer` | Builds root `StackPane`, seeds `ConnectionView`, loads `/style.css` |
+| `Renderer` | Builds root `StackPane`, seeds `ConnectionView`, loads `/styles/*.css` |
 
 ---
 
@@ -184,7 +184,7 @@ Glue between UI events and services. Always marshal UI updates onto the FX threa
 
 | Path | Role |
 | --- | --- |
-| `src/main/resources/style.css` | App-wide dark theme |
+| `src/main/resources/styles/*.css` | App-wide dark theme (split by area; loaded by `Renderer`) |
 | `src/main/resources/assets/logo.png` | Connection welcome / branding |
 
 ---

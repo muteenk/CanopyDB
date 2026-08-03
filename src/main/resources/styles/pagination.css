@@ -1,0 +1,58 @@
+/* =========================================================
+   Table Footer
+   ========================================================= */
+
+.table-footer {
+    -fx-background-color: #2b2d31;
+    -fx-border-color: #1f232a;
+    -fx-border-width: 1 0 0 0;
+
+    -fx-padding: 8 12;
+    -fx-spacing: 8;
+    -fx-alignment: center-left;
+}
+
+/* =========================================================
+   Pagination Label
+   ========================================================= */
+
+.pagination-label {
+    -fx-text-fill: #d0d7de;
+    -fx-font-size: 13px;
+}
+
+/* =========================================================
+   Pagination Buttons
+   ========================================================= */
+
+.pagination-button:disabled {
+    -fx-background-color: #5c5c5c;
+    -fx-text-fill: #bdbdbd;
+    -fx-opacity: 1;
+}
+
+.pagination-button {
+    -fx-background-color: #363840;
+    -fx-text-fill: white;
+
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+
+    -fx-padding: 4 10;
+
+    -fx-cursor: hand;
+}
+
+.pagination-button:hover {
+    -fx-background-color: #4a4d55;
+}
+
+.pagination-button:pressed {
+    -fx-background-color: #5C3E94;
+}
+
+.pagination-button:disabled {
+    -fx-opacity: 0.4;
+}
+
+

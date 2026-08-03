@@ -42,4 +42,4 @@ Main class: `org.canopydb.Launch` (see root `build.gradle`).
 | Filter / sort / page reload | `controllers/TableViewEventController`, `queries/TableQuery` |
 | Cell display / copy | `ui/utils/TableComponent`, `repository/ResultSetValueSerializer` |
 | Toasts / error modals | `ui/singletons/NotificationManager` |
-| Theme | `src/main/resources/style.css` |
+| Theme | `src/main/resources/styles/*.css` (loaded by `Renderer`) |

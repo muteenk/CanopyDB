@@ -1,0 +1,73 @@
+/* =========================================================
+   Filter Area
+   ========================================================= */
+
+.filter-area {
+    -fx-spacing: 8;
+    -fx-padding: 10 12;
+    -fx-background-color: #2b2d31;
+    -fx-border-color: #1f232a;
+    -fx-border-width: 0 0 1 0;
+    -fx-alignment: top-left;
+}
+
+/* =========================================================
+   Toolbar
+   ========================================================= */
+
+.filter-toolbar {
+    -fx-spacing: 8;
+    -fx-alignment: center-left;
+    -fx-padding: 0;
+}
+
+.filter-rows {
+    -fx-spacing: 8;
+    -fx-alignment: top-left;
+}
+
+/* =========================================================
+   Filter Row
+   ========================================================= */
+
+.filter-row {
+    -fx-spacing: 8;
+    -fx-alignment: center-left;
+    -fx-padding: 0;
+}
+
+/* =========================================================
+   Filter Input
+   ========================================================= */
+
+.filter-input {
+    -fx-padding: 4 10;
+    -fx-font-size: 13px;
+    -fx-pref-height: 28;
+    -fx-min-height: 28;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+}
+
+/* =========================================================
+   Filter Buttons
+   ========================================================= */
+
+.filter-apply-button,
+.filter-toolbar .button {
+    -fx-background-color: #5C3E94;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 4 12;
+    -fx-pref-height: 28;
+    -fx-min-height: 28;
+    -fx-font-size: 12px;
+}
+
+.filter-apply-button:hover,
+.filter-toolbar .button:hover {
+    -fx-background-color: #6d4db0;
+}
+

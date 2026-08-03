@@ -230,9 +230,22 @@ cd canopydb
 ./gradlew run
 ```
 
+### Package (jpackage)
+
+Native installers via JDK `jpackage`. **Build on the target OS** (DMG on macOS, EXE on Windows).
+
+```bash
+./gradlew jpackage          # current OS installer
+./gradlew jpackageDmg       # macOS → build/jpackage/dist/*.dmg
+./gradlew jpackageExe       # Windows → *.exe (needs WiX)
+./gradlew jpackageAppImage  # app folder only (any OS)
+```
+
+Windows EXE installers require the [WiX Toolset](https://wixtoolset.org/). Without WiX, use `jpackageAppImage`.
+
+**macOS note:** JDK 25 + JavaFX currently crash if the app bundle includes a `.icns` dock icon (ImageIO SIGBUS during Glass startup). The `jpackageDmg` task strips that icon after packaging so the app launches. Dock icon support can return once that platform bug is fixed.
+
 ---
-
-
 
 ## Contributing
 

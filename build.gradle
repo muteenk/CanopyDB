@@ -34,10 +34,205 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.0'
 }
 
+ext {
+    appName = 'CanopyDB'
+    appMainClass = 'org.canopydb.Launch'
+    appVendor = 'CanopyDB'
+    appDescription = 'A lightweight, modern SQL client'
+    macPackageId = 'org.canopy.canopydb'
+    // Bundled into the runtime image so JDBC + JavaFX work after install.
+    jpackageModules = [
+            'java.base',
+            'java.datatransfer',
+            'java.desktop',
+            'java.logging',
+            'java.management',
+            'java.naming',
+            'java.net.http',
+            'java.prefs',
+            'java.scripting',
+            'java.sql',
+            'java.transaction.xa',
+            'java.xml',
+            'jdk.crypto.ec',
+            'jdk.unsupported',
+            'javafx.base',
+            'javafx.controls',
+            'javafx.fxml',
+            'javafx.graphics'
+    ].join(',')
+}
+
 application {
-    mainClass = 'org.canopydb.Launch'
+    mainClass = appMainClass
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': appMainClass,
+                'Implementation-Title': appName,
+                'Implementation-Version': version
+        )
+    }
 }
 
 test {
     useJUnitPlatform()
+}
+
+def jpackageInputDir = layout.buildDirectory.dir('jpackage/input')
+def jpackageOutDir = layout.buildDirectory.dir('jpackage/dist')
+def jpackageBin = "${System.getProperty('java.home')}/bin/jpackage"
+def macAppImage = layout.buildDirectory.dir("jpackage/dist/${appName}.app")
+
+def isMac = org.gradle.internal.os.OperatingSystem.current().isMacOsX()
+def isWindows = org.gradle.internal.os.OperatingSystem.current().isWindows()
+
+/**
+ * App jar + non-JavaFX runtime deps. JavaFX stays on --module-path for jpackage.
+ */
+tasks.register('prepareJpackageInput', Sync) {
+    dependsOn tasks.jar
+    into jpackageInputDir
+    from(tasks.jar)
+    from(configurations.runtimeClasspath) {
+        exclude { FileTreeElement el ->
+            el.file.name.startsWith('javafx-')
+        }
+    }
+}
+
+def javafxModulePath = {
+    configurations.runtimeClasspath.files.findAll { it.name.startsWith('javafx-') }
+            .collect { it.absolutePath }
+            .join(File.pathSeparator)
+}
+
+def commonJpackageArgs = {
+    [
+            jpackageBin,
+            '--name', appName,
+            '--app-version', version.toString(),
+            '--description', appDescription,
+            '--vendor', appVendor,
+            '--input', jpackageInputDir.get().asFile.absolutePath,
+            '--main-jar', tasks.jar.archiveFile.get().asFile.name,
+            '--main-class', appMainClass,
+            '--dest', jpackageOutDir.get().asFile.absolutePath,
+            '--module-path', javafxModulePath(),
+            '--add-modules', jpackageModules,
+            '--java-options', '-Dfile.encoding=UTF-8',
+            // JavaFX Glass loads native libs; required on JDK 24+.
+            '--java-options', '--enable-native-access=javafx.graphics,ALL-UNNAMED'
+    ]
+}
+
+/**
+ * JavaFX Glass on macOS + JDK 25 crashes (SIGBUS in ImageIO) while loading the
+ * app bundle .icns during Glass init. Removing the icon reference keeps the app usable.
+ */
+tasks.register('jpackageAppImage', Exec) {
+    group = 'distribution'
+    description = 'Build a platform app-image with jpackage (no installer).'
+    dependsOn prepareJpackageInput
+    doFirst {
+        jpackageOutDir.get().asFile.mkdirs()
+        delete macAppImage
+        delete file("${jpackageOutDir.get().asFile.absolutePath}/${appName}")
+        workingDir = project.projectDir
+    }
+    commandLine(commonJpackageArgs() + ['--type', 'app-image'])
+    finalizedBy('stripMacAppIcon')
+}
+
+tasks.register('stripMacAppIcon') {
+    group = 'distribution'
+    description = 'Remove .icns that crashes JavaFX Glass/ImageIO on macOS JDK 25.'
+    dependsOn 'jpackageAppImage'
+    onlyIf { isMac }
+    doLast {
+        def app = macAppImage.get().asFile
+        if (!app.exists()) {
+            return
+        }
+        def plist = new File(app, 'Contents/Info.plist')
+        def resources = new File(app, 'Contents/Resources')
+        resources.listFiles()?.findAll { it.name.endsWith('.icns') }?.each { it.delete() }
+        def pb = new ProcessBuilder(
+                '/usr/libexec/PlistBuddy',
+                '-c', 'Delete :CFBundleIconFile',
+                plist.absolutePath
+        )
+        pb.redirectErrorStream(true)
+        def proc = pb.start()
+        proc.waitFor()
+        logger.lifecycle("Stripped CFBundleIconFile from ${app.name} (JavaFX/macOS ImageIO workaround).")
+    }
+}
+
+tasks.register('jpackageDmg', Exec) {
+    group = 'distribution'
+    description = 'Build a macOS DMG from a fixed app-image (must run on macOS).'
+    dependsOn 'stripMacAppIcon'
+    onlyIf {
+        if (!isMac) {
+            logger.warn('jpackageDmg skipped: DMG packaging requires macOS.')
+            return false
+        }
+        return true
+    }
+    doFirst {
+        jpackageOutDir.get().asFile.mkdirs()
+        delete fileTree(jpackageOutDir.get().asFile) { include '*.dmg' }
+        workingDir = project.projectDir
+    }
+    // Package the already-built (icon-stripped) .app into a DMG.
+    commandLine(
+            jpackageBin,
+            '--type', 'dmg',
+            '--name', appName,
+            '--app-version', version.toString(),
+            '--dest', jpackageOutDir.get().asFile.absolutePath,
+            '--app-image', macAppImage.get().asFile.absolutePath,
+            '--mac-package-name', appName,
+            '--mac-package-identifier', macPackageId
+    )
+}
+
+tasks.register('jpackageExe', Exec) {
+    group = 'distribution'
+    description = 'Build a Windows EXE installer with jpackage (must run on Windows; needs WiX).'
+    dependsOn prepareJpackageInput
+    onlyIf {
+        if (!isWindows) {
+            logger.warn('jpackageExe skipped: EXE packaging requires Windows (+ WiX Toolset).')
+            return false
+        }
+        return true
+    }
+    doFirst {
+        jpackageOutDir.get().asFile.mkdirs()
+        workingDir = project.projectDir
+    }
+    commandLine(
+            commonJpackageArgs() + [
+                    '--type', 'exe',
+                    '--win-menu',
+                    '--win-shortcut',
+                    '--win-menu-group', appName
+            ]
+    )
+}
+
+tasks.register('jpackage') {
+    group = 'distribution'
+    description = 'Build the native installer for the current OS (DMG on macOS, EXE on Windows).'
+    if (isMac) {
+        dependsOn jpackageDmg
+    } else if (isWindows) {
+        dependsOn jpackageExe
+    } else {
+        dependsOn jpackageAppImage
+    }
 }

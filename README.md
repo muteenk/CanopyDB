@@ -138,15 +138,15 @@ A major focus of the project is ensuring that heavy database operations never bl
 - [x] Handle Error Properly
 - [x] Cleaner Errors
 - [x] Better Error Display
-- [ ] Handle loading states
+- [x] Handle loading states
 - [x] Push Notifications
 - [x] Multi-tab interface
 - [x] Table Single Column Sorting
-- [ ] Multi-Column Sorting
 - [x] Table Pagination
 - [x] Table Filtering
 - [x] Search tables
 - [x] Connection management
+- [ ] Per Database Connections  
 - [ ] Query editor
 - [ ] Parallel query execution
 - [ ] Query cancellation
@@ -156,7 +156,7 @@ A major focus of the project is ensuring that heavy database operations never bl
 
 
 ### Future Scope
-
+- [ ] Multi-Column Sorting
 - [ ] Table Data Editing
 - [ ] Lazy schema loading
 - [ ] Create Tables

@@ -9,6 +9,50 @@
 
 
 /* =========================================================================
+   TOPBAR
+   ========================================================================= */
+
+.topbar {
+    -fx-background-color: #2b2d31;
+    -fx-border-color: transparent transparent #1f232a transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-spacing: 0;
+}
+
+.topbar-toolbar {
+    -fx-alignment: center-left;
+    /* -fx-padding: 8 14; */
+    /* -fx-spacing: 10; */
+    /* -fx-min-height: 40; */
+    /* -fx-pref-height: 40; */
+}
+
+.global-progress {
+    -fx-pref-width: Infinity;
+    -fx-min-height: 3;
+    -fx-pref-height: 3;
+    -fx-max-height: 3;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+
+.global-progress .track {
+    -fx-background-color: #1f232a;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+.global-progress .bar {
+    -fx-background-color: #5C3E94;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+
+
+/* =========================================================================
    SIDEBAR
    ========================================================================= */
 

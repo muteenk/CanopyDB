@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import org.canopydb.models.TableSession;
 import org.canopydb.services.TableActionService;
 import org.canopydb.ui.interfaces.TableUpdateAction;
+import org.canopydb.ui.singletons.LoadingManager;
 import org.canopydb.ui.singletons.NotificationManager;
 import org.canopydb.config.AppLogger;
 import org.canopydb.utils.ExceptionMessages;
@@ -23,7 +24,9 @@ public class TableViewEventController {
     public void tableReRender(
             TableSession tableSession
     ) {
+        LoadingManager.start();
         tableActionService.loadTableDataAsync(tableSession)
+                .whenComplete((session, error) -> LoadingManager.stop())
                 .thenAccept(session -> {
                     Platform.runLater(() -> tableUpdateAction.render(session));
                 }).exceptionally(error -> {

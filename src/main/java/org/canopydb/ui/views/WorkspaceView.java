@@ -4,6 +4,7 @@ import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 import org.canopydb.ui.interfaces.View;
 import org.canopydb.ui.organisms.workspace.Sidebar;
+import org.canopydb.ui.organisms.workspace.Topbar;
 import org.canopydb.ui.organisms.workspace.Workspace;
 
 public class WorkspaceView implements View {
@@ -11,10 +12,13 @@ public class WorkspaceView implements View {
 
     public WorkspaceView() {
         Workspace workspace = new Workspace();
+        Topbar topbar = new Topbar();
         Sidebar sidebar = new Sidebar(
                 workspace::addNewSession,
                 workspace::selectActiveSession
         );
+
+        app.setTop(topbar.getTopbar());
         app.setLeft(sidebar.getSidebar());
         app.setCenter(workspace.getWorkspace());
     }

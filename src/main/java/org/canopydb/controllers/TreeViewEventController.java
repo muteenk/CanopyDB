@@ -6,6 +6,7 @@ import org.canopydb.services.ConnectionMetadataService;
 import org.canopydb.services.TableActionService;
 import org.canopydb.ui.interfaces.TableActiveCheck;
 import org.canopydb.ui.interfaces.TableOpenAction;
+import org.canopydb.ui.singletons.LoadingManager;
 import org.canopydb.ui.singletons.NotificationManager;
 import org.canopydb.ui.utils.LazyTreeItem;
 import org.canopydb.ui.utils.TreeViewComponent;
@@ -132,10 +133,12 @@ public class TreeViewEventController {
             ))) {
                 return;
             }
+            LoadingManager.start();
             tableActionService.loadTableDataAsync(
                     selectedItem.getValue(),
                     selectedItem.getParent().getValue()
-            ).thenAccept(session -> Platform.runLater(() ->
+            ).whenComplete((session, error) -> LoadingManager.stop())
+                    .thenAccept(session -> Platform.runLater(() ->
                     tableDataAppendAction.render(session)
             )).exceptionally(error -> {
                 Platform.runLater(() -> NotificationManager.pushNotification(

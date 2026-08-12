@@ -7,11 +7,13 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.canopydb.controllers.TableViewEventController;
 import org.canopydb.models.TableSession;
 import org.canopydb.config.Profiler;
 import org.canopydb.ui.atoms.FilterBox;
+import org.canopydb.ui.atoms.IconButton;
 
 
 public class TabFilterArea {
@@ -35,7 +37,12 @@ public class TabFilterArea {
         clearAllFilters.addEventHandler(MouseEvent.MOUSE_CLICKED, _ -> clearAllFilterInputs());
         clearAllFilters.setDisable(true);
 
-        HBox controls = new HBox(8, addNewFilter, clearAllFilters);
+        Button refreshTable = IconButton.refresh("Refresh Table");
+        refreshTable.addEventHandler(MouseEvent.MOUSE_CLICKED, _ -> tableViewEventController.tableReRender(tableSession));
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        
+        HBox controls = new HBox(8, addNewFilter, clearAllFilters, spacer, refreshTable);
         controls.setAlignment(Pos.CENTER_LEFT);
         controls.getStyleClass().add("filter-toolbar");
 

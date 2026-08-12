@@ -123,7 +123,6 @@ A major focus of the project is ensuring that heavy database operations never bl
 ## Planned Features
 
 
-
 ### Phase 1
 
 - [x] JavaFX application setup
@@ -146,26 +145,27 @@ A major focus of the project is ensuring that heavy database operations never bl
 - [x] Table Filtering
 - [x] Search tables
 - [x] Connection management
-- [ ] Per Database Connections  
+- [ ] Per Database Connections
+- [ ] Refresh connections
+- [ ] Refresh Table 
 - [ ] Query editor
+- [ ] Result table rendering
 - [ ] Parallel query execution
 - [ ] Query cancellation
-- [ ] Result table rendering
-- [ ] Query history
-
-
 
 ### Future Scope
-- [ ] Multi-Column Sorting
-- [ ] Table Data Editing
 - [ ] Lazy schema loading
 - [ ] Create Tables
 - [ ] Delete Tables
+- [ ] Query history
+- [ ] Multi-Column Sorting
+- [ ] Table Data Editing
 - [ ] Table Schema Editing
 - [ ] Export results
 - [ ] Improved keyboard workflow
 - [ ] Streaming large result sets
 - [ ] Virtualized table rendering
+- [ ] Database-type selection (MySQL, PostgreSQL, SQLite, ...)
 - [ ] PostgreSQL support
 - [ ] Plugin architecture
 - [ ] Advanced query tooling

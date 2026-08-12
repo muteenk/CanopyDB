@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Owns sidebar tree search UI and filter/restore of the connection tree.
- * Keeps a canonical snapshot of loaded DB nodes and swaps in a filtered projection while searching.
+ * Owns sidebar tree search UI and filter/restore of pinned database nodes.
+ * Keeps a canonical snapshot and swaps in a filtered projection while searching.
  */
 public class ConnectionTreeSearch {
 
     private static final Duration SEARCH_DEBOUNCE = Duration.millis(180);
 
-    private final LazyTreeItem connectionRoot;
+    private final TreeItem<String> databasesRoot;
     private final TreeViewEventController treeViewEventController;
 
     private final List<TreeItem<String>> canonicalDatabases = new ArrayList<>();
@@ -34,10 +34,10 @@ public class ConnectionTreeSearch {
     private boolean filtering;
 
     public ConnectionTreeSearch(
-            LazyTreeItem connectionRoot,
+            TreeItem<String> databasesRoot,
             TreeViewEventController treeViewEventController
     ) {
-        this.connectionRoot = connectionRoot;
+        this.databasesRoot = databasesRoot;
         this.treeViewEventController = treeViewEventController;
         configureSearchUi();
     }
@@ -75,16 +75,9 @@ public class ConnectionTreeSearch {
     }
 
     private void refreshCanonicalDatabases() {
-        if (!connectionRoot.isLoaded()) {
-            if (!filtering) {
-                canonicalDatabases.clear();
-            }
-            return;
-        }
-        // While filtering, canonical DB nodes are updated in place by the controller.
         if (!filtering) {
             canonicalDatabases.clear();
-            canonicalDatabases.addAll(connectionRoot.getChildren());
+            canonicalDatabases.addAll(databasesRoot.getChildren());
         }
     }
 
@@ -106,13 +99,13 @@ public class ConnectionTreeSearch {
                 filtering = false;
                 setEmptySearchVisible(
                         true,
-                        "Expand Connection and a database to search loaded items."
+                        "Add a database to search its tables."
                 );
                 return;
             }
 
             filtering = true;
-            connectionRoot.getChildren().clear();
+            databasesRoot.getChildren().clear();
             boolean anyLoadedTables = canonicalDatabases.stream().anyMatch(TreeSearch::hasLoadedTables);
             String message = anyLoadedTables
                     ? "No loaded databases or tables match \"" + currentQuery.trim() + "\"."
@@ -127,8 +120,7 @@ public class ConnectionTreeSearch {
         for (TreeSearch.Match match : matches) {
             projected.add(buildProjectedDatabase(match));
         }
-        connectionRoot.getChildren().setAll(projected);
-        connectionRoot.setExpanded(true);
+        databasesRoot.getChildren().setAll(projected);
     }
 
     private void ensureCanonicalSnapshot() {
@@ -154,7 +146,6 @@ public class ConnectionTreeSearch {
             return projected;
         }
 
-        // DB name matched but tables not loaded yet — expand loads the canonical node.
         projected.addEventHandler(TreeItem.<String>branchExpandedEvent(), event -> {
             if (event.getSource() != projected) {
                 return;
@@ -173,10 +164,7 @@ public class ConnectionTreeSearch {
             refreshCanonicalDatabases();
         }
         if (!canonicalDatabases.isEmpty()) {
-            connectionRoot.getChildren().setAll(canonicalDatabases);
-            if (!connectionRoot.isLoaded()) {
-                connectionRoot.markLoaded();
-            }
+            databasesRoot.getChildren().setAll(canonicalDatabases);
         }
     }
 

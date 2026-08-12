@@ -13,6 +13,10 @@ import org.canopydb.ui.utils.TreeViewComponent;
 import org.canopydb.utils.ExceptionMessages;
 import org.canopydb.utils.TableUtilities;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 public class TreeViewEventController {
     private final ConnectionMetadataService connectionMetadataService = new ConnectionMetadataService();
     private final TableActionService tableActionService = new TableActionService();
@@ -33,6 +37,53 @@ public class TreeViewEventController {
     private void notifyTreeDataChanged() {
         if (onTreeDataChanged != null) {
             onTreeDataChanged.run();
+        }
+    }
+
+    public CompletableFuture<List<String>> fetchAllDatabasesAsync() {
+        return connectionMetadataService.loadDatabaseAsync();
+    }
+
+    /**
+     * Adds a database node under the hidden tree root if it is not already pinned.
+     *
+     * @return the new node, or {@code null} if the database was already in the tree
+     */
+    public LazyTreeItem addPinnedDatabase(TreeItem<String> databasesRoot, String databaseName) {
+        if (databaseName == null || databaseName.isBlank()) {
+            return null;
+        }
+        for (TreeItem<String> child : databasesRoot.getChildren()) {
+            if (databaseName.equals(child.getValue())) {
+                return null;
+            }
+        }
+        LazyTreeItem dbItem = createDatabaseNode(databaseName);
+        databasesRoot.getChildren().add(dbItem);
+        notifyTreeDataChanged();
+        return dbItem;
+    }
+
+    /**
+     * Reloads table lists for every pinned database that has been expanded before.
+     */
+    public void refreshPinnedDatabases(TreeItem<String> databasesRoot) {
+        List<LazyTreeItem> pinned = new ArrayList<>();
+        for (TreeItem<String> child : databasesRoot.getChildren()) {
+            if (child instanceof LazyTreeItem lazy && lazy.isLoaded()) {
+                pinned.add(lazy);
+            }
+        }
+        if (pinned.isEmpty()) {
+            NotificationManager.pushNotification(
+                    "Nothing to refresh",
+                    "Add a database and expand it to load tables first.",
+                    NotificationManager.NotificationType.INFO
+            );
+            return;
+        }
+        for (LazyTreeItem dbItem : pinned) {
+            reloadTables(dbItem);
         }
     }
 
@@ -86,43 +137,23 @@ public class TreeViewEventController {
         dbExpandHandler(node, node);
     }
 
-    public void dbRootExpandHandler(LazyTreeItem node) {
-        if (node == null || node.isLoading() || !node.needsLoad()) {
+    public void reloadTables(LazyTreeItem node) {
+        if (node == null || node.isLoading()) {
             return;
         }
+        node.markUnloaded();
+        dbExpandHandler(node);
+    }
 
-        node.beginLoading();
-
-        connectionMetadataService
-                .loadDatabaseAsync()
-                .thenAccept(dbList -> Platform.runLater(() -> {
-                    node.getChildren().clear();
-                    for (String dbName : dbList) {
-                        LazyTreeItem dbItem = new LazyTreeItem(dbName);
-                        dbItem.addEventHandler(TreeItem.<String>branchExpandedEvent(), dbEvent -> {
-                            if (dbEvent.getSource() != dbItem) {
-                                return;
-                            }
-                            dbExpandHandler(dbItem);
-                        });
-                        node.getChildren().add(dbItem);
-                    }
-                    node.markLoaded();
-                    notifyTreeDataChanged();
-                }))
-                .exceptionally(error -> {
-                    Platform.runLater(() -> {
-                        node.markUnloaded();
-                        node.setExpanded(false);
-                        NotificationManager.pushNotification(
-                                "Failed to fetch databases !",
-                                ExceptionMessages.userMessage(error),
-                                NotificationManager.NotificationType.DANGER
-                        );
-                        notifyTreeDataChanged();
-                    });
-                    return null;
-                });
+    private LazyTreeItem createDatabaseNode(String dbName) {
+        LazyTreeItem dbItem = new LazyTreeItem(dbName);
+        dbItem.addEventHandler(TreeItem.<String>branchExpandedEvent(), dbEvent -> {
+            if (dbEvent.getSource() != dbItem) {
+                return;
+            }
+            dbExpandHandler(dbItem);
+        });
+        return dbItem;
     }
 
     public void nodeClickEventHandler(TreeItem<String> selectedItem) {

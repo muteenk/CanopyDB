@@ -1,0 +1,151 @@
+/* =========================================================================
+   DIALOGS
+   ========================================================================= */
+
+.canopy-dialog {
+    -fx-background-color: #2b2d31;
+    -fx-border-color: #363840;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-padding: 0;
+}
+
+.canopy-dialog > .header-panel,
+.canopy-dialog > .content,
+.canopy-dialog > .button-bar {
+    -fx-background-color: #2b2d31;
+}
+
+.canopy-dialog:no-header > .header-panel {
+    -fx-padding: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+    -fx-max-height: 0;
+}
+
+.canopy-dialog > .header-panel {
+    -fx-padding: 16 18 0 18;
+}
+
+.canopy-dialog > .header-panel .label {
+    -fx-text-fill: #f5f5f5;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+}
+
+.canopy-dialog > .content {
+    -fx-padding: 18 18 8 18;
+}
+
+.canopy-dialog > .button-bar {
+    -fx-padding: 4 18 16 18;
+}
+
+.canopy-dialog > .button-bar > .container {
+    -fx-spacing: 10;
+}
+
+.canopy-dialog-body {
+    -fx-spacing: 8;
+}
+
+.canopy-dialog-title {
+    -fx-text-fill: #f5f5f5;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+}
+
+.canopy-dialog-description {
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 13px;
+    -fx-wrap-text: true;
+}
+
+.canopy-dialog .canopy-dialog-combo {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: transparent;
+    -fx-font-size: 13px;
+    -fx-pref-height: 34;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.canopy-dialog .canopy-dialog-combo:focused {
+    -fx-border-color: #5C3E94;
+    -fx-border-width: 1;
+}
+
+.canopy-dialog .canopy-dialog-combo .list-cell {
+    -fx-background-color: #363840;
+    -fx-background-radius: 8 0 0 8;
+    -fx-background-insets: 0;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 6 12;
+}
+
+.canopy-dialog .canopy-dialog-combo .arrow-button {
+    -fx-background-color: #363840;
+    -fx-background-radius: 0 8 8 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0 10 0 6;
+}
+
+.canopy-dialog .canopy-dialog-combo .arrow {
+    -fx-background-color: #8b949e;
+}
+
+.canopy-dialog .canopy-dialog-button {
+    -fx-background-color: #363840;
+    -fx-text-fill: #d0d7de;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-color: #4a4d55;
+    -fx-border-width: 1;
+    -fx-padding: 6 14;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+    -fx-effect: null;
+}
+
+.canopy-dialog .canopy-dialog-button:hover {
+    -fx-background-color: #4a4d55;
+    -fx-text-fill: #ffffff;
+}
+
+.canopy-dialog .canopy-dialog-button-primary {
+    -fx-background-color: #5C3E94;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-color: #5C3E94;
+    -fx-border-width: 1;
+    -fx-padding: 6 14;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+    -fx-effect: null;
+}
+
+.canopy-dialog .canopy-dialog-button-primary:hover {
+    -fx-background-color: #6d4db0;
+    -fx-border-color: #6d4db0;
+}
+
+.canopy-dialog .combo-box-popup .list-view {
+    -fx-background-color: #2b2d31;
+    -fx-border-color: #363840;
+}
+
+.canopy-dialog .combo-box-popup .list-cell:hover {
+    -fx-background-color: #373b41;
+}
+
+.canopy-dialog .combo-box-popup .list-cell:selected {
+    -fx-background-color: #5C3E94;
+    -fx-text-fill: #ffffff;
+}

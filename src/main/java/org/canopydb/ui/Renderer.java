@@ -24,6 +24,7 @@ public class Renderer {
             "/styles/table.css",
             "/styles/scrollbars.css",
             "/styles/notifications.css",
+            "/styles/dialogs.css",
             "/styles/pagination.css",
             "/styles/filters.css",
             "/styles/connections.css"

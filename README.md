@@ -1,4 +1,4 @@
-# CanopyDB (0.1 SNAPSHOT)
+# CanopyDB (1.0 SNAPSHOT)
 
 *A lightweight, fast, and modern SQL client built for developers.*
 

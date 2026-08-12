@@ -146,8 +146,9 @@ A major focus of the project is ensuring that heavy database operations never bl
 - [x] Search tables
 - [x] Connection management
 - [ ] Per Database Connections
-- [ ] Refresh connections
-- [ ] Refresh Table 
+- [x] Refresh connections
+- [x] Refresh Table
+- [ ] Client state save and load
 - [ ] Query editor
 - [ ] Result table rendering
 - [ ] Parallel query execution

@@ -145,7 +145,7 @@ A major focus of the project is ensuring that heavy database operations never bl
 - [x] Table Filtering
 - [x] Search tables
 - [x] Connection management
-- [ ] Per Database Connections
+- [x] Per Database Connections
 - [x] Refresh connections
 - [x] Refresh Table
 - [ ] Client state save and load

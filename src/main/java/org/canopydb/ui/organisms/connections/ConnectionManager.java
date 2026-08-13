@@ -111,6 +111,7 @@ public class ConnectionManager {
                         3306,
                         "root",
                         "",
+                        "",
                         ConnectionLabel.LOCAL
                 ));
 
@@ -148,6 +149,7 @@ public class ConnectionManager {
             existing.setPort(connection.getPort());
             existing.setUsername(connection.getUsername());
             existing.setPassword(connection.getPassword());
+            existing.setDatabase(connection.getDatabase());
             existing.setLabel(connection.getLabel());
             connectionCards.get(existing.getId()).refresh();
         } else {

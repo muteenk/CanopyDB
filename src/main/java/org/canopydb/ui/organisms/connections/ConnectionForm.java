@@ -41,6 +41,7 @@ public class ConnectionForm {
     private final TextField portField;
     private final TextField usernameField;
     private final PasswordField passwordField;
+    private final TextField databaseField;
     private final ComboBox<ConnectionLabel> labelField;
 
     private final Button testButton;
@@ -74,6 +75,7 @@ public class ConnectionForm {
         passwordField = new PasswordField();
         passwordField.setPromptText("Password");
         restrictPasswordFieldClipboard(passwordField);
+        databaseField = new TextInput("database").getTextField();
 
         labelField = new ComboBox<>();
         labelField.getItems().addAll(ConnectionLabel.values());
@@ -90,7 +92,8 @@ public class ConnectionForm {
                 labeledField("Host", hostField),
                 labeledField("Port", portField),
                 labeledField("Username", usernameField),
-                labeledField("Password", passwordField)
+                labeledField("Password", passwordField),
+                labeledField("Database", databaseField)
         );
         fields.getStyleClass().add("connection-form-fields");
 
@@ -199,6 +202,7 @@ public class ConnectionForm {
         int port = parsePort(portField.getText().trim());
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
+        String database = databaseField.getText();
 
         if (existing != null) {
             return new ConnectionMeta(
@@ -208,11 +212,12 @@ public class ConnectionForm {
                     port,
                     username,
                     password,
+                    database,
                     label
             );
         }
 
-        return new ConnectionMeta(name, host, port, username, password, label);
+        return new ConnectionMeta(name, host, port, username, password, database, label);
     }
 
     private void populateFrom(ConnectionMeta connection) {
@@ -225,6 +230,7 @@ public class ConnectionForm {
         portField.setText(String.valueOf(connection.getPort()));
         usernameField.setText(connection.getUsername());
         passwordField.setText(connection.getPassword());
+        databaseField.setText(connection.getDatabase());
         labelField.setValue(connection.getLabel());
     }
 
@@ -235,6 +241,7 @@ public class ConnectionForm {
         portField.textProperty().addListener((o, a, b) -> onChange.run());
         usernameField.textProperty().addListener((o, a, b) -> onChange.run());
         passwordField.textProperty().addListener((o, a, b) -> onChange.run());
+        databaseField.textProperty().addListener((o, a, b) -> onChange.run());
         labelField.valueProperty().addListener((o, a, b) -> onChange.run());
     }
 
@@ -256,7 +263,8 @@ public class ConnectionForm {
                 nullToEmpty(hostField.getText()),
                 nullToEmpty(portField.getText()),
                 nullToEmpty(usernameField.getText()),
-                nullToEmpty(passwordField.getText())
+                nullToEmpty(passwordField.getText()),
+                nullToEmpty(databaseField.getText())
         );
     }
 
@@ -357,6 +365,7 @@ public class ConnectionForm {
         private String port;
         private String username;
         private String password;
+        private String database;
 
         private FormSnapshot(
                 String name,
@@ -364,7 +373,8 @@ public class ConnectionForm {
                 String host,
                 String port,
                 String username,
-                String password
+                String password,
+                String database
         ) {
             this.name = name;
             this.label = label;
@@ -372,6 +382,7 @@ public class ConnectionForm {
             this.port = port;
             this.username = username;
             this.password = password;
+            this.database = database;
         }
 
         private void copyFrom(FormSnapshot other) {
@@ -381,6 +392,7 @@ public class ConnectionForm {
             this.port = other.port;
             this.username = other.username;
             this.password = other.password;
+            this.database = other.database;
         }
 
         @Override
@@ -392,12 +404,13 @@ public class ConnectionForm {
                     && Objects.equals(host, other.host)
                     && Objects.equals(port, other.port)
                     && Objects.equals(username, other.username)
-                    && Objects.equals(password, other.password);
+                    && Objects.equals(password, other.password)
+                    && Objects.equals(database, other.database);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(name, label, host, port, username, password);
+            return Objects.hash(name, label, host, port, username, password, database);
         }
     }
 }

@@ -50,9 +50,25 @@ public class Sidebar {
     private TreeView<String> databaseTreeView;
 
     public Sidebar(TableOpenAction tableOpenAction, TableActiveCheck tableActiveCheck) {
+        this(tableOpenAction, tableActiveCheck, null);
+    }
+
+    public Sidebar(
+            TableOpenAction tableOpenAction,
+            TableActiveCheck tableActiveCheck,
+            String initialDatabase
+    ) {
         treeViewEventController = new TreeViewEventController(tableOpenAction, tableActiveCheck);
         treeSearch = new ConnectionTreeSearch(databasesRoot, treeViewEventController);
         treeViewEventController.setOnTreeDataChanged(treeSearch::onTreeDataChanged);
+        pinInitialDatabase(initialDatabase);
+    }
+
+    private void pinInitialDatabase(String databaseName) {
+        if (databaseName == null || databaseName.isBlank()) {
+            return;
+        }
+        treeViewEventController.addPinnedDatabase(databasesRoot, databaseName.trim());
     }
 
     public VBox getSidebar() {

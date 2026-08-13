@@ -72,7 +72,8 @@ public final class DatabasePool {
                 + connection.getHost()
                 + ":"
                 + connection.getPort()
-                + "/";
+                + "/"
+                + connection.getDatabase();
     }
 
 }

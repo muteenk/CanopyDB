@@ -135,7 +135,7 @@ public class ConnectionFormArea {
                                 NotificationManager.NotificationType.SUCCESS
                         );
 
-                        ViewManager.pushView(new WorkspaceView().getView());
+                        ViewManager.pushView(new WorkspaceView(connection).getView());
                     });
                 } catch (Exception ex) {
                     LOGGER.log(Level.SEVERE, "Connection failed", ex);

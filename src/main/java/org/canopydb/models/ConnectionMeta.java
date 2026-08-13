@@ -9,6 +9,7 @@ public class ConnectionMeta {
     private int port;
     private String username;
     private String password;
+    private String database;
     private ConnectionLabel label;
 
     // Private Default Constructor for Jackson to serialize this class
@@ -22,6 +23,7 @@ public class ConnectionMeta {
             int port,
             String username,
             String password,
+            String database,
             ConnectionLabel label
     ) {
         this.id = UUID.randomUUID().toString();
@@ -30,6 +32,7 @@ public class ConnectionMeta {
         this.port = port;
         this.username = username;
         this.password = password;
+        this.database = database;
         this.label = label;
     }
 
@@ -40,6 +43,7 @@ public class ConnectionMeta {
             int port,
             String username,
             String password,
+            String database,
             ConnectionLabel label
     ) {
         this.id = id;
@@ -48,6 +52,7 @@ public class ConnectionMeta {
         this.port = port;
         this.username = username;
         this.password = password;
+        this.database = database;
         this.label = label;
     }
 
@@ -93,6 +98,14 @@ public class ConnectionMeta {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
     }
 
     public ConnectionLabel getLabel() {

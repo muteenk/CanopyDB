@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
+import org.canopydb.models.ConnectionMeta;
 import org.canopydb.ui.interfaces.View;
 import org.canopydb.ui.organisms.workspace.Sidebar;
 import org.canopydb.ui.organisms.workspace.Topbar;
@@ -14,11 +15,16 @@ public class WorkspaceView implements View {
     private final BorderPane app = new BorderPane();
 
     public WorkspaceView() {
+        this(null);
+    }
+
+    public WorkspaceView(ConnectionMeta connection) {
         Workspace workspace = new Workspace();
         Topbar topbar = new Topbar();
         Sidebar sidebar = new Sidebar(
                 workspace::addNewSession,
-                workspace::selectActiveSession
+                workspace::selectActiveSession,
+                connection != null ? connection.getDatabase() : null
         );
 
         Region sidebarPane = sidebar.getSidebar();

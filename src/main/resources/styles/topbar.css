@@ -17,6 +17,13 @@
     /* -fx-pref-height: 40; */
 }
 
+.global-progress-host {
+    -fx-min-height: 3;
+    -fx-pref-height: 3;
+    -fx-max-height: 3;
+    -fx-background-color: #1f232a;
+}
+
 .global-progress {
     -fx-pref-width: Infinity;
     -fx-min-height: 3;
@@ -29,9 +36,12 @@
 }
 
 .global-progress .track {
-    -fx-background-color: #1f232a;
+    -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
+    -fx-min-height: 3;
+    -fx-pref-height: 3;
+    -fx-max-height: 3;
 }
 
 .global-progress .bar {
@@ -39,6 +49,9 @@
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-padding: 0;
+    -fx-min-height: 3;
+    -fx-pref-height: 3;
+    -fx-max-height: 3;
 }
 
 

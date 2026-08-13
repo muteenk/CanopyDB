@@ -6,58 +6,63 @@ import javafx.animation.KeyValue;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 /**
  * Thin full-width progress strip used for global loading feedback.
+ * The host keeps a fixed height so idle / loading never shifts the layout.
  */
 public final class GlobalProgressBar {
+
+    public static final double BAR_HEIGHT = 3;
 
     private static final Duration SWEEP_DURATION = Duration.millis(280);
     private static final Duration HOLD_AT_END = Duration.millis(140);
     private static final double SWEEP_START_WHEN_INDETERMINATE = 0.12;
 
+    private final StackPane host = new StackPane();
     private final ProgressBar progressBar = new ProgressBar();
     private Timeline sweepTimeline;
     private PauseTransition holdAtEnd;
 
     public GlobalProgressBar() {
         progressBar.getStyleClass().add("global-progress");
-        progressBar.setMaxWidth(Double.MAX_VALUE);
-        progressBar.setMinHeight(3);
-        progressBar.setPrefHeight(3);
-        progressBar.setMaxHeight(3);
+        progressBar.setMaxSize(Double.MAX_VALUE, BAR_HEIGHT);
+        progressBar.setMinHeight(BAR_HEIGHT);
+        progressBar.setPrefHeight(BAR_HEIGHT);
+        progressBar.setMaxHeight(BAR_HEIGHT);
         progressBar.setProgress(0);
-        hide();
+
+        host.getStyleClass().add("global-progress-host");
+        host.setMinHeight(BAR_HEIGHT);
+        host.setPrefHeight(BAR_HEIGHT);
+        host.setMaxHeight(BAR_HEIGHT);
+        host.setMaxWidth(Double.MAX_VALUE);
+        host.getChildren().add(progressBar);
     }
 
-    public ProgressBar getNode() {
-        return progressBar;
+    public Region getNode() {
+        return host;
     }
 
     public void showIndeterminate() {
         cancelFinishAnimation();
         progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
-        progressBar.setVisible(true);
-        progressBar.setManaged(true);
     }
 
     public void showProgress(double progress) {
         cancelFinishAnimation();
         progressBar.setProgress(Math.clamp(progress, 0, 1));
-        progressBar.setVisible(true);
-        progressBar.setManaged(true);
     }
 
     /**
-     * Animate to 100%, briefly hold, then hide.
+     * Animate to 100%, briefly hold, then return to idle (progress 0).
      * Call when the last in-flight load completes.
      */
-    public void completeAndHide() {
+    public void completeProgress() {
         cancelFinishAnimation();
-
-        progressBar.setVisible(true);
-        progressBar.setManaged(true);
 
         double from = progressBar.getProgress();
         if (from < 0) {
@@ -91,8 +96,6 @@ public final class GlobalProgressBar {
     public void hide() {
         cancelFinishAnimation();
         progressBar.setProgress(0);
-        progressBar.setVisible(false);
-        progressBar.setManaged(false);
     }
 
     private void cancelFinishAnimation() {

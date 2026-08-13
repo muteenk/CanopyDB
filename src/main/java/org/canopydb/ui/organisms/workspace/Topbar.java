@@ -1,9 +1,9 @@
 package org.canopydb.ui.organisms.workspace;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.canopydb.ui.singletons.LoadingManager;
 
@@ -21,7 +21,7 @@ public class Topbar {
         toolbar.setAlignment(Pos.CENTER_LEFT);
         toolbar.setFillHeight(true);
 
-        ProgressBar progressBar = LoadingManager.getNode();
+        Region progressBar = LoadingManager.getNode();
         progressBar.setMaxWidth(Double.MAX_VALUE);
         VBox.setVgrow(progressBar, Priority.NEVER);
 

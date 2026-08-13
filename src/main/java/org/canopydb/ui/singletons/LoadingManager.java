@@ -1,7 +1,7 @@
 package org.canopydb.ui.singletons;
 
 import javafx.application.Platform;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.Region;
 import org.canopydb.ui.atoms.GlobalProgressBar;
 
 /**
@@ -17,7 +17,7 @@ public final class LoadingManager {
     private LoadingManager() {
     }
 
-    public static ProgressBar getNode() {
+    public static Region getNode() {
         return progressBar.getNode();
     }
 
@@ -38,7 +38,7 @@ public final class LoadingManager {
         runOnFx(() -> {
             activeLoads = Math.max(0, activeLoads - 1);
             if (activeLoads == 0) {
-                progressBar.completeAndHide();
+                progressBar.completeProgress();
             }
         });
     }

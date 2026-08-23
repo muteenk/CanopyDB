@@ -18,6 +18,7 @@ import org.canopydb.ui.views.WorkspaceView;
 import org.canopydb.utils.ExceptionMessages;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +28,13 @@ public class ConnectionFormArea {
 
     private final ScrollPane scrollPane = new ScrollPane();
     private final VBox contentArea = new VBox();
+
+    /**
+     * Bumped whenever the visible form changes so in-flight test/connect
+     * callbacks cannot update a form the user already left.
+     */
+    private final AtomicInteger formGeneration = new AtomicInteger();
+    private ConnectionForm activeForm;
 
     private Consumer<ConnectionMeta> onSave;
 
@@ -59,6 +67,7 @@ public class ConnectionFormArea {
     }
 
     public void showWelcome() {
+        invalidateActiveForm();
         contentArea.getChildren().setAll(buildWelcome());
     }
 
@@ -67,18 +76,33 @@ public class ConnectionFormArea {
     }
 
     public void showConnectionForm(ConnectionMeta connection) {
+        invalidateActiveForm();
         ConnectionForm form = new ConnectionForm(connection);
+        activeForm = form;
         wireFormActions(form);
         contentArea.getChildren().setAll(form.getRoot());
     }
 
+    private void invalidateActiveForm() {
+        formGeneration.incrementAndGet();
+        activeForm = null;
+    }
+
+    private boolean isCurrentForm(ConnectionForm form, int generation) {
+        return form == activeForm && generation == formGeneration.get();
+    }
+
     private void wireFormActions(ConnectionForm form) {
         form.setOnTest(connection -> {
+            int generation = formGeneration.get();
             form.setBusy(true, "Testing connection…");
             ThreadPool.getExecutor().execute(() -> {
                 try {
                     DatabasePool.testConnection(connection);
                     Platform.runLater(() -> {
+                        if (!isCurrentForm(form, generation)) {
+                            return;
+                        }
                         form.setBusy(false, null);
                         NotificationManager.pushNotification(
                                 "Connection Test Successful",
@@ -92,6 +116,9 @@ public class ConnectionFormArea {
                 } catch (Exception ex) {
                     LOGGER.log(Level.WARNING, "Connection test failed", ex);
                     Platform.runLater(() -> {
+                        if (!isCurrentForm(form, generation)) {
+                            return;
+                        }
                         form.setBusy(false, null);
                         NotificationManager.pushNotification(
                                 "Connection Failed",
@@ -118,11 +145,18 @@ public class ConnectionFormArea {
         });
 
         form.setOnConnect(connection -> {
+            int generation = formGeneration.get();
             form.setBusy(true, "Connecting…");
             ThreadPool.getExecutor().execute(() -> {
                 try {
-                    DatabasePool.connect(connection);
+                    long epoch = DatabasePool.connect(connection);
                     Platform.runLater(() -> {
+                        if (!isCurrentForm(form, generation)) {
+                            // User left this form; tear down only if no newer pool replaced us.
+                            DatabasePool.disconnectIfEpoch(epoch);
+                            return;
+                        }
+
                         if (onSave != null) {
                             onSave.accept(connection);
                         }
@@ -140,6 +174,9 @@ public class ConnectionFormArea {
                 } catch (Exception ex) {
                     LOGGER.log(Level.SEVERE, "Connection failed", ex);
                     Platform.runLater(() -> {
+                        if (!isCurrentForm(form, generation)) {
+                            return;
+                        }
                         form.setBusy(false, null);
                         NotificationManager.pushNotification(
                                 "Connection Failed",

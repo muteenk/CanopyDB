@@ -3,35 +3,49 @@ package org.canopydb.config;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.canopydb.models.ConnectionMeta;
+import org.canopydb.utils.Constants;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicLong;
 
 public final class DatabasePool {
+
+    private static final Object LOCK = new Object();
+    private static final AtomicLong poolEpoch = new AtomicLong();
 
     private static HikariDataSource dataSource;
 
     private DatabasePool() {}
 
-    public static void connect(
-            ConnectionMeta connection
-    ) throws SQLException {
-        if (dataSource != null) {
-            dataSource.close();
+    /**
+     * Replaces the active pool and verifies a connection can be obtained.
+     *
+     * @return pool epoch for this connect — use with {@link #disconnectIfEpoch(long)}
+     *         if the caller abandons the attempt after it succeeds
+     */
+    public static long connect(ConnectionMeta connection) throws SQLException {
+        synchronized (LOCK) {
+            if (dataSource != null) {
+                dataSource.close();
+                dataSource = null;
+            }
+
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(buildJdbcUrl(connection));
+            config.setUsername(connection.getUsername());
+            config.setPassword(connection.getPassword());
+
+            config.setMaximumPoolSize(10);
+            config.setIdleTimeout(30_000);
+            config.setConnectionTimeout(Constants.HIKARI_CONNECTION_TIMEOUT_MS);
+            config.setValidationTimeout(Constants.HIKARI_VALIDATION_TIMEOUT_MS);
+
+            dataSource = new HikariDataSource(config);
+            dataSource.getConnection().close();
+            return poolEpoch.incrementAndGet();
         }
-
-        HikariConfig config = new HikariConfig();
-
-        config.setJdbcUrl(buildJdbcUrl(connection));
-        config.setUsername(connection.getUsername());
-        config.setPassword(connection.getPassword());
-
-        config.setMaximumPoolSize(10);
-        config.setIdleTimeout(30000);
-
-        dataSource = new HikariDataSource(config);
-        dataSource.getConnection().close();
     }
 
     /**
@@ -47,23 +61,34 @@ public final class DatabasePool {
         }
     }
 
-    public static Connection getConnection()
-            throws SQLException {
-
-        if (dataSource == null) {
-            throw new IllegalStateException(
-                    "No active database connection."
-            );
+    public static Connection getConnection() throws SQLException {
+        synchronized (LOCK) {
+            if (dataSource == null) {
+                throw new IllegalStateException("No active database connection.");
+            }
+            return dataSource.getConnection();
         }
-
-        return dataSource.getConnection();
     }
 
     public static void disconnect() {
+        synchronized (LOCK) {
+            if (dataSource != null) {
+                dataSource.close();
+                dataSource = null;
+            }
+        }
+    }
 
-        if (dataSource != null) {
-            dataSource.close();
-            dataSource = null;
+    /**
+     * Closes the pool only if it still belongs to {@code epoch}
+     * (e.g. an abandoned connect that finished after the user switched forms).
+     */
+    public static void disconnectIfEpoch(long epoch) {
+        synchronized (LOCK) {
+            if (poolEpoch.get() == epoch && dataSource != null) {
+                dataSource.close();
+                dataSource = null;
+            }
         }
     }
 
@@ -73,7 +98,12 @@ public final class DatabasePool {
                 + ":"
                 + connection.getPort()
                 + "/"
-                + connection.getDatabase();
+                + nullToEmpty(connection.getDatabase())
+                + "?connectTimeout=" + Constants.JDBC_CONNECT_TIMEOUT_MS
+                + "&socketTimeout=" + Constants.JDBC_SOCKET_TIMEOUT_MS;
     }
 
+    private static String nullToEmpty(String value) {
+        return value == null ? "" : value;
+    }
 }

@@ -115,9 +115,11 @@ Persistence: `~/.canopydb/connections.json` (pretty-printed Jackson list of `Con
 
 | Action | Behavior |
 | --- | --- |
-| Test | Background thread → `DatabasePool.testConnection` (DriverManager; does not replace the pool) → toast |
-| Connect | FX thread → `DatabasePool.connect` (Hikari) → save → push `WorkspaceView` |
+| Test | Background thread → `DatabasePool.testConnection` (DriverManager + JDBC timeouts; does not replace the pool) → toast |
+| Connect | Background thread → `DatabasePool.connect` (Hikari + JDBC/Hikari timeouts) → save → push `WorkspaceView` |
 | Save | Writes full connection list to JSON via `ClientStateManager`; Save button only when editing and form is dirty |
+
+Switching cards while Test/Connect is in flight is safe: `ConnectionFormArea` bumps a form generation so stale callbacks do not clear busy state or navigate. An abandoned successful connect closes its pool via `disconnectIfEpoch` unless a newer connect already replaced it.
 
 ### Workspace view
 
@@ -234,7 +236,7 @@ Maps each JDBC cell to `CellValue` with type-aware rules so display (and future 
 | --- | --- |
 | Metadata / table loads / connection test | `ThreadPool` (fixed size **4**) |
 | UI mutations after async work | `Platform.runLater` |
-| `DatabasePool.connect` | Currently **synchronous on the FX thread** (can block UI) |
+| `DatabasePool.connect` / `testConnection` | Background (`ThreadPool`); JDBC `connectTimeout` 5s + `socketTimeout` 30s; Hikari `connectionTimeout` 10s |
 | Shutdown | `Main.stop` shuts down the executor |
 
 `Profiler.logMemory` logs used heap MB at a few UI hotspots (tab open, filter add, tree double-click).

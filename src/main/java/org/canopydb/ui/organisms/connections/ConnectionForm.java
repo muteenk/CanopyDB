@@ -181,6 +181,7 @@ public class ConnectionForm {
         portField.setDisable(busy);
         usernameField.setDisable(busy);
         passwordField.setDisable(busy);
+        databaseField.setDisable(busy);
         labelField.setDisable(busy);
         testButton.setDisable(busy);
         saveButton.setDisable(busy);

@@ -19,7 +19,7 @@ Runtime infrastructure.
 
 | Class | Role |
 | --- | --- |
-| `DatabasePool` | Static HikariCP lifecycle: `connect`, `testConnection`, `getConnection`, `disconnect`. JDBC URL `jdbc:mysql://host:port/` |
+| `DatabasePool` | Static HikariCP lifecycle: `connect` (returns epoch), `testConnection`, `getConnection`, `disconnect`, `disconnectIfEpoch`. JDBC URL includes `connectTimeout` / `socketTimeout` |
 | `ThreadPool` | Shared fixed executor (4 threads) for async DB work |
 | `AppLogger` | JUL setup under `org.canopydb`; level via `canopy.log.level` |
 | `Profiler` | `logMemory` — used-heap MB logging |

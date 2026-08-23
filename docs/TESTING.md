@@ -43,9 +43,10 @@ Great first targets          Harder / later
 ─────────────────────       ──────────────────────────
 CellValue                   ConnectionForm (JavaFX)
 ExceptionMessages           NotificationManager animations
-TableQuery SQL strings      DatabasePool + real MySQL
-TableSession pagination     Full WorkspaceView flows
-ResultSetValueSerializer    Controllers (need async + UI)
+ClientStateManager          DatabasePool + real MySQL
+TableQuery SQL strings      Full WorkspaceView flows
+TableSession pagination     Controllers (need async + UI)
+ResultSetValueSerializer    ConnectionManager UI flows
 TreeSearch matching
 ```
 
@@ -74,7 +75,7 @@ Examples:
 | --- | --- | --- |
 | **Unit** | One class, no DB, no UI stage | `CellValueTest`, `TableQueryTest` |
 | **Connected (collaboration)** | 2–3 classes together, still no DB | `TableSession` + `TableQuery` + `TableUtilities` |
-| **Integration** | Real JDBC / real files / real FX | Future: Testcontainers MySQL, temp `connections.json` |
+| **Integration** | Real JDBC / real files / real FX | `ClientStateManagerTest` (temp dir); future Testcontainers MySQL |
 
 Connected tests answer: *“When these modules talk, does the *behavior* stay correct?”*  
 They are still fast — they just don’t isolate with mocks as aggressively.
@@ -133,7 +134,7 @@ src/test/java/org/canopydb/
 ├── models/          # CellValue, TableData, TableSession (connected)
 ├── queries/         # Order, TableQuery
 ├── repository/      # ResultSetValueSerializer (+ Mockito)
-├── utils/           # ExceptionMessages, TableUtilities
+├── utils/           # ClientStateManager, ExceptionMessages, TableUtilities
 └── ui/utils/        # TreeSearch, TableComponent copy helpers
 ```
 
@@ -145,7 +146,7 @@ Mirror production packages so it’s obvious what a file covers.
 
 | Next step | Why |
 | --- | --- |
-| Temp-dir test for `ConnectionManager` JSON save/load | File I/O without touching real `~/.canopydb` |
+| ~~Temp-dir test for `ClientStateManager`~~ | Done — `ClientStateManagerTest` isolates file I/O |
 | Testcontainers MySQL for `TableActionDAO` | Real SQL against a throwaway DB |
 | TestFX for a single control | Only when UI regressions hurt |
 

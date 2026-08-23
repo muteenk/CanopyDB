@@ -21,7 +21,7 @@ Launch → Main → Renderer → ConnectionView
 - **UI:** programmatic JavaFX (no FXML). Atomic design: atoms → molecules → organisms → views.
 - **DB:** MySQL only today (`mysql-connector-j` + HikariCP). One active pool at a time.
 - **Async:** JDBC on a fixed 4-thread pool; UI updates via `Platform.runLater`.
-- **Data on disk:** `~/.canopydb/connections.json` (Jackson).
+- **Data on disk:** `~/.canopydb/*.json` via `ClientStateManager` (connections today; more state files later).
 
 ## Run
 
@@ -35,6 +35,7 @@ Main class: `org.canopydb.Launch` (see root `build.gradle`).
 
 | Goal | Start here |
 | --- | --- |
+| Saved connections / JSON state | `utils/ClientStateManager`, `ui/organisms/connections/ConnectionManager` |
 | Connection screen UX | `ui/organisms/connections/` |
 | Sidebar / tree / search | `ui/organisms/workspace/Sidebar`, `ConnectionTreeSearch` |
 | Open / expand tree nodes | `controllers/TreeViewEventController` |

@@ -1,6 +1,5 @@
 package org.canopydb.ui.organisms.connections;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -12,12 +11,10 @@ import org.canopydb.ui.atoms.TextInput;
 import org.canopydb.ui.molecules.ConnectionCard;
 import org.canopydb.config.AppLogger;
 import org.canopydb.ui.singletons.NotificationManager;
+import org.canopydb.utils.ClientStateManager;
+import org.canopydb.utils.Constants;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -90,19 +87,9 @@ public class ConnectionManager {
     }
 
     private void seedSavedConnections() {
-        ObjectMapper mapper = new ObjectMapper();
-
-        // Resolves the '~' home directory properly across Windows, Mac, and Linux
-        String userHome = System.getProperty("user.home");
-        Path filePath = Paths.get(userHome, ".canopydb", "connections.json");
-        File jsonFile = filePath.toFile();
-
         try {
-            if (!jsonFile.exists()) {
+            if (!ClientStateManager.exists(Constants.CONNECTIONS_STATE_FILE)) {
                 LOGGER.info("Connections file not found. Creating default configuration...");
-
-                // Create parent directories (~/.canopydb) if they don't exist
-                Files.createDirectories(filePath.getParent());
 
                 List<ConnectionMeta> defaultConnections = new ArrayList<>();
                 defaultConnections.add(new ConnectionMeta(
@@ -115,18 +102,14 @@ public class ConnectionManager {
                         ConnectionLabel.LOCAL
                 ));
 
-                // Save to file
-                mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, defaultConnections);
-                LOGGER.info("Created connections file at: " + filePath.toAbsolutePath());
+                ClientStateManager.write(Constants.CONNECTIONS_STATE_FILE, defaultConnections);
+                LOGGER.info("Created connections file at: "
+                        + ClientStateManager.stateFilePath(Constants.CONNECTIONS_STATE_FILE).toAbsolutePath());
             }
 
-            // Read and parse the file
-            // Using TypeFactory to handle a List of ConnectionConfig objects safely
-            this.connections = mapper.readValue(
-                    jsonFile,
-                    mapper.getTypeFactory().constructCollectionType(List.class, ConnectionMeta.class)
+            this.connections = new ArrayList<>(
+                    ClientStateManager.readList(Constants.CONNECTIONS_STATE_FILE, ConnectionMeta.class)
             );
-
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "Error processing configuration file", e);
             NotificationManager.pushNotification(
@@ -159,15 +142,9 @@ public class ConnectionManager {
         }
 
         try {
-            ObjectMapper mapper = new ObjectMapper();
-
-            // Resolves the '~' home directory properly across Windows, Mac, and Linux
-            String userHome = System.getProperty("user.home");
-            Path filePath = Paths.get(userHome, ".canopydb", "connections.json");
-            File jsonFile = filePath.toFile();
-            Files.createDirectories(filePath.getParent());
-            mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, connections);
-        } catch (IOException ignored) {
+            ClientStateManager.write(Constants.CONNECTIONS_STATE_FILE, connections);
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, "Could not save connections", e);
             NotificationManager.pushNotification(
                     "Could not save connections",
                     "Unable to save connection details to CanopyDB",

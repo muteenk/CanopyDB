@@ -83,7 +83,8 @@ Glue between UI events and services. Always marshal UI updates onto the FX threa
 
 | Class | Role |
 | --- | --- |
-| `Constants` | APPLY / APPLIED filter labels |
+| `Constants` | Filter labels; client state paths (`DIRECTORY`, `CONNECTIONS_STATE_FILE`, …) |
+| `ClientStateManager` | Control point for JSON state files under `~/.canopydb/` (`write`, `read`, `readList`, `exists`) |
 | `ExceptionMessages` | `userMessage(Throwable)` — unwrap for user-facing text |
 | `TableUtilities` | `tablePath(database, table)` → `"database : table"` (tab identity) |
 
@@ -131,7 +132,7 @@ Glue between UI events and services. Always marshal UI updates onto the FX threa
 
 | Class | Role |
 | --- | --- |
-| `ConnectionManager` | Sidebar list, search, cards, JSON load/save under `~/.canopydb/` |
+| `ConnectionManager` | Sidebar list, search, cards; loads/saves connections via `ClientStateManager` |
 | `ConnectionFormArea` | Welcome vs form; Test / Save / Connect orchestration |
 | `ConnectionForm` | Fields, dirty tracking, password copy/cut blocked, name length limit |
 
@@ -191,8 +192,10 @@ Glue between UI events and services. Always marshal UI updates onto the FX threa
 
 ## Persistence
 
-| Path | Contents |
-| --- | --- |
-| `~/.canopydb/connections.json` | Array of `ConnectionMeta` (includes passwords in plaintext) |
+All files are written under `~/.canopydb/` by **`ClientStateManager`**. Feature classes choose *what* to store; the utility handles *how*.
 
-No other config files are written under `~/.canopydb` today.
+| Path | Contents | Owned by |
+| --- | --- | --- |
+| `~/.canopydb/connections.json` | Array of `ConnectionMeta` (includes passwords in plaintext) | `ConnectionManager` |
+
+Add new state files by extending `Constants` with a filename, then calling `ClientStateManager.write` / `read` / `readList` from the feature that owns that data.

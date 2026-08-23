@@ -101,7 +101,7 @@ public class ConnectionMeta {
     }
 
     public String getDatabase() {
-        return database;
+        return database != null ? database : "";
     }
 
     public void setDatabase(String database) {

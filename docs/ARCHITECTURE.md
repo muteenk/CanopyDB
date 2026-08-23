@@ -111,11 +111,13 @@ Connecting successfully does `ViewManager.pushView(new WorkspaceView().getView()
 
 Persistence: `~/.canopydb/connections.json` (pretty-printed Jackson list of `ConnectionMeta`). Created on first run with a default “Local Instance” (`localhost:3306` / `root` / empty password / LOCAL). **Passwords are stored in plaintext.**
 
+`ConnectionManager` owns connection defaults and load/save behavior; all JSON file I/O goes through `ClientStateManager` (see [Client state persistence](#client-state-persistence)).
+
 | Action | Behavior |
 | --- | --- |
 | Test | Background thread → `DatabasePool.testConnection` (DriverManager; does not replace the pool) → toast |
 | Connect | FX thread → `DatabasePool.connect` (Hikari) → save → push `WorkspaceView` |
-| Save | Writes full connection list to JSON; Save button only when editing and form is dirty |
+| Save | Writes full connection list to JSON via `ClientStateManager`; Save button only when editing and form is dirty |
 
 ### Workspace view
 
@@ -176,6 +178,35 @@ LIMIT 300 OFFSET n
 ```
 
 Filters are **not** parameterized column operators — they are developer-entered SQL snippets.
+
+## Client state persistence
+
+All on-disk client state lives under `~/.canopydb/`. **`ClientStateManager`** is the single control point for JSON file I/O; feature code owns defaults and domain rules.
+
+```
+Feature (e.g. ConnectionManager)
+  → decides what to store / default seed data
+  → ClientStateManager.write(filename, data)
+  → ClientStateManager.read / readList(filename, type)
+```
+
+| Piece | Responsibility |
+| --- | --- |
+| `Constants` | State directory name (`.canopydb`), filenames (`connections.json`, …) |
+| `ClientStateManager` | Path resolution, directory creation, Jackson read/write |
+| Feature classes | When to load/save, default content, UI error handling |
+
+| API | Use |
+| --- | --- |
+| `stateDirectory()` / `stateFilePath(filename)` | Resolve paths under `~/.canopydb/` |
+| `exists(filename)` | Check before seeding a new file |
+| `write(filename, data)` | Pretty-print JSON to disk |
+| `read(filename, type)` | Read a single JSON object |
+| `readList(filename, elementClass)` | Read a JSON array |
+
+**Connections today:** `ConnectionManager.seedSavedConnections()` seeds a default list when `connections.json` is missing, then loads via `readList`. `handleSave()` writes the in-memory list with `write(Constants.CONNECTIONS_STATE_FILE, connections)`.
+
+**Adding a new state file:** add a filename constant in `Constants`, keep feature-specific logic in the owning class, and call `ClientStateManager` for I/O only.
 
 ## Data model highlights
 

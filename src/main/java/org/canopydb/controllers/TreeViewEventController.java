@@ -2,6 +2,7 @@ package org.canopydb.controllers;
 
 import javafx.application.Platform;
 import javafx.scene.control.TreeItem;
+import org.canopydb.services.AsyncQuery;
 import org.canopydb.services.ConnectionMetadataService;
 import org.canopydb.services.TableActionService;
 import org.canopydb.ui.interfaces.TableActiveCheck;
@@ -11,11 +12,13 @@ import org.canopydb.ui.singletons.NotificationManager;
 import org.canopydb.ui.utils.LazyTreeItem;
 import org.canopydb.ui.utils.TreeViewComponent;
 import org.canopydb.utils.ExceptionMessages;
+import org.canopydb.utils.QueryExceptions;
 import org.canopydb.utils.TableUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TreeViewEventController {
     private final ConnectionMetadataService connectionMetadataService = new ConnectionMetadataService();
@@ -23,10 +26,13 @@ public class TreeViewEventController {
     private final TableOpenAction tableDataAppendAction;
     private final TableActiveCheck tableActiveCheck;
 
+    private final Map<String, AsyncQuery<List<String>>> inFlightTableLoads = new ConcurrentHashMap<>();
+    private AsyncQuery<org.canopydb.models.TableSession> inFlightTableOpen;
+
     private Runnable onTreeDataChanged;
 
-    public TreeViewEventController(TableOpenAction tableDataAppendAction, TableActiveCheck tableActiveCheck) {
-        this.tableDataAppendAction = tableDataAppendAction;
+    public TreeViewEventController(TableOpenAction tableOpenAction, TableActiveCheck tableActiveCheck) {
+        this.tableDataAppendAction = tableOpenAction;
         this.tableActiveCheck = tableActiveCheck;
     }
 
@@ -40,7 +46,7 @@ public class TreeViewEventController {
         }
     }
 
-    public CompletableFuture<List<String>> fetchAllDatabasesAsync() {
+    public AsyncQuery<List<String>> fetchAllDatabasesAsync() {
         return connectionMetadataService.loadDatabaseAsync();
     }
 
@@ -101,20 +107,31 @@ public class TreeViewEventController {
             uiNode.beginLoading();
         }
 
-        connectionMetadataService
-                .loadDBTablesAsync(dataNode.getValue())
+        String database = dataNode.getValue();
+        cancelTableLoad(database);
+
+        AsyncQuery<List<String>> query = connectionMetadataService.loadDBTablesAsync(database);
+        inFlightTableLoads.put(database, query);
+
+        query.future()
+                .whenComplete((tables, error) -> inFlightTableLoads.remove(database, query))
                 .thenAccept(tables -> Platform.runLater(() -> {
-                    dataNode.getChildren().clear();
-                    for (String table : tables) {
-                        dataNode.getChildren().add(new TreeItem<>(table));
+                    if (dataNode.isLoading()) {
+                        dataNode.getChildren().clear();
+                        for (String table : tables) {
+                            dataNode.getChildren().add(new TreeItem<>(table));
+                        }
+                        dataNode.markLoaded();
+                        if (uiNode != null && uiNode != dataNode) {
+                            uiNode.markLoaded();
+                        }
+                        notifyTreeDataChanged();
                     }
-                    dataNode.markLoaded();
-                    if (uiNode != null && uiNode != dataNode) {
-                        uiNode.markLoaded();
-                    }
-                    notifyTreeDataChanged();
                 }))
                 .exceptionally(error -> {
+                    if (QueryExceptions.isCancellation(error)) {
+                        return null;
+                    }
                     Platform.runLater(() -> {
                         dataNode.markUnloaded();
                         dataNode.setExpanded(false);
@@ -153,6 +170,15 @@ public class TreeViewEventController {
             }
             dbExpandHandler(dbItem);
         });
+        dbItem.addEventHandler(TreeItem.<String>branchCollapsedEvent(), dbEvent -> {
+            if (dbEvent.getSource() != dbItem) {
+                return;
+            }
+            if (dbItem.isLoading()) {
+                cancelTableLoad(dbItem.getValue());
+                dbItem.markUnloaded();
+            }
+        });
         return dbItem;
     }
 
@@ -164,21 +190,51 @@ public class TreeViewEventController {
             ))) {
                 return;
             }
+
+            cancelTableOpen();
+
             LoadingManager.start();
-            tableActionService.loadTableDataAsync(
+            AsyncQuery<org.canopydb.models.TableSession> query = tableActionService.loadTableDataAsync(
                     selectedItem.getValue(),
                     selectedItem.getParent().getValue()
-            ).whenComplete((session, error) -> LoadingManager.stop())
+            );
+            inFlightTableOpen = query;
+
+            query.future()
+                    .whenComplete((session, error) -> {
+                        LoadingManager.stop();
+                        if (inFlightTableOpen == query) {
+                            inFlightTableOpen = null;
+                        }
+                    })
                     .thenAccept(session -> Platform.runLater(() ->
-                    tableDataAppendAction.render(session)
-            )).exceptionally(error -> {
-                Platform.runLater(() -> NotificationManager.pushNotification(
-                        "Failed to fetch table !",
-                        ExceptionMessages.userMessage(error),
-                        NotificationManager.NotificationType.DANGER
-                ));
-                return null;
-            });
+                            tableDataAppendAction.render(session)
+                    ))
+                    .exceptionally(error -> {
+                        if (QueryExceptions.isCancellation(error)) {
+                            return null;
+                        }
+                        Platform.runLater(() -> NotificationManager.pushNotification(
+                                "Failed to fetch table !",
+                                ExceptionMessages.userMessage(error),
+                                NotificationManager.NotificationType.DANGER
+                        ));
+                        return null;
+                    });
+        }
+    }
+
+    private void cancelTableLoad(String database) {
+        AsyncQuery<List<String>> existing = inFlightTableLoads.remove(database);
+        if (existing != null) {
+            existing.cancel();
+        }
+    }
+
+    private void cancelTableOpen() {
+        if (inFlightTableOpen != null) {
+            inFlightTableOpen.cancel();
+            inFlightTableOpen = null;
         }
     }
 }

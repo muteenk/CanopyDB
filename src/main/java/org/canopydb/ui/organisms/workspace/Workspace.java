@@ -40,6 +40,7 @@ public class Workspace {
 
         Tab tab = tableTab.getTab();
         tab.setOnClosed(event -> {
+            tableViewEventController.cancelPending(tableSession.getTablePath());
             activeTabs.remove(tableSession.getTablePath());
             tableTab.dispose();
             Profiler.logMemory();

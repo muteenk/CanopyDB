@@ -133,8 +133,8 @@ Name tests like **behavior**, not like methods:
 src/test/java/org/canopydb/
 ├── models/          # CellValue, TableData, TableSession (connected)
 ├── queries/         # Order, TableQuery
-├── repository/      # ResultSetValueSerializer (+ Mockito)
-├── utils/           # ClientStateManager, ExceptionMessages, TableUtilities
+├── repository/      # ResultSetValueSerializer, QueryHandle (+ Mockito)
+├── utils/           # ClientStateManager, ExceptionMessages, QueryExceptions, TableUtilities
 └── ui/utils/        # TreeSearch, TableComponent copy helpers
 ```
 

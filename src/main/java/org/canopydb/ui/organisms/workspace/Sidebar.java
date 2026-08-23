@@ -18,6 +18,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.canopydb.config.Profiler;
 import org.canopydb.controllers.TreeViewEventController;
+import org.canopydb.services.AsyncQuery;
 import org.canopydb.ui.atoms.IconButton;
 import org.canopydb.ui.interfaces.TableActiveCheck;
 import org.canopydb.ui.interfaces.TableOpenAction;
@@ -129,7 +130,8 @@ public class Sidebar {
 
     private void showAddDatabaseDialog() {
         LoadingManager.start();
-        treeViewEventController.fetchAllDatabasesAsync()
+        AsyncQuery<List<String>> query = treeViewEventController.fetchAllDatabasesAsync();
+        query.future()
                 .whenComplete((databases, error) -> LoadingManager.stop())
                 .thenAccept(allDatabases -> Platform.runLater(() -> {
                     if (allDatabases == null || allDatabases.isEmpty()) {

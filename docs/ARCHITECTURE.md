@@ -210,6 +210,28 @@ Feature (e.g. ConnectionManager)
 
 **Adding a new state file:** add a filename constant in `Constants`, keep feature-specific logic in the owning class, and call `ClientStateManager` for I/O only.
 
+## Query cancellation
+
+Long-running table queries are allowed (no `setQueryTimeout`). Abortion is explicit via {@link org.canopydb.repository.QueryHandle}:
+
+```
+Controller / UI event
+  → AsyncQuery.cancel()  →  QueryHandle.cancel()  →  Statement.cancel()  (MySQL KILL QUERY)
+  → CompletableFuture.cancel(true)
+```
+
+| Trigger | Behavior |
+| --- | --- |
+| Collapse DB node while tables load | Cancel metadata query; node returns to unloaded |
+| Re-expand / refresh same DB | Cancel previous table-list load for that database |
+| New table double-click | Cancel previous table open |
+| Filter / sort / page / reload | Cancel previous reload for that tab |
+| Close table tab | Cancel pending reload for that tab |
+
+Cancelled queries do not show error toasts (`QueryExceptions.isCancellation`).
+
+Pooled connections use `socketTimeout=0` so slow legitimate queries are not cut off by the driver; test connections keep a 30s socket timeout.
+
 ## Data model highlights
 
 | Type | Role |
@@ -236,7 +258,7 @@ Maps each JDBC cell to `CellValue` with type-aware rules so display (and future 
 | --- | --- |
 | Metadata / table loads / connection test | `ThreadPool` (fixed size **4**) |
 | UI mutations after async work | `Platform.runLater` |
-| `DatabasePool.connect` / `testConnection` | Background (`ThreadPool`); JDBC `connectTimeout` 5s + `socketTimeout` 30s; Hikari `connectionTimeout` 10s |
+| `DatabasePool.connect` / `testConnection` | Background (`ThreadPool`); JDBC connect timeout 5s; pooled queries use `socketTimeout=0`; test uses 30s socket timeout |
 | Shutdown | `Main.stop` shuts down the executor |
 
 `Profiler.logMemory` logs used heap MB at a few UI hotspots (tab open, filter add, tree double-click).

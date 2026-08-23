@@ -13,8 +13,13 @@ public class Constants {
     // CONNECTION TIMEOUTS (ms)
     /** MySQL JDBC TCP connect deadline. */
     public static final int JDBC_CONNECT_TIMEOUT_MS = 5_000;
-    /** MySQL JDBC socket read deadline (0 = forever). */
-    public static final int JDBC_SOCKET_TIMEOUT_MS = 30_000;
+    /** MySQL JDBC socket read deadline for one-off test connections. */
+    public static final int JDBC_TEST_SOCKET_TIMEOUT_MS = 30_000;
+    /**
+     * MySQL JDBC socket read deadline for pooled query connections.
+     * 0 = no read timeout; long-running queries rely on {@link org.canopydb.repository.QueryHandle}.
+     */
+    public static final int JDBC_QUERY_SOCKET_TIMEOUT_MS = 0;
     /** Hikari: max wait for a pooled connection. */
     public static final int HIKARI_CONNECTION_TIMEOUT_MS = 10_000;
     /** Hikari: max time for connection validation. */

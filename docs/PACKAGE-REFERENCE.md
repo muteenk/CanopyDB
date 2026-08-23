@@ -64,8 +64,10 @@ Glue between UI events and services. Always marshal UI updates onto the FX threa
 
 | Class | Role |
 | --- | --- |
-| `MetadataDAO` | `SHOW DATABASES`; table list from `information_schema` |
-| `TableActionDAO` | Execute browse SQL / count; build `TableData` via serializer |
+| `MetadataDAO` | `SHOW DATABASES`; table list from `information_schema`; accepts {@link org.canopydb.repository.QueryHandle} |
+| `TableActionDAO` | Execute browse SQL / count; build `TableData` via serializer; accepts {@link org.canopydb.repository.QueryHandle} |
+| `QueryHandle` | Registers in-flight {@link java.sql.Statement}; {@link #cancel()} sends JDBC cancel (no hard query timeout) |
+| `QueryCancelledException` | Thrown when a query is aborted via {@link QueryHandle} |
 | `ResultSetValueSerializer` | JDBC type → `CellValue` (temporals as strings, binary summarized, null-aware) |
 
 ---
@@ -74,8 +76,9 @@ Glue between UI events and services. Always marshal UI updates onto the FX threa
 
 | Class | Role |
 | --- | --- |
-| `ConnectionMetadataService` | Async database / table name loads |
-| `TableActionService` | Async initial table open and session reload (data + count) |
+| `ConnectionMetadataService` | Async database / table name loads; returns {@link org.canopydb.services.AsyncQuery} |
+| `TableActionService` | Async initial table open and session reload (data + count); returns {@link org.canopydb.services.AsyncQuery} |
+| `AsyncQuery` | Pairs a {@link java.util.concurrent.CompletableFuture} with a {@link org.canopydb.repository.QueryHandle} for cancellation |
 
 ---
 
@@ -86,6 +89,7 @@ Glue between UI events and services. Always marshal UI updates onto the FX threa
 | `Constants` | Filter labels; client state paths (`DIRECTORY`, `CONNECTIONS_STATE_FILE`, …) |
 | `ClientStateManager` | Control point for JSON state files under `~/.canopydb/` (`write`, `read`, `readList`, `exists`) |
 | `ExceptionMessages` | `userMessage(Throwable)` — unwrap for user-facing text |
+| `QueryExceptions` | `isCancellation(Throwable)` — detect aborted queries for silent UI handling |
 | `TableUtilities` | `tablePath(database, table)` → `"database : table"` (tab identity) |
 
 ---

@@ -53,7 +53,7 @@ public final class DatabasePool {
      */
     public static void testConnection(ConnectionMeta connection) throws SQLException {
         try (Connection ignored = DriverManager.getConnection(
-                buildJdbcUrl(connection),
+                buildTestJdbcUrl(connection),
                 connection.getUsername(),
                 connection.getPassword()
         )) {
@@ -93,6 +93,14 @@ public final class DatabasePool {
     }
 
     private static String buildJdbcUrl(ConnectionMeta connection) {
+        return buildUrl(connection, Constants.JDBC_QUERY_SOCKET_TIMEOUT_MS);
+    }
+
+    private static String buildTestJdbcUrl(ConnectionMeta connection) {
+        return buildUrl(connection, Constants.JDBC_TEST_SOCKET_TIMEOUT_MS);
+    }
+
+    private static String buildUrl(ConnectionMeta connection, int socketTimeoutMs) {
         return "jdbc:mysql://"
                 + connection.getHost()
                 + ":"
@@ -100,7 +108,7 @@ public final class DatabasePool {
                 + "/"
                 + nullToEmpty(connection.getDatabase())
                 + "?connectTimeout=" + Constants.JDBC_CONNECT_TIMEOUT_MS
-                + "&socketTimeout=" + Constants.JDBC_SOCKET_TIMEOUT_MS;
+                + "&socketTimeout=" + socketTimeoutMs;
     }
 
     private static String nullToEmpty(String value) {

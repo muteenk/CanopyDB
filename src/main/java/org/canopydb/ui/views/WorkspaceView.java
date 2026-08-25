@@ -24,7 +24,8 @@ public class WorkspaceView implements View {
         Sidebar sidebar = new Sidebar(
                 workspace::addNewSession,
                 workspace::selectActiveSession,
-                connection != null ? connection.getDatabase() : null
+                connection != null ? connection.getDatabase() : null,
+                workspace::openQueryTab
         );
 
         Region sidebarPane = sidebar.getSidebar();

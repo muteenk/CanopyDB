@@ -20,6 +20,7 @@ import org.canopydb.config.Profiler;
 import org.canopydb.controllers.TreeViewEventController;
 import org.canopydb.services.AsyncQuery;
 import org.canopydb.ui.atoms.IconButton;
+import org.canopydb.ui.interfaces.OpenQueryAction;
 import org.canopydb.ui.interfaces.TableActiveCheck;
 import org.canopydb.ui.interfaces.TableOpenAction;
 import org.canopydb.ui.singletons.LoadingManager;
@@ -48,10 +49,11 @@ public class Sidebar {
     /** Hidden root; pinned {@link LazyTreeItem} databases are direct children. */
     private final TreeItem<String> databasesRoot = new TreeItem<>();
     private final ConnectionTreeSearch treeSearch;
+    private final OpenQueryAction openQueryAction;
     private TreeView<String> databaseTreeView;
 
     public Sidebar(TableOpenAction tableOpenAction, TableActiveCheck tableActiveCheck) {
-        this(tableOpenAction, tableActiveCheck, null);
+        this(tableOpenAction, tableActiveCheck, null, null);
     }
 
     public Sidebar(
@@ -59,6 +61,16 @@ public class Sidebar {
             TableActiveCheck tableActiveCheck,
             String initialDatabase
     ) {
+        this(tableOpenAction, tableActiveCheck, initialDatabase, null);
+    }
+
+    public Sidebar(
+            TableOpenAction tableOpenAction,
+            TableActiveCheck tableActiveCheck,
+            String initialDatabase,
+            OpenQueryAction openQueryAction
+    ) {
+        this.openQueryAction = openQueryAction;
         treeViewEventController = new TreeViewEventController(tableOpenAction, tableActiveCheck);
         treeSearch = new ConnectionTreeSearch(databasesRoot, treeViewEventController);
         treeViewEventController.setOnTreeDataChanged(treeSearch::onTreeDataChanged);
@@ -74,6 +86,15 @@ public class Sidebar {
 
     public VBox getSidebar() {
         databaseTreeView = buildTreeView();
+
+        Button sqlButton = new Button("SQL");
+        sqlButton.getStyleClass().add("sidebar-sql-button");
+        sqlButton.setMaxWidth(Double.MAX_VALUE);
+        sqlButton.setOnAction(e -> {
+            if (openQueryAction != null) {
+                openQueryAction.open();
+            }
+        });
 
         Label databasesLabel = new Label("Databases");
         databasesLabel.getStyleClass().add("sidebar-section-label");
@@ -97,6 +118,7 @@ public class Sidebar {
 
         VBox sidebar = new VBox(
                 8,
+                sqlButton,
                 treeSearch.getSearchField(),
                 treeSearch.getEmptySearchLabel(),
                 databaseToolbar,

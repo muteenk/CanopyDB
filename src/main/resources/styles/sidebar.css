@@ -56,6 +56,27 @@
     -fx-font-weight: 700;
 }
 
+.sidebar-sql-button {
+    -fx-background-color: #363840;
+    -fx-text-fill: #d0d7de;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-padding: 7 12;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+}
+
+.sidebar-sql-button:hover {
+    -fx-background-color: #4a4d55;
+    -fx-text-fill: #ffffff;
+}
+
+.sidebar-sql-button:pressed {
+    -fx-background-color: #5C3E94;
+    -fx-text-fill: #ffffff;
+}
+
 .sidebar-icon-button {
     -fx-background-color: #363840;
     -fx-background-radius: 6;

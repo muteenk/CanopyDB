@@ -21,6 +21,7 @@ public class Renderer {
             "/styles/inputs.css",
             "/styles/tree.css",
             "/styles/tabs.css",
+            "/styles/query.css",
             "/styles/table.css",
             "/styles/scrollbars.css",
             "/styles/notifications.css",

@@ -1,0 +1,50 @@
+/* =========================================================================
+   QUERY EDITOR TAB
+   ========================================================================= */
+
+.query-tab {
+    -fx-background-color: #1f232a;
+    -fx-padding: 0;
+}
+
+.query-split {
+    -fx-background-color: #1f232a;
+    -fx-padding: 0;
+}
+
+.query-split > .split-pane-divider {
+    -fx-background-color: #2b2d31;
+    -fx-padding: 2 0;
+    -fx-border-color: transparent;
+}
+
+.query-split > .split-pane-divider:hover {
+    -fx-background-color: #5C3E94;
+}
+
+.query-editor {
+    -fx-background-color: #1f232a;
+    -fx-control-inner-background: #1f232a;
+    -fx-text-fill: #e6edf3;
+    -fx-prompt-text-fill: #8b949e;
+    -fx-font-family: "Menlo", "Consolas", "Courier New", monospace;
+    -fx-font-size: 13px;
+    -fx-padding: 10;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+}
+
+.query-editor .content {
+    -fx-background-color: #1f232a;
+}
+
+.query-results-pane {
+    -fx-background-color: #1f232a;
+    -fx-padding: 16;
+    -fx-alignment: center;
+}
+
+.query-results-placeholder {
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 13px;
+}

@@ -148,11 +148,11 @@ A major focus of the project is ensuring that heavy database operations never bl
 - [x] Per Database Connections
 - [x] Refresh connections
 - [x] Refresh Table
-- [ ] Client state save and load
-- [ ] Query editor
-- [ ] Result table rendering
-- [ ] Parallel query execution
-- [ ] Query cancellation
+- [] Client state save and load
+- [x] Query editor
+- [x] Result table rendering
+- [x] Parallel query execution
+- [x] Query cancellation
 
 ### Future Scope
 - [ ] Lazy schema loading

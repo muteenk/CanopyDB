@@ -57,6 +57,7 @@ public class Workspace {
         Tab tab = queryTab.getTab();
         tab.setOnClosed(event -> {
             queryTabs.remove(session.getId());
+            queryTab.cancelPending();
             queryTab.dispose();
             Profiler.logMemory();
         });

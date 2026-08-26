@@ -5,6 +5,52 @@
 .query-tab {
     -fx-background-color: #1f232a;
     -fx-padding: 0;
+    -fx-spacing: 0;
+}
+
+.query-toolbar {
+    -fx-background-color: #2b2d31;
+    -fx-padding: 8 10;
+    -fx-spacing: 8;
+    -fx-alignment: center-left;
+    -fx-border-color: transparent transparent #1f232a transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.query-toolbar-button {
+    -fx-background-color: #363840;
+    -fx-text-fill: #d0d7de;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-padding: 5 12;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.query-toolbar-button:hover {
+    -fx-background-color: #4a4d55;
+    -fx-text-fill: #ffffff;
+}
+
+.query-toolbar-button:disabled {
+    -fx-opacity: 0.45;
+    -fx-cursor: default;
+}
+
+.query-toolbar-button-primary {
+    -fx-background-color: #5C3E94;
+    -fx-text-fill: #ffffff;
+}
+
+.query-toolbar-button-primary:hover {
+    -fx-background-color: #6d4db0;
+}
+
+.query-status-label {
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 12px;
+    -fx-padding: 0 0 0 8;
 }
 
 .query-split {
@@ -20,6 +66,10 @@
 
 .query-split > .split-pane-divider:hover {
     -fx-background-color: #5C3E94;
+}
+
+.query-editor-pane {
+    -fx-background-color: #1f232a;
 }
 
 .query-editor {
@@ -40,11 +90,17 @@
 
 .query-results-pane {
     -fx-background-color: #1f232a;
-    -fx-padding: 16;
+    -fx-padding: 0;
     -fx-alignment: center;
 }
 
-.query-results-placeholder {
+.query-results-placeholder,
+.query-results-message {
     -fx-text-fill: #8b949e;
     -fx-font-size: 13px;
+    -fx-padding: 16;
+}
+
+.query-results-table {
+    -fx-background-color: #1f232a;
 }
